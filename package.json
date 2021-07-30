@@ -2,7 +2,7 @@
   "name": "harpee",
   "version": "1.0.0",
   "description": "harpee is an asynchronous Object modeling tool for HarperDB, harpee supports both callbacks and Promise.",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "jest --coverage",
     "start": "nodemon ./test/index.js"
