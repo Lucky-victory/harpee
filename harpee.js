@@ -4,8 +4,8 @@ const model = require('./src/model');
 
 /** harpee object
  * @type {Object} harpee
- * @property {function} harpe.connect
- * @property {function} harpee.Model
+ * @property {function} harpee.connect
+ * @property {function} harpee.model
  * @property {function} harpee.Schema
  */
 const harpee = {
