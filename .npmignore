@@ -49,6 +49,10 @@ typings/
 
 # Optional eslint cache
 .eslintcache
+# linting
+.config
+.eslintrc
+.vscode
 
 # Microbundle cache
 .rpt2_cache/
@@ -68,13 +72,12 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
-
+.env.default
 # parcel-bundler cache (https://parceljs.org/)
 .cache
-
+# test directory
+test/
 # compiler 
 .dcoder_run
 .upm/
 
-# test
-*.html

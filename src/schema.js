@@ -1,3 +1,4 @@
+const U = require('../utils/utils');
 /** creates a schema .
  *
  * @param {Object} options - an object takes in `name` and `fields` .
@@ -14,9 +15,9 @@ function Schema(options) {
   }
   const SCHEMA_NAME = options && options.name ? options.name : options.name = 'defaultSchema';
   return {
-    name: SCHEMA_NAME,
+  name: SCHEMA_NAME,
     fields: options.fields
   }
 }
 
-//module.exports=Schema;
+module.exports=Schema;

@@ -1,8 +1,5 @@
-'use strict'
-const U = Utils
-
-
-
+const U = require('../utils/utils');
+const validateEntry = require('./validateNewEntry');
 /** Creates a model for your project, the `modelName` represents a table in plural form.
  * @class Model
  * @param {string} modelName - the `modelName` is used to create a table.
@@ -76,7 +73,7 @@ function Model(modelName, schema) {
         await DESCRIBE_DB().then(res => {
           let result;
           result = res;
-          const NO_SCHEMA = (!(Object.keys(result).includes(`${SCHEMA_NAME}`)));
+          const NO_SCHEMA = (!U._findStr(Object.keys(result), `${SCHEMA_NAME}`));
 
           if (NO_SCHEMA) {
             CREATE_SCHEMA();
@@ -108,7 +105,11 @@ function Model(modelName, schema) {
    * @param { * } err - returns an error or null if no errors.
    * @param { * } data - returns the response data if any or null .
    * */
-
+  /** Gets all data from a table.
+   * @param {(any[] | string[]) } arr - an empty array or an array of strings.
+   * @param {responseCallback} [cb] - an optional callback function.
+   * 
+   * */
   this.find = async function(arr, cb) {
     let findArr = arr;
     if (!U._isArray(arr) || U._isEmpty(arr) || (arr.length === 1 && arr[0] === '*'.trim())) {
@@ -148,6 +149,7 @@ function Model(modelName, schema) {
     return await data
 
   }
+
   /** response callback
    * @callback responseCallback
    * @param { * } err - returns an error if any or null if no errors.
@@ -304,23 +306,24 @@ function Model(modelName, schema) {
 
     return await data
   }
-  
+
   /** response callback
    * @callback responseCallback
    * @param { * } err - returns an error if any or null if no errors.
    * @param { * } data - returns the response data if any or null .
    * */
-  /** inserts new data to the table.
-
+  /** inserts new data into the table.
    * @param {Object} obj - an object of the new data to be inserted. 
    * @param { responseCallback} [cb] - an optional callback function.
    * 
    * */
 
   this.create = async function(obj, cb) {
+    const SCHEMA_FIELDS = schema.fields;
     let res, err, data;
-    const OBJ_KEYS = Object.keys(obj).join(','),
-      OBJ_VALUES = Object.values(obj).join("','");
+    const OBJ_KEYS = Object.keys(obj).join(',');
+    const OBJ_VALUES = Object.values(obj).join("','");
+    validateEntry(SCHEMA_FIELDS, obj)
     try {
       res = await axios({
         data: JSON.stringify({
@@ -611,4 +614,6 @@ function Model(modelName, schema) {
   }
 
 }
-harp.connect({ host: 'https://hashnode-lv.harperdbcloud.com', token: 'dmVlazpAdmVlay4yNDc=' })
+module.exports= Model;
+
+//harp.connect({ host: 'https://hashnode-lv.harperdbcloud.com', token: 'dmVlazpAdmVlay4yNDc=' })

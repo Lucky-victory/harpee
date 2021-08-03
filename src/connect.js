@@ -35,4 +35,4 @@ function connect(options) {
   axios.defaults.method = 'post';
 
 }
-// module.exports=connect
+module.exports=connect
