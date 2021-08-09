@@ -1,6 +1,6 @@
 const U = require("../utils/utils");
-const VALIDATOR = require("../utils/validators").default;
-const AXIOS = require("../utils/axiosInstance").default;
+const VALIDATOR = require("../utils/validators");
+const axios = require("axios");
 
 /** Creates a model for your project, the `modelName` represents a table in plural form.
  *
@@ -32,7 +32,8 @@ function model(modelName, schema) {
       const DESCRIBE_DB = async function () {
         let result, res;
         try {
-          res = await AXIOS({
+          // @ts-ignore
+          res = await axios({
             data: JSON.stringify({
               operation: "describe_all",
             }),
@@ -44,7 +45,8 @@ function model(modelName, schema) {
         return await result;
       };
       const CREATE_SCHEMA = async function () {
-        let res = await AXIOS({
+        // @ts-ignore
+        let res = await axios({
           data: JSON.stringify({
             operation: "create_schema",
             schema: `${SCHEMA_NAME}`,
@@ -53,7 +55,8 @@ function model(modelName, schema) {
         return await res.data;
       };
       const CREATE_TABLE = async function () {
-        let res = await AXIOS({
+        // @ts-ignore
+        let res = await axios({
           data: JSON.stringify({
             operation: "create_table",
             schema: `${SCHEMA_NAME}`,
@@ -112,7 +115,8 @@ model.prototype.find = async function (arr, callback) {
   }
   let res, err, data;
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "sql",
         sql: `SELECT ${findArr.join(",")} from ${this.SCHEMA_NAME}.${
@@ -163,7 +167,8 @@ model.prototype.findById = async function (id, callback) {
     idValue = U._splitObj(id).values.join('","');
   }
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "sql",
         sql: `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}='${idValue}'`,
@@ -218,7 +223,8 @@ model.prototype.findByIdAndRemove = async function (id, callback) {
   }
 
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "sql",
         sql: `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
@@ -277,7 +283,8 @@ model.prototype.update = async function (id, obj, callback) {
   }
 
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "sql",
         sql: `UPDATE ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] SET ${UPDATE_ARR} WHERE ${idKey} IN ('${idValue}')`,
@@ -327,7 +334,8 @@ model.prototype.create = async function (obj, callback) {
   }
   VALIDATOR(this.SCHEMA_FIELDS, obj);
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "insert",
         schema: `${this.SCHEMA_NAME}`,
@@ -381,7 +389,8 @@ model.prototype.importFromCsv = async function (options, callback) {
   }
 
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "csv_data_load",
         action: `${ACTION}`,
@@ -439,7 +448,8 @@ model.prototype.importFromCsvFile = async function (options, callback) {
   }
 
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "csv_file_load",
         action: `${ACTION}`,
@@ -497,7 +507,8 @@ model.prototype.importFromCsvUrl = async function (options, callback) {
   }
 
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "csv_url_load",
         action: `${ACTION}`,
@@ -571,7 +582,8 @@ model.prototype.importFromS3 = async function (options, callback) {
     );
   }
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "import_from_s3",
         action: `${ACTION}`,
@@ -624,7 +636,8 @@ model.prototype.clearAll = async function (callback) {
   let res, data, err;
 
   try {
-    res = await AXIOS({
+    // @ts-ignore
+    res = await axios({
       data: JSON.stringify({
         operation: "sql",
         sql: `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}]`,

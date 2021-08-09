@@ -129,4 +129,4 @@ function validateRequired({ fieldsKeys, dataValues, requiredKeys }) {
   }
 }
 
-export default validator;
+module.exports = validator;

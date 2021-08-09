@@ -1,5 +1,5 @@
 const U = require("../utils/utils");
-const AXIOS = require("../utils/axiosInstance");
+const axios = require("axios");
 /** function to Connect to your database.
  * @param {Object} options - An object that takes in `host`, `username`,`password`,`token`.
  * @param {string} options.host - your harperdb host url.
@@ -34,9 +34,13 @@ function connect(options) {
   } else if (TOKEN) {
     auth = `Bearer ${TOKEN}`;
   }
-  AXIOS.defaults.baseURL = `${options.host}`;
-  AXIOS.defaults.headers.common["Authorization"] = auth;
-  AXIOS.defaults.headers.post["Content-Type"] = "application/json";
-  AXIOS.defaults.method = "post";
+  // @ts-ignore
+  axios.defaults.baseURL = `${options.host}`;
+  // @ts-ignore
+  axios.defaults.headers.common["Authorization"] = auth;
+  // @ts-ignore
+  axios.defaults.headers.post["Content-Type"] = "application/json";
+  // @ts-ignore
+  axios.defaults.method = "post";
 }
 module.exports = connect;

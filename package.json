@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "harpee is an asynchronous Object modeling tool for HarperDB, harpee supports both callbacks and Promise.",
   "main": "harpee.js",
-  "types":"./types/harpee.d.ts",
+  "types": "./types/harpee.d.ts",
   "scripts": {
-    "test":"jest --coverage",
-    "sample": "parcel ./samples/**/*",
-    "start": "nodemon "
+    "test": "jest --coverage",
+    "sample": "parcel ./samples/**/*"
   },
-  "files":["src","utils","harpee.js","typings"],
+  "files": [
+    "src",
+    "utils",
+    "harpee.js",
+    "typings"
+  ],
   "keywords": [
     "model",
     "harperdb",
@@ -24,11 +28,13 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.24",
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.0.6",
     "nodemon": "^2.0.12",
     "prettier": "^2.3.2"
   },
