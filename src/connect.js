@@ -1,5 +1,5 @@
-const U = require('../utils/utils')
-const AXIOS = require('../utils/axiosInstance');
+const U = require("../utils/utils");
+const AXIOS = require("../utils/axiosInstance");
 /** function to Connect to your database.
  * @param {Object} options - An object that takes in `host`, `username`,`password`,`token`.
  * @param {string} options.host - your harperdb host url.
@@ -10,31 +10,33 @@ const AXIOS = require('../utils/axiosInstance');
  **/
 function connect(options) {
   if (!U._isObj(options)) {
-    throw new TypeError('connection options must be an Object');
+    throw new TypeError("connection options must be an Object");
   }
   if (!options.host) {
-    throw new Error('host is required')
+    throw new Error("host is required");
   }
   let auth;
   const USERNAME = options.username;
   const PASSWORD = options.password;
   const TOKEN = options.token;
-  if (USERNAME && !PASSWORD || PASSWORD && !USERNAME) {
-    throw new Error('you must include both username and password')
+  if ((USERNAME && !PASSWORD) || (PASSWORD && !USERNAME)) {
+    throw new Error("you must include both username and password");
   }
   if (!USERNAME && !PASSWORD && !TOKEN) {
-    throw new Error('you can should include username and password or only token')
+    throw new Error(
+      "you can should include username and password or only token"
+    );
   }
   if (USERNAME && PASSWORD) {
-    auth = 'Basic '+ Buffer.from(`${USERNAME}:${PASSWORD}`, 'utf-8').toString('base64');
-  }
-  else if(TOKEN){
+    auth =
+      "Basic " +
+      Buffer.from(`${USERNAME}:${PASSWORD}`, "utf-8").toString("base64");
+  } else if (TOKEN) {
     auth = `Bearer ${TOKEN}`;
   }
   AXIOS.defaults.baseURL = `${options.host}`;
-  AXIOS.defaults.headers.common['Authorization'] = auth;
-  AXIOS.defaults.headers.post['Content-Type'] = 'application/json';
-  AXIOS.defaults.method = 'post';
-
+  AXIOS.defaults.headers.common["Authorization"] = auth;
+  AXIOS.defaults.headers.post["Content-Type"] = "application/json";
+  AXIOS.defaults.method = "post";
 }
-module.exports=connect
+module.exports = connect;

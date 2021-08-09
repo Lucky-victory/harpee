@@ -1,9 +1,4 @@
 {
-  "env": {
-    "commonjs": true,
-    "es6": true,
-    "node": true
-  },
   "extends": ["prettier", "airbnb-base"],
   "plugins": ["prettier"],
   "globals": {
@@ -14,6 +9,11 @@
     "ecmaVersion": 2018
   },
   "rules": {
-    "prettier/prettier": "error"
+    "no-underscore-dangle": "off",
+    "no-undef": "off",
+    "no-restricted-syntax": "off",
+    "quotes": "off",
+    "no-lonely-if":"off",
+    "no-use-before-define": "off"
   }
-}
+} 

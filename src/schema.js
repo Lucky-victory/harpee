@@ -17,7 +17,7 @@ function Schema(options) {
   return {
   name: SCHEMA_NAME,
     fields: options.fields
-  }
+  };
 }
 
 module.exports=Schema;
