@@ -1,4 +1,4 @@
-const U = require('../utils/utils');
+const U = require('../utils/helpers');
 /** creates a schema .
  *
  * @param {Object} options - an object takes in `name` and `fields` .

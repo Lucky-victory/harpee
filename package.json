@@ -12,7 +12,7 @@
     "src",
     "utils",
     "harpee.js",
-    "typings"
+    "types"
   ],
   "keywords": [
     "model",
@@ -28,6 +28,7 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
+    "parcel":"2.0.0-rc.0",
     "@types/jest": "^26.0.24",
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",

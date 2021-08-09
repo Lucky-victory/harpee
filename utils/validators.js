@@ -1,5 +1,5 @@
 // @ts-ignore
-const Utils = require("./utils/utils");
+const Utils = require("./helpers");
 
 function validator(fields, newData) {
   const FIELDS_TYPES = [];

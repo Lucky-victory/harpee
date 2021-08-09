@@ -1,4 +1,4 @@
-const U = require("../utils/utils");
+const U = require("../utils/helpers");
 const VALIDATOR = require("../utils/validators");
 const axios = require("axios");
 
