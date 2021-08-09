@@ -88,22 +88,13 @@ function model(modelName, schema) {
             CREATE_TABLE();
           }
         });
-        return res;
+      
       };
       RUN_SCHEMA().then((response) => RUN_TABLE(response));
     })();
   }
 }
-/* response callback
- * @callback responseCallback
- * @param { * } err - returns an error or null if no errors.
- * @param { * } data - returns the response data if any or null .
- * */
-/** Gets all data from a table.
- * @param {(any[] | string[]) } arr - an empty array or an array of strings.
- * @param {responseCallback} [callback] - an optional callback function.
- *
- * */
+
 model.prototype.find = async function (arr, callback) {
   let findArr = arr;
   if (
@@ -200,11 +191,7 @@ model.prototype.findById = async function (id, callback) {
   return await data[0];
 };
 
-/* response callback
- * @callback responseCallback
- * @param { * } err - returns an error if any or null if no errors.
- * @param { * } data - returns the response data if any or null .
- * */
+
 /** deletes data from the table based on the specified `id`.
  * @param {(string | object )} id - a string of id or an object specifying the id key & value(string).
  * @param { responseCallback} [callback] - an optional callback function.
@@ -316,11 +303,6 @@ model.prototype.update = async function (id, obj, callback) {
   return await data;
 };
 
-/* response callback
- * @callback responseCallback
- * @param { * } err - returns an error if any or null if no errors.
- * @param { * } data - returns the response data if any or null .
- * */
 /** inserts new data to the table.
  * @param {Object} obj - an object of the new data to be inserted.
  * @param { responseCallback} [callback] - an optional callback function.
@@ -368,11 +350,7 @@ model.prototype.create = async function (obj, callback) {
 
   return await data;
 };
-/* response callback
- * @callback responseCallback
- * @param { * } err - returns an error if any or null if no errors.
- * @param { * } data - returns the response data if any or null .
- * */
+
 /** Import data from plain CSV.
  * @param {Object} options - an `object` that takes in `action` and `csv`.
  * @param {string} options.csv - plain CSV string.
@@ -423,11 +401,7 @@ model.prototype.importFromCsv = async function (options, callback) {
 
   return await data;
 };
-/* response callback
- * @callback responseCallback
- * @param { * } err - returns an error if any or null if no errors.
- * @param { * } data - returns the response data if any or null .
- * */
+
 /** Import data from local CSV file.
  * @param {Object} options - an `object` that takes in `action` and `filePath`
  * @param {string} options.filePath - the relative path of the csv file.
@@ -482,11 +456,7 @@ model.prototype.importFromCsvFile = async function (options, callback) {
 
   return await data;
 };
-/*response callback
- * @callback responseCallback
- * @param { * } err - returns an error if any or null if no errors.
- * @param { * } data - returns the response data if any or null .
- * */
+
 /** Import data from an external CSV file.
  * @param {Object} options - an `object` that takes in `action` and `fileUrl`
  * @param {string} options.fileUrl - an absolute url of the csv file.
@@ -541,11 +511,6 @@ model.prototype.importFromCsvUrl = async function (options, callback) {
 
   return await data;
 };
-/* response callback
- * @callback responseCallback
- * @param { * } err - returns an error or null if no errors.
- * @param { * } data - returns the response data or null .
- * */
 
 /** Import data from your AWS S3 Bucket into a table.
  *
@@ -622,11 +587,7 @@ model.prototype.importFromS3 = async function (options, callback) {
   return await data;
 };
 
-/** response callback.
- * @callback responseCallback
- * @param { * } err - returns an error if any or null if no errors.
- * @param { * } data - returns the response data if any or null .
- * */
+
 /** Deletes every data from the table, use this with caution;
  *
  * @param {responseCallback} [callback] - an optional callback function.
