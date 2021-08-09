@@ -1,23 +1,19 @@
 const U = require('../utils/utils');
-const validateEntry = require('./validateNewEntry');
+const VALIDATOR = require('../utils/validators');
+const AXIOS = require('../utils/axiosInstance');
+
 /** Creates a model for your project, the `modelName` represents a table in plural form.
- * @class Model
+ * 
  * @param {string} modelName - the `modelName` is used to create a table.
  * 
- * @param {Object} schema - an `object` returned from `Schema` function;
- * @property {function} find
- * @property {function} findById
- * @property {function} findByIdAndRemove
- * @property {function} create
- * @property {function} update
- * @property {function} importFromCsv
- * @property {function} importFromCsvFile
- * @property {function} importFromCsvUrl
- * @property {function} clearAll
+ * @param {object} schema - an `object` returned from `Schema` function;
+ * @param {string} [schema.name] - an `object` returned from `Schema` function;
+ * @param {object} schema.fields - an `object` returned from `Schema` function;
+ * 
  * 
  */
 
-function Model(modelName, schema) {
+function model(modelName, schema) {
   if (!modelName || !U._isStr(modelName)) {
     throw new Error('modelName is required and it must be a String')
   }
@@ -25,15 +21,19 @@ function Model(modelName, schema) {
     throw new Error('schema is required')
   }
   const SCHEMA_NAME = schema.name;
-  const MODEL_NAME = `${modelName}s`;
+  this.SCHEMA_NAME = SCHEMA_NAME;
 
-  if (schema && SCHEMA_NAME && modelName) {
+  const MODEL_NAME = `${modelName}s`;
+  this.MODEL_NAME = MODEL_NAME;
+
+  this.SCHEMA_FIELDS = schema && schema.fields;
+  if (schema && SCHEMA_NAME && MODEL_NAME) {
     (async function() {
 
       const DESCRIBE_DB = async function() {
         let result, res;
         try {
-          res = await axios({
+          res = await AXIOS({
             data: JSON.stringify({
               'operation': 'describe_all'
             })
@@ -47,7 +47,7 @@ function Model(modelName, schema) {
 
       };
       const CREATE_SCHEMA = async function() {
-        let res = await axios({
+        let res = await AXIOS({
           data: JSON.stringify({
             'operation': 'create_schema',
             'schema': `${SCHEMA_NAME}`
@@ -56,7 +56,7 @@ function Model(modelName, schema) {
         return await res.data
       }
       const CREATE_TABLE = async function() {
-        let res = await axios({
+        let res = await AXIOS({
           data: JSON.stringify({
             'operation': 'create_table',
             'schema': `${SCHEMA_NAME}`,
@@ -73,7 +73,7 @@ function Model(modelName, schema) {
         await DESCRIBE_DB().then(res => {
           let result;
           result = res;
-          const NO_SCHEMA = (!U._findStr(Object.keys(result), `${SCHEMA_NAME}`));
+          const NO_SCHEMA = (!Object.keys(result).includes(`${SCHEMA_NAME}`));
 
           if (NO_SCHEMA) {
             CREATE_SCHEMA();
@@ -83,7 +83,7 @@ function Model(modelName, schema) {
 
 
       }
-      const RUN_TABLE = async function() {
+      const RUN_TABLE = async function(res) {
         await DESCRIBE_DB().then(res => {
           let result;
           result = res;
@@ -95,525 +95,528 @@ function Model(modelName, schema) {
           }
 
         });
-
+return res
       }
       RUN_SCHEMA().then(response => RUN_TABLE(response))
+
+
     })();
   }
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** Gets all data from a table.
-   * @param {(any[] | string[]) } arr - an empty array or an array of strings.
-   * @param {responseCallback} [cb] - an optional callback function.
-   * 
-   * */
-  this.find = async function(arr, cb) {
-    let findArr = arr;
-    if (!U._isArray(arr) || U._isEmpty(arr) || (arr.length === 1 && arr[0] === '*'.trim())) {
-      findArr = ['*']
-    }
-    let res, err, data;
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'sql',
-          'sql': `SELECT ${findArr.join(',')} from ${SCHEMA_NAME}.${MODEL_NAME} `
-        })
-      });
-
-      data = res.data
-
-
-    } catch (error) {
-      if (error.request) {
-
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-
-
-      if (cb) cb(err, null);
-      throw (err)
-    }
-    if (cb) cb(null, await data);
-
-    return await data
-
+}
+/* response callback
+ * @callback responseCallback
+ * @param { * } err - returns an error or null if no errors.
+ * @param { * } data - returns the response data if any or null .
+ * */
+/** Gets all data from a table.
+ * @param {(any[] | string[]) } arr - an empty array or an array of strings.
+ * @param {responseCallback} [callback] - an optional callback function.
+ * 
+ * */
+model.prototype.find = async function(arr, callback) {
+  let findArr=arr;
+  if (!U._isArray(arr) || U._isEmpty(arr) || (arr.length && arr[0] === '*'.trim())) {
+    findArr = ['*']
   }
-
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error if any or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** returns a data based on the specified `id`.
-   * @param {(string | object )} id - a string of id or an object specifying the id key & value(string). 
-   * @param { responseCallback} [cb] - an optional callback function.
-   * 
-   * */
-
-  this.findById = async function(id, cb) {
-    let res, data, err, idKey = 'id',
-      idValue = id;
-    if (U._isObj(id)) {
-      idKey = Object.keys(id).join(',');
-      idValue = Object.values(id).join('","');
-
-    }
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'sql',
-          'sql': `SELECT * FROM ${SCHEMA_NAME}.[${MODEL_NAME}] WHERE ${idKey}='${idValue}'`
-        })
+  let res, err, data;
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'sql',
+        'sql': `SELECT ${findArr.join(',')} from ${this.SCHEMA_NAME}.${this.MODEL_NAME} `
       })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
+    });
+    data = res.data
 
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
 
-        err = error;
-      }
+  } catch (error) {
+    if (error.request) {
 
-      if (cb) cb(err, null);
-      throw (err)
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (cb) cb(null, await data[0]);
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
+    }
+    else {
 
-    return await data[0]
+      err = error;
+    }
+
+
+    if (callback) callback(err, null);
+    throw (err)
   }
+  if (callback) callback(null, await data);
 
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error if any or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** deletes data from the table based on the specified `id`.
-   * @param {(string | object )} id - a string of id or an object specifying the id key & value(string). 
-   * @param { responseCallback} [cb] - an optional callback function.
-   * 
-   * */
+  return await data
 
-  this.findByIdAndRemove = async function(id, cb) {
-    let res, data, err, idKey = 'id',
-      idValue = id;
-    if (U._isObj(id)) {
-      idKey = Object.keys(id).join(',');
-      idValue = Object.values(id).join("','");
+}
 
-    }
 
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'sql',
-          'sql': `DELETE FROM ${SCHEMA_NAME}.[${MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`
-        })
+/** returns a data based on the specified `id`.
+ * @param {(string | object )} id - a string of id or an object specifying the id key & value(string). 
+ * @param { responseCallback} [callback] - an optional callback function.
+ * 
+ * */
+
+model.prototype.findById = async function(id, callback) {
+  let res, data, err, idKey = 'id',
+    idValue = id;
+  if (U._isObj(id)) {
+    idKey = U._splitObj(id).keys.join(',');
+    idValue = U._splitObj(id).values.join('","');
+
+  }
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'sql',
+        'sql': `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}='${idValue}'`
       })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
 
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-      if (cb) cb(err, null);
-      throw (err)
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (cb) cb(null, await data);
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
+    }
+    else {
 
-    return await data
+      err = error;
+    }
+
+    if (callback) callback(err, null);
+    throw (err)
   }
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error if any or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** updates the table with new data on the specified `id`.
-   * @param {(string | object | string[])} id - a string of id or an object specifying the id key & value(string). 
-   * @param {Object} obj - an object of the new data to be updated. 
-   * @param { responseCallback} [cb] - an optional callback function.
-   * 
-   * */
+  if (callback) callback(null, await data[0]);
 
-  this.update = async function(id, obj, cb) {
-    let res, data, err, idKey = 'id',
-      idValue = id;
-    if (!obj) {
-      throw new Error('please include an object of the data to be updated')
-    }
-    else if (obj && !U._isObj(obj)) {
-      throw new Error('the data to be updated must be an object')
-    }
-    const UPDATE_ARR = U._objToArray(obj, '=').join(',');
+  return await data[0]
+}
 
-    if (U._isObj(id)) {
-      idKey = Object.keys(id).join(',');
-      idValue = Object.values(id).join("','");
+/* response callback
+ * @callback responseCallback
+ * @param { * } err - returns an error if any or null if no errors.
+ * @param { * } data - returns the response data if any or null .
+ * */
+/** deletes data from the table based on the specified `id`.
+ * @param {(string | object )} id - a string of id or an object specifying the id key & value(string). 
+ * @param { responseCallback} [callback] - an optional callback function.
+ * 
+ * */
 
-    }
-    if (U._isArray(id)) {
-      idValue = idValue.join("','")
-    }
+model.prototype.findByIdAndRemove = async function(id, callback) {
+  let res, data, err, idKey = 'id',
+    idValue = id;
+  if (U._isObj(id)) {
+    idKey = U._splitObj(id).keys.join(',');
+    idValue = U._splitObj(id).values.join("','");
 
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'sql',
-          'sql': `UPDATE ${SCHEMA_NAME}.[${MODEL_NAME}] SET ${UPDATE_ARR} WHERE ${idKey} IN ('${idValue}')`
-        })
+  }
+
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'sql',
+        'sql': `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`
       })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
 
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-
-
-      if (cb) cb(err, null);
-      throw (err)
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (cb) cb(null, await data);
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
+    }
+    else {
 
-    return await data
+      err = error;
+    }
+    if (callback) callback(err, null);
+    throw (err)
+  }
+  if (callback) callback(null, await data);
+
+  return await data
+}
+
+/** updates the table with new data on the specified `id`.
+ * @param {(string | object | string[])} id - a string of id or an object specifying the id key & value(string). 
+ * @param {object} obj - an object of the new data to be updated. 
+ * @param { responseCallback} [callback] - an optional callback function.
+ * 
+ * */
+
+model.prototype.update = async function(id, obj, callback) {
+  let res, data, err, idKey = 'id',
+    idValue = id;
+  if (!obj) {
+    throw new Error('please include an object of the data to be updated')
+  }
+  else if (obj && !U._isObj(obj)) {
+    throw new Error('the data to be updated must be an object')
+  }
+  const UPDATE_ARR = U._objToArray(obj, '=').join(',');
+
+  if (U._isObj(id)) {
+    idKey = U._splitObj(id).keys.join(',');
+    idValue = U._splitObj(id).values.join("','");
+
+  }
+  else if (U._isArray(id)) {
+    idValue = idValue.join("','")
   }
 
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error if any or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** inserts new data into the table.
-   * @param {Object} obj - an object of the new data to be inserted. 
-   * @param { responseCallback} [cb] - an optional callback function.
-   * 
-   * */
-
-  this.create = async function(obj, cb) {
-    const SCHEMA_FIELDS = schema.fields;
-    let res, err, data;
-    const OBJ_KEYS = Object.keys(obj).join(',');
-    const OBJ_VALUES = Object.values(obj).join("','");
-    validateEntry(SCHEMA_FIELDS, obj)
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'sql',
-          'sql': `INSERT INTO ${SCHEMA_NAME}.[${MODEL_NAME}](${OBJ_KEYS}) VALUES('${OBJ_VALUES}')`
-        })
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'sql',
+        'sql': `UPDATE ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] SET ${UPDATE_ARR} WHERE ${idKey} IN ('${idValue}')`
       })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
 
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-
-
-      if (cb) cb(err, null);
-      throw (err)
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (cb) cb(null, await data);
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
+    }
+    else {
 
-    return await data
+      err = error;
+    }
 
+
+    if (callback) callback(err, null);
+    throw (err)
   }
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error if any or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** Import data from plain CSV.
-   * @param {Object} options - an `object` that takes in `action` and `csv`.
-   * @param {string} options.csv - plain CSV string.
-   * @param {string} [options.action=insert] - optional `action` to be performed.
-   * @param {responseCallback} [cb] - optional callback function.
-   * */
+  if (callback) callback(null, await data);
 
-  this.importFromCsv = async function(options, cb) {
-    let res, data, err;
-    const CSV_DATA = options.csv;
-    const ACTION = options && options.action ? options.action : 'insert'
-    if (!CSV_DATA || !U._isStr(CSV_DATA)) {
-      throw new Error(' csv is required and it should be in string format')
-    }
+  return await data
+}
 
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'csv_data_load',
-          'action': `${ACTION}`,
-          'schema': `${SCHEMA_NAME}`,
-          'table': `${MODEL_NAME}`,
-          'data': `${CSV_DATA}`
-        })
+/* response callback
+ * @callback responseCallback
+ * @param { * } err - returns an error if any or null if no errors.
+ * @param { * } data - returns the response data if any or null .
+ * */
+/** inserts new data to the table.
+ * @param {Object} obj - an object of the new data to be inserted. 
+ * @param { responseCallback} [callback] - an optional callback function.
+ * 
+ * */
+
+model.prototype.create = async function(obj, callback) {
+  let res, err, data;
+  if (!U._isObj(obj)) {
+    throw new TypeError('must be an object')
+  }
+  VALIDATOR(this.SCHEMA_FIELDS, obj)
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'insert',
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'records': [obj]
       })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
 
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-      if (cb) cb(err, null);
-      throw (err)
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (cb) cb(null, await data);
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
+    }
+    else {
 
-    return await data
+      err = error;
+    }
+
+
+    if (callback) callback(err, null);
+    throw (err)
   }
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error if any or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** Import data from local CSV file.
-   * @param {Object} options - an `object` that takes in `action` and `filePath`
-   * @param {string} options.filePath - the relative path of the csv file.
-   * @param {string} [options.action=insert] - optional `action` to be performed, default is `insert`;
-   * @param {responseCallback} [cb] - optional callback function.
+  if (callback) callback(null, await data);
 
-   * */
+  return await data
 
-  this.importFromCsvFile = async function(options, cb) {
-    let res, data, err;
-    const ACTION = options && options.action ? options.action : 'insert';
-    const FILE_PATH = options.filePath
-    if (!FILE_PATH || !U._isStr(FILE_PATH)) {
-      throw new Error('filePath is required and it should be a string')
-    }
+}
+/* response callback
+ * @callback responseCallback
+ * @param { * } err - returns an error if any or null if no errors.
+ * @param { * } data - returns the response data if any or null .
+ * */
+/** Import data from plain CSV.
+ * @param {Object} options - an `object` that takes in `action` and `csv`.
+ * @param {string} options.csv - plain CSV string.
+ * @param {string} [options.action=insert] - optional `action` to be performed.
+ * @param {responseCallback} [callback] - optional callback function.
+ * */
 
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'csv_file_load',
-          'action': `${ACTION}`,
-          'schema': `${SCHEMA_NAME}`,
-          'table': `${MODEL_NAME}`,
-          'file_path': `${FILE_PATH}`
-        })
+model.prototype.importFromCsv = async function(options, callback) {
+  let res, data, err;
+  const CSV_DATA = options.csv;
+  const ACTION = options && options.action ? options.action : 'insert'
+  if (!CSV_DATA || !U._isStr(CSV_DATA)) {
+    throw new Error(' csv is required and it should be in string format')
+  }
+
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'csv_data_load',
+        'action': `${ACTION}`,
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'data': `${CSV_DATA}`
       })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
 
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-      if (cb) cb(err, null);
-      throw (err)
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (cb) cb(null, await data);
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
+    }
+    else {
 
-    return await data
+      err = error;
+    }
+    if (callback) callback(err, null);
+    throw (err)
   }
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error if any or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** Import data from an external CSV file.
-   * @param {Object} options - an `object` that takes in `action` and `fileUrl`
-   * @param {string} options.fileUrl - an absolute url of the csv file.
-   * @param {string} [options.action=insert] - optional `action` to be performed, default is `insert`;
-   *@param {responseCallback} [cb] - optional callback function
+  if (callback) callback(null, await data);
 
-   * */
-  this.importFromCsvUrl = async function(options, cb) {
-    let res, data, err;
-    const ACTION = options && options.action ? options.action : 'insert'
-    const FILE_URL = options.fileUrl;
-    if (!FILE_URL || !U._isStr(FILE_URL)) {
-      throw new Error('fileUrl is required and it should be string')
-    }
+  return await data
+}
+/* response callback
+ * @callback responseCallback
+ * @param { * } err - returns an error if any or null if no errors.
+ * @param { * } data - returns the response data if any or null .
+ * */
+/** Import data from local CSV file.
+ * @param {Object} options - an `object` that takes in `action` and `filePath`
+ * @param {string} options.filePath - the relative path of the csv file.
+ * @param {string} [options.action=insert] - optional `action` to be performed, default is `insert`;
+ * @param {responseCallback} [callback] - optional callback function.
 
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'csv_url_load',
-          'action': `${ACTION}`,
-          'schema': `${SCHEMA_NAME}`,
-          'table': `${MODEL_NAME}`,
-          'csv_url': `${FILE_URL}`
-        })
+ * */
+
+model.prototype.importFromCsvFile = async function(options, callback) {
+  let res, data, err;
+  if (!options || !U._isObj(options)) {
+    throw new TypeError('options is required and must be object')
+  }
+  const ACTION = options && options.action ? options.action : 'insert';
+  const FILE_PATH = options.filePath
+  if (!FILE_PATH || !U._isStr(FILE_PATH)) {
+    throw new Error('filePath is required and it should be a string')
+  }
+
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'csv_file_load',
+        'action': `${ACTION}`,
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'file_path': `${FILE_PATH}`
       })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
 
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-      if (cb) cb(err, null);
-      throw (err)
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (cb) cb(null, await data);
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
+    }
+    else {
 
-    return await data
+      err = error;
+    }
+    if (callback) callback(err, null);
+    throw (err)
   }
-  /** response callback
-   * @callback responseCallback
-   * @param { * } err - returns an error or null if no errors.
-   * @param { * } data - returns the response data or null .
-   * */
+  if (callback) callback(null, await data);
 
-  /** Import data from your AWS S3 Bucket into a table.
-   * 
-   * @param { Object } options - an object that takes in `s3Key` your aws key ,`s3Secret` your aws secret key,`bucket` your aws bucket,and `filename` the name of the csv or json file.
-   * @param { string } options.s3Key - your aws key id.
-   * @param { string } options.s3Secret - your aws secret key.
-   * @param { string } options.bucket - your aws bucket.
-   * @param { string } options.filename - your csv pr json filename .
-   * @param { string } [options.action=insert] - the action to be performed `insert`,`update`,`upsert`. .
-   * @param {responseCallback} [cb] - an optional callback function;
-   * @return {promise} - returns a promise.
-   */
+  return await data
+}
+/*response callback
+ * @callback responseCallback
+ * @param { * } err - returns an error if any or null if no errors.
+ * @param { * } data - returns the response data if any or null .
+ * */
+/** Import data from an external CSV file.
+ * @param {Object} options - an `object` that takes in `action` and `fileUrl`
+ * @param {string} options.fileUrl - an absolute url of the csv file.
+ * @param {string} [options.action=insert] - optional `action` to be performed, default is `insert`;
+ *@param {responseCallback} [callback] - optional callback function
 
-  this.importFromS3 = async function(options, cb) {
-    let res, data, err;
-    const ACTION = options.action ? options.action : 'insert';
-    const s3Key = options.s3Key;
-    const s3Secret = options.s3Secret;
-    const s3Bucket = options.bucket;
-    const s3Filename = options.filename;
-    if (!s3Key || !s3Secret || !s3Bucket || !s3Filename) {
-      throw new Error('s3key, s3Secret, bucket and filename are required ');
+ * */
+model.prototype.importFromCsvUrl = async function(options, callback) {
+  let res, data, err;
+  if (!options || !U._isObj(options)) {
+    throw new TypeError('options is required and must be object')
+  }
+
+  const ACTION = options && options.action ? options.action : 'insert'
+  const FILE_URL = options.fileUrl;
+  if (!FILE_URL || !U._isStr(FILE_URL)) {
+    throw new Error('fileUrl is required and it should be string')
+  }
+
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'csv_url_load',
+        'action': `${ACTION}`,
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'csv_url': `${FILE_URL}`
+      })
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
+
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (s3Filename && (U._getExtname(s3Filename) !== 'csv' || U._getExtname(s3Filename) !== 'json')) {
-      throw new Error('the file extension is invalid , only a .csv or .json file is acceptable')
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
     }
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'import_from_s3',
-          'action': `${ACTION}`,
-          'schema': `${SCHEMA_NAME}`,
-          'table': `${MODEL_NAME}`,
-          's3': `{
+    else {
+
+      err = error;
+    }
+    if (callback) callback(err, null);
+    throw (err)
+  }
+  if (callback) callback(null, await data);
+
+  return await data
+}
+/* response callback
+ * @callback responseCallback
+ * @param { * } err - returns an error or null if no errors.
+ * @param { * } data - returns the response data or null .
+ * */
+
+/** Import data from your AWS S3 Bucket into a table.
+ * 
+ * @param { Object } options - an object that takes in `s3Key` your aws key ,`s3Secret` your aws secret key,`bucket` your aws bucket,and `filename` the name of the csv or json file.
+ * @param { string } options.s3Key - your aws key id.
+ * @param { string } options.s3Secret - your aws secret key.
+ * @param { string } options.bucket - your aws bucket.
+ * @param { string } options.filename - your csv pr json filename .
+ * @param { string } [options.action=insert] - the action to be performed `insert`,`update`,`upsert`. .
+ * @param {responseCallback} [callback] - an optional callback function;
+ * 
+ */
+
+model.prototype.importFromS3 = async function(options, callback) {
+  let res, data, err;
+  if (!U._isObj(options)) {
+    throw new TypeError('options must be an object');
+  }
+  const ACTION = options.action ? options.action : 'insert';
+  const s3Key = options.s3Key;
+  const s3Secret = options.s3Secret;
+  const s3Bucket = options.bucket;
+  const s3Filename = options.filename;
+  if (!s3Key || !s3Secret || !s3Bucket || !s3Filename) {
+    throw new Error('s3key, s3Secret, bucket and filename are required ');
+  }
+  if (s3Filename && (U._getExtname(s3Filename) !== 'csv' || U._getExtname(s3Filename) !== 'json')) {
+    throw new Error('the file extension is invalid , only a .csv or .json file is acceptable')
+  }
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'import_from_s3',
+        'action': `${ACTION}`,
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        's3': `{
           'aws_access_key_id':'${s3Key}',
           'aws_secret_access_key':'${s3Secret}',
           'bucket':'${s3Bucket}',
           'key':'${s3Filename}'
             }`
-        })
       })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
 
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-      if (cb) cb(err, null);
-      throw (err)
+      err = { message: error.message, data: error.request.response, status: error.request.status }
     }
-    if (cb) cb(null, await data);
-
-    return await data
-  }
-
-  /** response callback.
-   * @callback responseCallback
-   * @param { * } err - returns an error if any or null if no errors.
-   * @param { * } data - returns the response data if any or null .
-   * */
-  /** Deletes every data from the table, use this with caution;
-   * 
-   * @param {responseCallback} [cb] - an optional callback function.
-   * @return {promise} - returns a promise;
-   */
-  this.clearAll = async function(cb) {
-    let res, data, err;
-
-    try {
-      res = await axios({
-        data: JSON.stringify({
-          'operation': 'sql',
-          'sql': `DELETE FROM ${SCHEMA_NAME}.[${MODEL_NAME}]`
-        })
-      })
-      data = res.data;
-    } catch (error) {
-      if (error.request) {
-
-        err = { message: error.message, data: error.request.response, status: error.request.status }
-      }
-      else if (error.response) {
-        err = { message: error.message, data: error.response.data, status: error.response.status }
-      }
-      else {
-
-        err = error;
-      }
-      if (cb) cb(err, null);
-      throw (err)
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
     }
-    if (cb) cb(null, await data);
+    else {
 
-    return await data
+      err = error;
+    }
+    if (callback) callback(err, null);
+    throw (err)
   }
+  if (callback) callback(null, await data);
 
+  return await data
 }
-module.exports= Model;
 
-//harp.connect({ host: 'https://hashnode-lv.harperdbcloud.com', token: 'dmVlazpAdmVlay4yNDc=' })
+/** response callback.
+ * @callback responseCallback
+ * @param { * } err - returns an error if any or null if no errors.
+ * @param { * } data - returns the response data if any or null .
+ * */
+/** Deletes every data from the table, use this with caution;
+ * 
+ * @param {responseCallback} [callback] - an optional callback function.
+ * 
+ */
+model.prototype.clearAll = async function(callback) {
+  let res, data, err;
+
+  try {
+    res = await AXIOS({
+      data: JSON.stringify({
+        'operation': 'sql',
+        'sql': `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}]`
+      })
+    })
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
+
+      err = { message: error.message, data: error.request.response, status: error.request.status }
+    }
+    else if (error.response) {
+      err = { message: error.message, data: error.response.data, status: error.response.status }
+    }
+    else {
+
+      err = error;
+    }
+    if (callback) callback(err, null);
+    throw (err)
+  }
+  if (callback) callback(null, await data);
+
+  return await data
+}
+
+module.exports = model;

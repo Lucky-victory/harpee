@@ -59,6 +59,30 @@ const Utils = {
       return false
     }
   },
+  /** Checks if the value is a Undefined.
+   * @param { * } val - the value to be checked
+   * */
+
+  _isUndefined: function(val) {
+    if (Object.prototype.toString.call(val) === '[object Undefined]' || typeof val === 'undefined') {
+      return true
+    }
+    else {
+      return false
+    }
+  },
+  /** Checks if the value is a Null.
+   * @param { * } val - the value to be checked
+   * */
+
+  _isNull: function(val) {
+    if (Object.prototype.toString.call(val) === '[object Null]') {
+      return true
+    }
+    else {
+      return false
+    }
+  },
   /** Checks if the value is a Date.
    * @param { * } date - the value to be checked
    * */
@@ -75,7 +99,7 @@ const Utils = {
    * @param { string } str - the string to find .
    * 
    * */
-  _itHasStr: function(STR = '', str = '') {
+  _itHasStr: function(STR, str) {
     if (STR.toLowerCase().includes(str.toLowerCase())) {
       return true
     }
@@ -88,7 +112,7 @@ const Utils = {
    * @param { string } str - the string to find .
    * 
    * */
-  _sameStrStrict: function(STR = '', str = '') {
+  _sameStrStrict: function(STR, str) {
     if (STR.toLowerCase().trim() === str.toLowerCase().trim()) {
       return true
     }
@@ -110,7 +134,7 @@ const Utils = {
 
     }
     else {
-      throw new TypeError('argument should be an array or an object');
+      console.error('argument should be an array or an object');
 
     }
   },
@@ -125,7 +149,7 @@ const Utils = {
       return false
     }
   },
-  /** Splits an object into another object of `keys` array and `values` array.
+  /** Splits an object to an object of `keys` array and `values` array.
    * @param { object} obj - the object to be splitted.
    * */
   _splitObj: function(obj) {
@@ -135,6 +159,18 @@ const Utils = {
       keys.push(key);
       values.push(obj[key])
     }
+    return { keys, values }
+  },
+  /** Splits an object to an object of `keys` sorted array and `values` sorted array .
+   * @param { object} obj - the object to be splitted.
+   * */
+  _splitObjSorted: function(obj) {
+    const keys = [],
+      values = [];
+    Object.keys(obj).sort().forEach(function(key) {
+      keys.push(key);
+      values.push(obj[key])
+    });
     return { keys, values }
   },
   /** Splits a string by a seperator and returns the last string
@@ -195,6 +231,12 @@ const Utils = {
     else if (Utils._isDate(arg) || arg === Date) {
       type = 'Date';
     }
+    else if (Utils._isNull(arg) || arg === null) {
+      type = 'Null';
+    }
+    else if (Utils._isUndefined(arg) || arg === undefined) {
+      type = 'Undefined';
+    }
     else {
       type = 'Unknown';
     }
@@ -204,19 +246,33 @@ const Utils = {
   /**Finds a string in an array and returns true or false.
    * @param {string[]} arr - an array of string.
    * @param { string } str - the string to find in the array.
-  */
+   */
   _findStr: function(arr, str) {
-    let logic ;
+    let itHas;
     arr.find((val) => {
       if (val.toLowerCase().trim() === str.toLowerCase().trim()) {
-        logic = true
+        itHas = true
       }
       else {
-        logic = false
+        itHas = false
       }
-      return logic
+      return itHas
     });
-    return logic
+    return itHas
+  },
+  /**Checks if an array includes a certain  string and returns true or false.
+   * @param {string[]} arr - an array of string.
+   * @param { string } str - the string to find in the array.
+   */
+  _findStrInArr: function(arr, str) {
+    let itHas;
+    if (arr.includes(str)) {
+      itHas = true
+    }
+    else {
+      itHas = false
+    }
+    return itHas
   },
   /** returns indexes of same value in an array.
    * @param { array } arr - the array to perform the operation on.
@@ -235,5 +291,4 @@ const Utils = {
 
 }
 
-
-//module.exports=Utils;
+module.exports = Utils;
