@@ -78,7 +78,7 @@ function model(modelName, schema) {
           }
         });
       };
-      const RUN_TABLE = async function (res) {
+      const RUN_TABLE = async function (resp) {
         await DESCRIBE_DB().then((res) => {
           let result;
           result = res;
