@@ -16,10 +16,10 @@ declare function connect(options: {
 export = Schema
 /** creates a schema .
  *
- * @param {Object} options - an object takes in `name` and `fields` .
+ * @param {Object} options - an object that takes in `name` and `fields` .
  * @param {string } [options.name=defaultShema] - the name of your schema.
  * @param {Object} options.fields - an object to specify the table columns.
- * @returns {Object} - returns an object.
+ * @returns {Object} - returns an object to be used as the second parameter of `model`.
  **/
 declare function Schema(options: {
     name?: string;
@@ -31,7 +31,7 @@ export = model;
  * @param {string} modelName - the `modelName` is used to create a table.
  *
  * @param {object} schema - an `object` returned from `Schema` function;
- * @param {string} [schema.name] - an `object` returned from `Schema` function;
+ * @param {string} [schema.name] - an string returned from `Schema` function;
  * @param {object} schema.fields - an `object` returned from `Schema` function;
  *
  *

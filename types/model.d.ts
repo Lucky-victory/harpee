@@ -28,9 +28,7 @@ declare class model {
         name?: string;
         fields: object;
     });
-    SCHEMA_NAME: string;
-    MODEL_NAME: string;
-    SCHEMA_FIELDS: object;
+    
     /** Gets all data from a table.
      * @param {(any[] | string[]) } arr - an empty array or an array of strings.
      * @param {responseCallback} [callback] - an optional callback function.
