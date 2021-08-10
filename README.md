@@ -116,7 +116,15 @@ const Articles = new harpee.model("Article",ArticleSchema);
 ```
 
    **model** has the following methods. all model methods supports both callbacks and promises, the callback function takes two parameters `err` and `data`
-  - `find` : 
+  - `find` : the **find** method returns all data from the table. to do this, pass an empty array `[]` or wildcard `["*"]` as the first argument, you can also choose to return specific data, for example, in order to return only *Articles titles*, 
+  ```
+  // this will return only Articles titles.
+  Articles.find(["title"],(err,data)=>{
+    console.log(data)
+  })
+  ```
+  - `findById` : the **findById** method returns a single data, based on the specified `id`, 
+
 ### Bugs or Feature Request.
 For bugs or feature request, please create an [issue](https://github.com/lucky-victory/harpee/issues) on github.
 
