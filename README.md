@@ -99,7 +99,7 @@ Users.findById({user_id:1},(err,data)=>{
    - `fields` *Type - Object* : this option represents the table columns that will be created in your database,
   > Note: the properties and data-types declared in **fields** must be same with properties and data-types that will be specified at `model.create()`, otherwise an error will be thrown. 
 ```js
-const ArticleSchema = harpee.Schema({name:MyArticlesSchema},fields:{
+const ArticleSchema = harpee.Schema({name:"MyArticlesSchema"},fields:{
   title:String,
   author:String,
   body:{type:String,required:true},
