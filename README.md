@@ -118,7 +118,7 @@ const Articles = new harpee.model("Article",ArticleSchema);
    **model** has the following methods. all model methods supports both callbacks and promises, the callback function takes two parameters `err` and `data`.
   - `create`: inserts new data into the table, takes in an object of the data to be created. **whenever you create a new data, an id is automatically generated**.
 
-  ```
+  ```js
   // inserts new data into Articles table.
   Articles.create({title:"post 1", 
   author:"lucky",
