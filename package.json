@@ -1,6 +1,6 @@
 {
   "name": "harpee",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "harpee is an asynchronous Object modeling tool for HarperDB, harpee supports both callbacks and Promise.",
   "main": "harpee.js",
   "types": "./types/harpee.d.ts",
