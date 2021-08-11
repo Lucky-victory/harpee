@@ -243,7 +243,7 @@ model.prototype.findByIdAndRemove = async function (id, callback) {
 };
 
 /** updates the table with new data on the specified `id`.
- * @param {(string | object | string[])} id - a string of id or an object specifying the id key & value(string).
+ * @param {( object | string[])} id - a string of id or an object specifying the id key & value(string).
  * @param {object} obj - an object of the new data to be updated.
  * @param { responseCallback} [callback] - an optional callback function.
  *

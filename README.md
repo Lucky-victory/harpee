@@ -115,7 +115,18 @@ const Articles = new harpee.model("Article",ArticleSchema);
 
 ```
 
-   **model** has the following methods. all model methods supports both callbacks and promises, the callback function takes two parameters `err` and `data`
+   **model** has the following methods. all model methods supports both callbacks and promises, the callback function takes two parameters `err` and `data`.
+  - `create`: inserts new data into the table, takes in an object of the data to be created. **whenever you create a new data, an id is automatically generated**.
+
+  ```
+  // inserts new data into Articles table.
+  Articles.create({title:"post 1", 
+  author:"lucky",
+  body:"lorem ipsum dot set amor",
+  publishDate:new Date()
+    
+  })
+  ```
   - `find` : the **find** method returns all data from the table. to do this, pass an empty array `[]` or wildcard `["*"]` as the first argument, you can also choose to return specific data, for example, in order to return only *Articles titles*, 
   ```js
   // this will return only Articles titles.
@@ -123,13 +134,28 @@ const Articles = new harpee.model("Article",ArticleSchema);
     console.log(data)
   })
   ```
-  - `findById` : the **findById** method returns a single data, based on the specified `id`, 
-  - `findByIdAndRemove` : deletes a single data from the table based on the specified `id`.
-  - `update`: updates the table with the new data based on the specified id.
-  - `importFromCsv`: plain csv data to be inserted into the table.
-  - `importFromCsvFile`: import a .csv file to be inserted into the table, *Note: this only works when using harperdb locally not the cloud instance*.
-  - `importFromCsvUrl`: import a .csv file to be inserted into the table from an external Url.
-  - `importFromS3`: import a .csv or .json file from your AWS S3 bucket.
+  - `findById` : the **findById** method returns a single data, based on the specified `id`, takes in an object of id key and value or an array of id string. 
+  - `findByIdAndRemove` *param - Object* : deletes a single data from the table based on the specified `id`, takes in an *Object* of id key and value or an *Array* of id string.
+  - `update`: updates the table with the new data based on the specified id, takes in the following.
+    - `id`: an object of id key and value or an array of id string.
+    - `obj`: an object with the data to be updated.
+  - `importFromCsv` *param - Object*: plain csv data to be inserted into the table.
+    - `csv`:a well formatted plain csv string.   
+    - `action`: *optional*, the action to be performed, default is 'insert'.
+
+  - `importFromCsvFile` *param - Object*: import a .csv file to be inserted into the table, *Note: this only works when using harperdb locally not the cloud instance*.
+    - `filePath`: a relative path to the local file. 
+    - `action`: *optional*, the action to be performed, default is 'insert'.
+ 
+  - `importFromCsvUrl` *param - Object*: import a .csv file to be inserted into the table from an external Url, this method takes in the following.
+    - `fileUrl`: an absolute url ( with file extension) where the file lives.
+    - `action`: *optional*, the action to be performed, default is 'insert'.
+  - `importFromS3` *param - Object*: import a .csv or .json file from your AWS S3 bucket, this method takes in the following,
+    - `s3Key`: your aws access key id.
+    - `s3Secret`: your aws secret access key.
+    - `bucket`: your aws s3 bucket where the file lives.
+    - `filename`: a .csv or .json file.
+    - `action`: *optional*, the action to be performed, default is 'insert'.
   - `clearAll`: *Use this with caution*, deletes all data from the table.
 ### Bugs or Feature Request.
 For bugs or feature request, please create an [issue](https://github.com/lucky-victory/harpee/issues) on github.

@@ -74,18 +74,18 @@ declare class model {
      * */
     findByIdAndRemove(id: (string | object), callback?: responseCallback): Promise<any>;
     /** updates the table with new data on the specified `id`.
-     * @param {(string | object | string[])} id - a string of id or an object specifying the id key & value(string).
+     * @param {( object | string[])} id - a string of id or an object specifying the id key & value(string).
      * @param {object} obj - an object of the new data to be updated.
      * @param { responseCallback} [callback] - an optional callback function.
      *
      * */
-    update(id: (string | object | string[]), obj: object, callback?: responseCallback): Promise<any>;
+    update(id: (object | string[]), obj: object, callback?: responseCallback): Promise<any>;
     /** inserts new data to the table.
      * @param {Object} obj - an object of the new data to be inserted.
      * @param { responseCallback} [callback] - an optional callback function.
      *
      * */
-    create(obj: Object, callback?: responseCallback): Promise<any>;
+    create(obj: object, callback?: responseCallback): Promise<any>;
     /** Import data from plain CSV.
      * @param {Object} options - an `object` that takes in `action` and `csv`.
      * @param {string} options.csv - plain CSV string.
