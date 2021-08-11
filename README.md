@@ -161,4 +161,4 @@ const Articles = new harpee.model("Article",ArticleSchema);
 For bugs or feature request, please create an [issue](https://github.com/lucky-victory/harpee/issues) on github.
 
 ### Support this project.
-Love this project? you can [Buy me a coffee](https://buymeacoffee.com/luckyvictory).
+Want to support this project? [![Buy me a coffee](https://raw.githubusercontent.com/Lucky-victory/folio/main/files/images/blue-button.png)](https://buymeacoffee.com/luckyvictory).
