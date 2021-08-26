@@ -90,7 +90,7 @@ function model(modelName, schema) {
         });
       
       };
-      RUN_SCHEMA().then((response) => RUN_TABLE(response));
+      await RUN_SCHEMA().then((response) => RUN_TABLE(response));
     })();
   }
 }
