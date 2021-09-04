@@ -25,7 +25,7 @@ declare function Schema(options: {
     name?: string;
     fields: Object;
 }): Object;
-export = model;
+export = Model;
 /** Creates a model for your project, the `modelName` represents a table in plural form.
  *
  * @param {string} modelName - the `modelName` is used to create a table.
@@ -36,11 +36,11 @@ export = model;
  *
  *
  */
-declare function model(modelName: string, schema: {
+declare function Model(modelName: string, schema: {
     name?: string;
     fields: object;
 }): void;
-declare class model {
+declare class Model {
     /** Creates a model for your project, the `modelName` represents a table in plural form.
      *
      * @param {string} modelName - the `modelName` is used to create a table.
@@ -148,7 +148,7 @@ declare class model {
      */
     clearAll(callback?: responseCallback): Promise<any>;
 }
-declare namespace model {
+declare namespace Model {
     export { responseCallback };
 }
 /**
