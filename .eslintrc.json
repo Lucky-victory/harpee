@@ -10,11 +10,15 @@
   },
   "rules": {
     "no-underscore-dangle": "off",
-    "no-undef": "off",
+    "no-undef": "warn",
+    "no-console":"off",
     "no-restricted-syntax": "off",
     "quotes": "off",
     "no-lonely-if": "off",
     "no-use-before-define": "off",
-    "object-shorthand": "off"
+    "object-shorthand": "off",
+    "func-names":"off",
+    "no-useless-catch":"off",
+    "consistent-return":"off"
   }
 }

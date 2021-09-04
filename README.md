@@ -42,7 +42,7 @@ harpee.connect({host:
 
 // create a model, the model name represents a table in plural form, if you declare "User" as your model name, a table of "Users" will be created.
 
-const Users = new harpee.model("User",myUsersSchema);
+const Users = new harpee.Model("User",myUsersSchema);
 
 ```
 ## Usage.
@@ -87,7 +87,7 @@ Users.findById({user_id:1},(err,data)=>{
 > To better understand how **Harpee** works, you should check out [HarperDB docs](https://harperdb.io/docs/overview/?utm_source=luckyvictory) to learn more about HarperDB.
 
 
-**Harpee** has 3 main functions, `connect`,`Schema`, and `model`;
+**Harpee** has 3 main functions, `connect`,`Schema`, and `Model`;
 - **connect** : the `connect` function creates a connection with your database. it takes in an object with the following properties.
   - `host` *Type - String* : your HarperDB url, *https://localhost:9925* or *https://xxxxxxxxxx.harperdbcloud.com*.
   - `username` *Type - String* : your HarperDB username.
@@ -107,15 +107,15 @@ const ArticleSchema = harpee.Schema({name:"MyArticlesSchema"},fields:{
 })
 ```
  
-- **model**: the `model` should be instantiated with `new` keyword. the model functions takes the following options.
+- **Model**: the `Model` should be instantiated with `new` keyword. the model functions takes the following options.
   - `modelName` *Type - Striníg* : this modelName represents a table in plural form, that is, if you specify **Article** as your modelName, a table called **Articles** will be created.
   - `schema` Type - Schema(Object) : this option takes in an Object returned from the `Schema` function.
 ```js
-const Articles = new harpee.model("Article",ArticleSchema);
+const Articles = new harpee.Model("Article",ArticleSchema);
 
 ```
 
-   **model** has the following methods. all model methods supports both callbacks and promises, the callback function takes two parameters `err` and `data`.
+   **Model** has the following methods. all model methods supports both callbacks and promises, the callback function takes two parameters `err` and `data`.
   - `create`: inserts new data into the table, takes in an object of the data to be created. **whenever you create a new data, an id is automatically generated**.
 
   ```js

@@ -1,12 +1,13 @@
 {
   "name": "harpee",
-  "version": "1.0.6",
+  "version": "2.0.1",
   "description": "harpee is an asynchronous Object modeling tool for HarperDB, harpee supports both callbacks and Promise.",
   "main": "harpee.js",
   "types": "./types/harpee.d.ts",
   "scripts": {
     "test": "jest --coverage",
-    "lint":"eslint . --fix"
+    "lint": "eslint . --fix",
+    "example": "cd example && node index.js"
   },
   "files": [
     "src",
@@ -25,7 +26,8 @@
   "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
