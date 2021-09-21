@@ -90,7 +90,42 @@ function Model(modelName, schema) {
     }());
   }
 }
+Model.prototype.query = async function (sqlQuery, callback) {
+  let res; let err; let
+    data;
+  try {
+    // @ts-ignore
+    res = await axios({
+      data: JSON.stringify({
+        operation: "sql",
+        sql: sqlQuery,
+      }),
+    });
+    data = res.data;
+  } catch (error) {
+    if (error.request) {
+      err = {
+        message: error.message,
+        data: error.request.response,
+        status: error.request.status,
+      };
+    } else if (error.response) {
+      err = {
+        message: error.message,
+        data: error.response.data,
+        status: error.response.status,
+      };
+    } else {
+      err = error;
+    }
 
+    if (callback) callback(err, null);
+    throw err;
+  }
+  if (callback) callback(null, await data);
+
+  return data;
+};
 Model.prototype.find = async function (arr, callback) {
   let findArr = arr;
   if (

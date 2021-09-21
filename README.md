@@ -1,3 +1,5 @@
+ # Changelog
+> As of version `2.1.0`, harpee now has a `.query()` method for executing custom sql queries. 
 
 # Introduction.
 **Harpee** is an asynchronous object modeling tool for [HarperDB](https://harperdb.io/?utm_source=luckyvictory), harpee supports both callbacks and promises.
@@ -139,6 +141,16 @@ const Articles = new harpee.Model("Article",ArticleSchema);
   - `update`: updates the table with the new data based on the specified id, takes in the following.
     - `id`: an object of id key and value or an array of id string.
     - `obj`: an object with the data to be updated.
+  - `query`: let's you write your custom sql queries.
+      - `sqlQuery`: *param - String*: a valid sql string.
+  ```js  
+  Model.query("SELECT * FROM defaultSchema.Articles LIMIT 5",(err,data)=>{
+    if(err) throw err;
+    console.log(data)
+  })
+  
+  ```
+
   - `importFromCsv` *param - Object*: plain csv data to be inserted into the table.
     - `csv`:a well formatted plain csv string.   
     - `action`: *optional*, the action to be performed, default is 'insert'.
@@ -157,6 +169,8 @@ const Articles = new harpee.Model("Article",ArticleSchema);
     - `filename`: a .csv or .json file.
     - `action`: *optional*, the action to be performed, default is 'insert'.
   - `clearAll`: *Use this with caution*, deletes all data from the table.
+
+
 ### Bugs or Feature Request.
 For bugs or feature request, please create an [issue](https://github.com/lucky-victory/harpee/issues) on github.
 

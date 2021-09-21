@@ -80,11 +80,19 @@ declare class Model {
      *
      * */
     update(id: (object | string[]), obj: object, callback?: responseCallback): Promise<any>;
+   
+    /** perform custom sql queries.
+     * @param {string} sqlQuery - a valid sql string.
+     * @param { responseCallback} [callback] - an optional callback function.
+     *
+     * */
+        query(sqlQuery:string, callback?: responseCallback): Promise<any>;
     /** inserts new data to the table.
      * @param {Object} obj - an object of the new data to be inserted.
      * @param { responseCallback} [callback] - an optional callback function.
      *
      * */
+  
     create(obj: object, callback?: responseCallback): Promise<any>;
     /** Import data from plain CSV.
      * @param {Object} options - an `object` that takes in `action` and `csv`.
