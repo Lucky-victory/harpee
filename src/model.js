@@ -16,37 +16,23 @@ function Model(modelName, schema) {
   this.MODEL_NAME = MODEL_NAME;
 
   this.SCHEMA_FIELDS = schema && schema.fields;
-  if (schema && SCHEMA_NAME && MODEL_NAME) {
+  if (SCHEMA_NAME && MODEL_NAME) {
     (async function () {
-      const DESCRIBE_DB = async function () {
-        let result; let
-          res;
-        try {
-          // @ts-ignore
-          res = await axios({
-            data: JSON.stringify({
-              operation: "describe_all",
-            }),
-          });
-          result = res.data;
-        } catch (err) {
-          throw err;
-        }
-        return result;
-      };
-      const CREATE_SCHEMA = async function () {
-        // @ts-ignore
-        const res = await axios({
+ 
+     
+      try {
+        await axios({
           data: JSON.stringify({
             operation: "create_schema",
             schema: `${SCHEMA_NAME}`,
           }),
         });
-        return res.data;
-      };
-      const CREATE_TABLE = async function () {
+      } catch (err) {
+      // console.error(err);
+      }
+      try {
         // @ts-ignore
-        const res = await axios({
+        await axios({
           data: JSON.stringify({
             operation: "create_table",
             schema: `${SCHEMA_NAME}`,
@@ -54,39 +40,10 @@ function Model(modelName, schema) {
             hash_attribute: "id",
           }),
         });
-        return res.data;
-      };
-
-      const RUN_SCHEMA = async function () {
-        await DESCRIBE_DB().then((res) => {
-          const result = res;
-          const NO_SCHEMA = !Object.keys(result).includes(`${SCHEMA_NAME}`);
-
-          if (NO_SCHEMA) {
-            CREATE_SCHEMA();
-          }
-        });
-      };
-      const RUN_TABLE = async function () {
-        await DESCRIBE_DB().then((res) => {
-          const result = res;
-          const NO_TABLE = !Object.hasOwnProperty.call(result[SCHEMA_NAME], `${MODEL_NAME}`);
-
-          if (NO_TABLE) {
-            CREATE_TABLE();
-          }
-        });
-      };
-      try {
-        await RUN_SCHEMA();
       } catch (err) {
-        throw (err);
+        // console.error(err)
       }
-      try {
-        await RUN_TABLE();
-      } catch (err) {
-        throw (err);
-      }
+  
     }());
   }
 }
