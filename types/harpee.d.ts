@@ -87,12 +87,16 @@ declare class Model {
      *
      * */
         query(sqlQuery:string, callback?: responseCallback): Promise<any>;
+        /** Get details about a the table in use
+         *  @param { responseCallback} [callback] - an optional callback function.
+         * */
+          describeModel(callback?:responseCallback):Promise<any>;
+
     /** inserts new data to the table.
      * @param {Object} obj - an object of the new data to be inserted.
      * @param { responseCallback} [callback] - an optional callback function.
      *
      * */
-  
     create(obj: object, callback?: responseCallback): Promise<any>;
     /** Import data from plain CSV.
      * @param {Object} options - an `object` that takes in `action` and `csv`.
