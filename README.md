@@ -150,7 +150,7 @@ const Articles = new harpee.Model("Article",ArticleSchema);
   })
   
   ```
-
+  - `describeModel`: Returns details about the table (alias model), such as the the number of records on the table, etc.
   - `importFromCsv` *param - Object*: plain csv data to be inserted into the table.
     - `csv`:a well formatted plain csv string.   
     - `action`: *optional*, the action to be performed, default is 'insert'.
