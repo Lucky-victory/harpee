@@ -240,7 +240,7 @@ Model.prototype.findMany= async function (id,arr, callback) {
     res = await axios({
       data: JSON.stringify({
         operation: "sql",
-        sql: `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
+        sql: `SELECT ${findArr.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
       }),
     });
     data = res.data;
