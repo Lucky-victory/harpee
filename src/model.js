@@ -96,6 +96,10 @@ Model.prototype.describeModel = async function (callback) {
       }),
     });
     data = res.data;
+  if (callback) callback(null, await data);
+    
+  return data;
+    
   } catch (error) {
     if (error.request) {
       err = {
@@ -116,9 +120,7 @@ Model.prototype.describeModel = async function (callback) {
     if (callback) callback(err, null);
     throw err;
   }
-  if (callback) callback(null, await data);
 
-  return data;
 };
 
 Model.prototype.find = async function (arr, callback) {
@@ -143,6 +145,9 @@ Model.prototype.find = async function (arr, callback) {
       }),
     });
     data = res.data;
+  if (callback) callback(null, await data);
+  return data;
+    
   } catch (error) {
     if (error.request) {
       err = {
@@ -161,11 +166,9 @@ Model.prototype.find = async function (arr, callback) {
     }
 
     if (callback) callback(err, null);
-    throw err;
+    throw(err);
   }
-  if (callback) callback(null, await data);
 
-  return data;
 };
 
 Model.prototype.findById = async function (id, callback) {
@@ -183,10 +186,14 @@ Model.prototype.findById = async function (id, callback) {
     res = await axios({
       data: JSON.stringify({
         operation: "sql",
-        sql: `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}='${idValue}'`,
+        sql: `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data[0]);
+
+  return data[0];
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -205,11 +212,62 @@ Model.prototype.findById = async function (id, callback) {
     }
 
     if (callback) callback(err, null);
-    throw err;
+    throw(err);
   }
-  if (callback) callback(null, await data[0]);
+};
+Model.prototype.findMany= async function (id,arr, callback) {
+  let res;
+  let data;
+  let err;
+  let idKey = "id";
+  let idValue = id;
+    let findArr = arr;
+  
+  if (U._isObj(id)) {
+    idKey = U._splitObj(id).keys.join(",");
+    idValue = U._splitObj(id).values.join('","');
+  }
+  if (
+    !U._isArray(arr)
+    || U._isEmpty(arr)
+    || (arr.length && arr[0] === "*".trim())
+  ) {
+    findArr = ["*"];
+  }
 
-  return data[0];
+  try {
+    // @ts-ignore
+    res = await axios({
+      data: JSON.stringify({
+        operation: "sql",
+        sql: `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
+      }),
+    });
+    data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
+  } catch (error) {
+    if (error.request) {
+      err = {
+        message: error.message,
+        data: error.request.response,
+        status: error.request.status,
+      };
+    } else if (error.response) {
+      err = {
+        message: error.message,
+        data: error.response.data,
+        status: error.response.status,
+      };
+    } else {
+      err = error;
+    }
+
+    if (callback) callback(err, null);
+    return err;
+  }
 };
 
 Model.prototype.findByIdAndRemove = async function (id, callback) {
@@ -232,6 +290,10 @@ Model.prototype.findByIdAndRemove = async function (id, callback) {
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -249,11 +311,8 @@ Model.prototype.findByIdAndRemove = async function (id, callback) {
       err = error;
     }
     if (callback) callback(err, null);
-    throw err;
+    return err;
   }
-  if (callback) callback(null, await data);
-
-  return data;
 };
 
 Model.prototype.update = async function (id, obj, callback) {
@@ -285,6 +344,10 @@ Model.prototype.update = async function (id, obj, callback) {
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -303,11 +366,8 @@ Model.prototype.update = async function (id, obj, callback) {
     }
 
     if (callback) callback(err, null);
-    throw err;
+    return err;
   }
-  if (callback) callback(null, await data);
-
-  return data;
 };
 
 Model.prototype.create = async function (obj, callback) {
@@ -328,6 +388,10 @@ Model.prototype.create = async function (obj, callback) {
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -346,11 +410,8 @@ Model.prototype.create = async function (obj, callback) {
     }
 
     if (callback) callback(err, null);
-    throw err;
+    return err;
   }
-  if (callback) callback(null, await data);
-
-  return data;
 };
 
 Model.prototype.importFromCsv = async function (options, callback) {
@@ -374,6 +435,10 @@ Model.prototype.importFromCsv = async function (options, callback) {
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -391,11 +456,8 @@ Model.prototype.importFromCsv = async function (options, callback) {
       err = error;
     }
     if (callback) callback(err, null);
-    throw err;
+    return err;
   }
-  if (callback) callback(null, await data);
-
-  return data;
 };
 
 Model.prototype.importFromCsvFile = async function (options, callback) {
@@ -422,6 +484,10 @@ Model.prototype.importFromCsvFile = async function (options, callback) {
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -439,11 +505,8 @@ Model.prototype.importFromCsvFile = async function (options, callback) {
       err = error;
     }
     if (callback) callback(err, null);
-    throw err;
+    return err;
   }
-  if (callback) callback(null, await data);
-
-  return data;
 };
 
 Model.prototype.importFromCsvUrl = async function (options, callback) {
@@ -471,6 +534,10 @@ Model.prototype.importFromCsvUrl = async function (options, callback) {
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -488,11 +555,8 @@ Model.prototype.importFromCsvUrl = async function (options, callback) {
       err = error;
     }
     if (callback) callback(err, null);
-    throw err;
+    return err;
   }
-  if (callback) callback(null, await data);
-
-  return data;
 };
 
 Model.prototype.importFromS3 = async function (options, callback) {
@@ -535,6 +599,10 @@ Model.prototype.importFromS3 = async function (options, callback) {
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -552,11 +620,8 @@ Model.prototype.importFromS3 = async function (options, callback) {
       err = error;
     }
     if (callback) callback(err, null);
-    throw err;
+    return err;
   }
-  if (callback) callback(null, await data);
-
-  return data;
 };
 
 /** Deletes every data from the table, use this with caution;
@@ -577,6 +642,10 @@ Model.prototype.clearAll = async function (callback) {
       }),
     });
     data = res.data;
+      if (callback) callback(null, await data);
+
+  return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -594,11 +663,8 @@ Model.prototype.clearAll = async function (callback) {
       err = error;
     }
     if (callback) callback(err, null);
-    throw err;
+  return err;
   }
-  if (callback) callback(null, await data);
-
-  return data;
 };
 
 module.exports = Model;
