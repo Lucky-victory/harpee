@@ -1,5 +1,6 @@
 // @ts-ignore
 const Utils = require("./utils");
+const validateTypes=require('./validateTypes');
 
 function validator(fields, newData) {
   const FIELDS_TYPES = [];
@@ -57,23 +58,6 @@ function validator(fields, newData) {
   });
 }
 
-function validateTypes({ types, dataTypes, dataKeys, fieldsType }) {
-  const TYPES_INDEX = Utils._findMultipleIndex(types, false);
-
-  if (TYPES_INDEX.length) {
-    for (const NOT_SAME of TYPES_INDEX) {
-      const DATA_VALUE_TYPE = Utils._getType(dataTypes[NOT_SAME]);
-
-      const DATA_KEY = dataKeys[NOT_SAME];
-
-      const FIELD_VALUE_TYPE = Utils._getType(fieldsType[NOT_SAME]);
-
-      throw new Error(
-        `you are trying to assign '${DATA_VALUE_TYPE}', to '${DATA_KEY}', that has a data type of ' ${FIELD_VALUE_TYPE} '`
-      );
-    }
-  }
-}
 
 function validateDataKeysLength({ dataKeys, fieldsKeys }) {
   if (dataKeys.length > fieldsKeys.length) {
