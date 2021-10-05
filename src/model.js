@@ -16,6 +16,8 @@ function Model(modelName, schema) {
   this.MODEL_NAME = MODEL_NAME;
 
   this.SCHEMA_FIELDS = schema && schema.fields;
+  const PRIMARY_KEY = schema.primary_key;
+  this.PRIMARY_KEY =PRIMARY_KEY;
   if (SCHEMA_NAME && MODEL_NAME) {
     (async function () {
  
