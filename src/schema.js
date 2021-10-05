@@ -3,7 +3,7 @@ const U = require('../utils/helpers');
  *
  * @param {Object} options - an object takes in `name` and `fields` .
  * @param {string } [options.name=defaultShema] - the name of your schema.
- * @param {string } [options.primary_key=id] - a primary key for your table.
+ * @param {string } [options.primary_key=id] - a primary key for your tables.
  * @param {object} options.fields - an object to specify the table columns.
  * @returns {object} - returns an object.
  * */
