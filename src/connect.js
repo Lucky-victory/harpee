@@ -1,4 +1,4 @@
-const U = require("../utils/helpers");
+const U = require("../helpers/utils");
 const axios = require("axios");
 /** Create a Connection to your database.
  * @param {object} options - An object that takes in `host`, `username`,`password` and `token`.
