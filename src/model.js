@@ -39,7 +39,7 @@ function Model(modelName, schema) {
             operation: "create_table",
             schema: `${SCHEMA_NAME}`,
             table: `${MODEL_NAME}`,
-            hash_attribute: "id",
+            hash_attribute: `${PRIMARY_KEY}`,
           }),
         });
       } catch (err) {
@@ -687,7 +687,7 @@ Model.prototype.clearAll = async function(callback) {
   }
 };
 `SELECT * FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' FETCH NEXT '+ LIMIT +' ROWS': ''} ${OFFSET ? ' OFFSET '+ OFFSET+' ROWS' : ''} `
-`SELECT ${GET_ATTR.join(',')} FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${OFFSET ? ' OFFSET '+ OFFSET : ''} ${ORDERBY ? ' ORDER BY '+ORDERBY : ' ORDER BY id '} ${DESC ? ' DESC ' : ' ASC '} `
+`SELECT ${GET_ATTR.join(',')} FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${OFFSET ? ' OFFSET '+ OFFSET : ''} ${ORDERBY ? ' ORDER BY '+ORDERBY : ' ORDER BY '+this.PRIMARY_KEY} ${DESC ? ' DESC ' : ' ASC '} `
 `{
   desc?:boolean,
   offset?:number,
