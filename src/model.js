@@ -1,6 +1,6 @@
 const axios = require("axios");
-const U = require("../utils/helpers");
-const VALIDATOR = require("../utils/validators");
+const U = require("../helpers/utils");
+const VALIDATOR = require("../helpers/validators");
 
 function Model(modelName, schema) {
   if (!modelName || !U._isStr(modelName)) {
