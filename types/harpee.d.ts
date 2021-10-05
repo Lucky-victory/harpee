@@ -33,14 +33,17 @@ export = Model;
  * @param {string} modelName - the `modelName` is used to create a table.
  *
  * @param {object} schema - an `object` returned from `Schema` function;
- * @param {string} [schema.name] - an string returned from `Schema` function;
+ * @param {string} schema.name - a string returned from `Schema` function;
+  * @param {string} schema.primary - a `string` returned from `Schema` function;
+
  * @param {object} schema.fields - an `object` returned from `Schema` function;
  *
  *
  */
 declare function Model(modelName: string, schema: {
-    name?: string;
+    name: string;
     fields: object;
+    primary_key:string;
 }): void;
 declare class Model {
     /** Creates a model for your project, the `modelName` represents a table in plural form.
@@ -48,14 +51,16 @@ declare class Model {
      * @param {string} modelName - the `modelName` is used to create a table.
      *
      * @param {object} schema - an `object` returned from `Schema` function;
-     * @param {string} [schema.name] - an `object` returned from `Schema` function;
+     * @param {string} schema.name - a `string` returned from `Schema` function;
+     * @param {string} schema.primary - a `string` returned from `Schema` function;
      * @param {object} schema.fields - an `object` returned from `Schema` function;
      *
      *
      */
     constructor(modelName: string, schema: {
-        name?: string;
+        name: string;
         fields: object;
+        primary_key:string;
     });
     /** Gets all data from a table.
      * @param {(any[] | string[]) } arr - an empty array or an array of strings.
@@ -68,15 +73,15 @@ declare class Model {
      * @param { responseCallback} [callback] - an optional callback function.
      *
      * */
-    findById(id: (string | object), callback?: responseCallback): Promise<any>;
+    findById(id: object, callback?: responseCallback): Promise<any>;
     /** deletes data from the table based on the specified `id`.
-     * @param {(string | object )} id - a string of id or an object specifying the id key & value(string).
+     * @param {object } id - an object specifying the id key value pairs.
      * @param { responseCallback} [callback] - an optional callback function.
      *
      * */
-    findByIdAndRemove(id: (string | object), callback?: responseCallback): Promise<any>;
+    findByIdAndRemove(id: object, callback?: responseCallback): Promise<any>;
     /** updates the table with new data on the specified `id`.
-     * @param {( object | string[])} id - a string of id or an object specifying the id key & value(string).
+     * @param {( object | string[])} id - a string of id or an object specifying the id key value pairs.
      * @param {object} obj - an object of the new data to be updated.
      * @param { responseCallback} [callback] - an optional callback function.
      *
@@ -95,7 +100,7 @@ declare class Model {
           describeModel(callback?:responseCallback):Promise<any>;
 
     /** inserts new data to the table.
-     * @param {Object} obj - an object of the new data to be inserted.
+     * @param {object} obj - an object of the new data to be inserted.
      * @param { responseCallback} [callback] - an optional callback function.
      *
      * */
