@@ -17,11 +17,11 @@ function Model(modelName, schema) {
 
   this.SCHEMA_FIELDS = schema && schema.fields;
   const PRIMARY_KEY = schema.primary_key;
-  this.PRIMARY_KEY =PRIMARY_KEY;
+  this.PRIMARY_KEY = PRIMARY_KEY;
   if (SCHEMA_NAME && MODEL_NAME) {
-    (async function () {
- 
-     
+    (async function() {
+
+
       try {
         await axios({
           data: JSON.stringify({
@@ -30,7 +30,7 @@ function Model(modelName, schema) {
           }),
         });
       } catch (err) {
-      // console.error(err);
+        // console.error(err);
       }
       try {
         // @ts-ignore
@@ -45,12 +45,14 @@ function Model(modelName, schema) {
       } catch (err) {
         // console.error(err)
       }
-  
+
     }());
   }
 }
-Model.prototype.query = async function (sqlQuery, callback) {
-  let res; let err; let
+Model.prototype.query = async function(sqlQuery, callback) {
+  let res;
+  let err;
+  let
     data;
   try {
     // @ts-ignore
@@ -85,8 +87,10 @@ Model.prototype.query = async function (sqlQuery, callback) {
 
   return data;
 };
-Model.prototype.describeModel = async function (callback) {
-  let res; let err; let
+Model.prototype.describeModel = async function(callback) {
+  let res;
+  let err;
+  let
     data;
   try {
     // @ts-ignore
@@ -94,14 +98,14 @@ Model.prototype.describeModel = async function (callback) {
       data: JSON.stringify({
         operation: "describe_table",
         schema: `${this.SCHEMA_NAME}`,
-        table:`${this.MODEL_NAME}`
+        table: `${this.MODEL_NAME}`
       }),
     });
     data = res.data;
-  if (callback) callback(null, await data);
-    
-  return data;
-    
+    if (callback) callback(null, await data);
+
+    return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -125,16 +129,18 @@ Model.prototype.describeModel = async function (callback) {
 
 };
 
-Model.prototype.find = async function (arr, callback) {
+Model.prototype.find = async function(arr, callback) {
   let findArr = arr;
   if (
-    !U._isArray(arr)
-    || U._isEmpty(arr)
-    || (arr.length && arr[0] === "*".trim())
+    !U._isArray(arr) ||
+    U._isEmpty(arr) ||
+    (arr.length && arr[0] === "*".trim())
   ) {
     findArr = ["*"];
   }
-  let res; let err; let
+  let res;
+  let err;
+  let
     data;
   try {
     // @ts-ignore
@@ -147,9 +153,9 @@ Model.prototype.find = async function (arr, callback) {
       }),
     });
     data = res.data;
-  if (callback) callback(null, await data);
-  return data;
-    
+    if (callback) callback(null, await data);
+    return data;
+
   } catch (error) {
     if (error.request) {
       err = {
@@ -168,12 +174,12 @@ Model.prototype.find = async function (arr, callback) {
     }
 
     if (callback) callback(err, null);
-    throw(err);
+    throw (err);
   }
 
 };
 
-Model.prototype.findById = async function (id, callback) {
+Model.prototype.findById = async function(id, callback) {
   let res;
   let data;
   let err;
@@ -192,9 +198,9 @@ Model.prototype.findById = async function (id, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data[0]);
+    if (callback) callback(null, await data[0]);
 
-  return data[0];
+    return data[0];
 
   } catch (error) {
     if (error.request) {
@@ -214,25 +220,25 @@ Model.prototype.findById = async function (id, callback) {
     }
 
     if (callback) callback(err, null);
-    throw(err);
+    throw (err);
   }
 };
-Model.prototype.findMany= async function (id,arr, callback) {
+Model.prototype.findMany = async function(id, arr, callback) {
   let res;
   let data;
   let err;
   let idKey = "id";
   let idValue = id;
-    let findArr = arr;
-  
+  let findArr = arr;
+
   if (U._isObj(id)) {
     idKey = U._splitObj(id).keys.join(",");
     idValue = U._splitObj(id).values.join('","');
   }
   if (
-    !U._isArray(arr)
-    || U._isEmpty(arr)
-    || (arr.length && arr[0] === "*".trim())
+    !U._isArray(arr) ||
+    U._isEmpty(arr) ||
+    (arr.length && arr[0] === "*".trim())
   ) {
     findArr = ["*"];
   }
@@ -246,9 +252,9 @@ Model.prototype.findMany= async function (id,arr, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -272,7 +278,7 @@ Model.prototype.findMany= async function (id,arr, callback) {
   }
 };
 
-Model.prototype.findByIdAndRemove = async function (id, callback) {
+Model.prototype.findByIdAndRemove = async function(id, callback) {
   let res;
   let data;
   let err;
@@ -292,9 +298,9 @@ Model.prototype.findByIdAndRemove = async function (id, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -317,7 +323,7 @@ Model.prototype.findByIdAndRemove = async function (id, callback) {
   }
 };
 
-Model.prototype.update = async function (id, obj, callback) {
+Model.prototype.update = async function(id, obj, callback) {
   let res;
   let data;
   let err;
@@ -346,9 +352,9 @@ Model.prototype.update = async function (id, obj, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -372,8 +378,10 @@ Model.prototype.update = async function (id, obj, callback) {
   }
 };
 
-Model.prototype.create = async function (obj, callback) {
-  let res; let err; let
+Model.prototype.create = async function(obj, callback) {
+  let res;
+  let err;
+  let
     data;
   if (!U._isObj(obj)) {
     throw new TypeError("must be an object");
@@ -390,9 +398,9 @@ Model.prototype.create = async function (obj, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -416,8 +424,10 @@ Model.prototype.create = async function (obj, callback) {
   }
 };
 
-Model.prototype.importFromCsv = async function (options, callback) {
-  let res; let data; let
+Model.prototype.importFromCsv = async function(options, callback) {
+  let res;
+  let data;
+  let
     err;
   const CSV_DATA = options.csv;
   const ACTION = options && options.action ? options.action : "insert";
@@ -437,9 +447,9 @@ Model.prototype.importFromCsv = async function (options, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -462,8 +472,10 @@ Model.prototype.importFromCsv = async function (options, callback) {
   }
 };
 
-Model.prototype.importFromCsvFile = async function (options, callback) {
-  let res; let data; let
+Model.prototype.importFromCsvFile = async function(options, callback) {
+  let res;
+  let data;
+  let
     err;
   if (!options || !U._isObj(options)) {
     throw new TypeError("options is required and must be object");
@@ -486,9 +498,9 @@ Model.prototype.importFromCsvFile = async function (options, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -511,8 +523,10 @@ Model.prototype.importFromCsvFile = async function (options, callback) {
   }
 };
 
-Model.prototype.importFromCsvUrl = async function (options, callback) {
-  let res; let data; let
+Model.prototype.importFromCsvUrl = async function(options, callback) {
+  let res;
+  let data;
+  let
     err;
   if (!options || !U._isObj(options)) {
     throw new TypeError("options is required and must be object");
@@ -536,9 +550,9 @@ Model.prototype.importFromCsvUrl = async function (options, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -561,8 +575,10 @@ Model.prototype.importFromCsvUrl = async function (options, callback) {
   }
 };
 
-Model.prototype.importFromS3 = async function (options, callback) {
-  let res; let data; let
+Model.prototype.importFromS3 = async function(options, callback) {
+  let res;
+  let data;
+  let
     err;
   if (!U._isObj(options)) {
     throw new TypeError("options must be an object");
@@ -576,9 +592,9 @@ Model.prototype.importFromS3 = async function (options, callback) {
     throw new Error("s3key, s3Secret, bucket and filename are required ");
   }
   if (
-    s3Filename
-    && (U._getExtname(s3Filename) !== "csv"
-      || U._getExtname(s3Filename) !== "json")
+    s3Filename &&
+    (U._getExtname(s3Filename) !== "csv" ||
+      U._getExtname(s3Filename) !== "json")
   ) {
     throw new Error(
       "the file extension is invalid , only a .csv or .json file is acceptable",
@@ -601,9 +617,9 @@ Model.prototype.importFromS3 = async function (options, callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -631,8 +647,10 @@ Model.prototype.importFromS3 = async function (options, callback) {
  * @param {responseCallback} [callback] - an optional callback function.
  *
  */
-Model.prototype.clearAll = async function (callback) {
-  let res; let data; let
+Model.prototype.clearAll = async function(callback) {
+  let res;
+  let data;
+  let
     err;
 
   try {
@@ -644,9 +662,9 @@ Model.prototype.clearAll = async function (callback) {
       }),
     });
     data = res.data;
-      if (callback) callback(null, await data);
+    if (callback) callback(null, await data);
 
-  return data;
+    return data;
 
   } catch (error) {
     if (error.request) {
@@ -665,7 +683,7 @@ Model.prototype.clearAll = async function (callback) {
       err = error;
     }
     if (callback) callback(err, null);
-  return err;
+    return err;
   }
 };
 `SELECT * FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' FETCH NEXT '+ LIMIT +' ROWS': ''} ${OFFSET ? ' OFFSET '+ OFFSET+' ROWS' : ''} `
@@ -677,78 +695,76 @@ Model.prototype.clearAll = async function (callback) {
   attr:object,
   get_attr?:array
   }`
-Model.prototype.findByAttribute=async function(options,callback) {
-  if(!U._isObj(options)){
+Model.prototype.findByAttribute = async function(options, callback) {
+  if (!U._isObj(options)) {
     throw new TypeError('findByAttribute "options" param must be an object')
   }
-  if(!U._isObj(options.attr)){
+  if (!U._isObj(options.attr)) {
     throw new TypeError('"options.attr" property must be an object')
   }
-  if(options.get_attr && !U._isArray(options.get_attr)){
+  if (options.get_attr && !U._isArray(options.get_attr)) {
     throw new Error('"options.get_attr" must be an array')
   }
-  const GET_ATTR= options.get_attr ? options.get_attr : ['*'];
-  const obj={
-    attr:{category:'motivational'},
-    'get_attr':`string[]`,
-    
+  const GET_ATTR = options.get_attr ? options.get_attr : ['*'];
+  const obj = {
+    attr: { category: 'motivational' },
+    'get_attr': `string[]`,
+
   };
   let res;
-  try{
-  res=await axios(
+  try {
+    res = await axios(
     {
-      data:JSON.stringify({
-        'operation':'search_by_value',
-        'schema':`${this.SCHEMA_NAME}`,
-        'table':`${this.MODEL_NAME}`,
-        'search_attribute':`${obj.key}`,
-        'search_value':`${obj.val}`,
-        'get_attribute':['*']
+      data: JSON.stringify({
+        'operation': 'search_by_value',
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'search_attribute': `${obj.key}`,
+        'search_value': `${obj.val}`,
+        'get_attribute': ['*']
       })
-    }
-    )  ;
-    
+    });
+
     return res.data
   }
-  catch(error){
-    
+  catch (error) {
+
   }
 }
-Model.prototype.findByConditions=async function(options,callback) {
-  if(!U._isObj(options)){
+Model.prototype.findByConditions = async function(options, callback) {
+  if (!U._isObj(options)) {
     throw new TypeError('findByConditions "options" param must be an object')
   }
-  if(!U._isArray(options.conditions)){
+  if (!U._isArray(options.conditions)) {
     throw new TypeError(' "options.conditions" must be an array')
   }
-  const obj={
-    offset:0,
-    limit:null,
-    operator:'and',
-     conditions:`object[]`,
-    attr:{category:'motivational'},
-    'get_attr':`string[]`,
-    
+  const obj = {
+    offset: 0,
+    limit: null,
+    operator: 'and',
+    conditions: `object[]`,
+    attr: { category: 'motivational' },
+    'get_attr': `string[]`,
+
   };
   let res;
-  try{
-  res=await axios(
+  try {
+    res = await axios(
     {
-      data:JSON.stringify({
-        'operation':'search_by_value',
-        'schema':`${this.SCHEMA_NAME}`,
-        'table':`${this.MODEL_NAME}`,
-        'search_attribute':`${obj.key}`,
-        'search_value':`${obj.val}`,
-        'get_attribute':['*']
+      data: JSON.stringify({
+        'operation': 'search_by_value',
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'search_attribute': `${obj.key}`,
+        'search_value': `${obj.val}`,
+        'get_attribute': ['*']
       })
-    }
-    )  ;
-    
+    });
+
     return res.data
   }
-  catch(error){
-    
+  catch (error) {
+
   }
 }
 module.exports = Model;
