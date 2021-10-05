@@ -15,15 +15,17 @@ declare function connect(options: {
 }): void;
 export = Schema
 /** creates a schema .
- *
- * @param {Object} options - an object that takes in `name` and `fields` .
- * @param {string } [options.name=defaultShema] - the name of your schema.
- * @param {Object} options.fields - an object to specify the table columns.
- * @returns {Object} - returns an object to be used as the second parameter of `model`.
- **/
+  *
+  * @param {Object} options - an object takes in `name` and `fields` .
+  * @param {string } [options.name=defaultShema] - the name of your schema.
+  * @param {string } [options.primary_key=id] - a primary key for your tables.
+  * @param {object} options.fields - an object to specify the table columns.
+  * @returns {object} - returns an object.
+  * */
 declare function Schema(options: {
     name?: string;
     fields: object;
+    primary_key?:string
 }): object;
 export = Model;
 /** Creates a model for your project, the `modelName` represents a table in plural form.
