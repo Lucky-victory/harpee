@@ -25,3 +25,4 @@ function validateRequired({ fieldsKeys, dataValues, requiredKeys }) {
     }
   }
 }
+module.exports=validateRequired;
