@@ -666,5 +666,87 @@ Model.prototype.clearAll = async function (callback) {
   return err;
   }
 };
-
+`SELECT * FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' FETCH NEXT '+ LIMIT +' ROWS': ''} ${OFFSET ? ' OFFSET '+ OFFSET+' ROWS' : ''} `
+`SELECT ${GET_ATTR.join(',')} FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${OFFSET ? ' OFFSET '+ OFFSET : ''} ${ORDERBY ? ' ORDER BY '+ORDERBY : ' ORDER BY id '} ${DESC ? ' DESC ' : ' ASC '} `
+`{
+  desc?:boolean,
+  offset?:number,
+  limit?:number,
+  attr:object,
+  get_attr?:array
+  }`
+Model.prototype.findByAttribute=async function(options,callback) {
+  if(!U._isObj(options)){
+    throw new TypeError('findByAttribute "options" param must be an object')
+  }
+  if(!U._isObj(options.attr)){
+    throw new TypeError('"options.attr" property must be an object')
+  }
+  if(options.get_attr && !U._isArray(options.get_attr)){
+    throw new Error('"options.get_attr" must be an array')
+  }
+  const GET_ATTR= options.get_attr ? options.get_attr : ['*'];
+  const obj={
+    attr:{category:'motivational'},
+    'get_attr':`string[]`,
+    
+  };
+  let res;
+  try{
+  res=await axios(
+    {
+      data:JSON.stringify({
+        'operation':'search_by_value',
+        'schema':`${this.SCHEMA_NAME}`,
+        'table':`${this.MODEL_NAME}`,
+        'search_attribute':`${obj.key}`,
+        'search_value':`${obj.val}`,
+        'get_attribute':['*']
+      })
+    }
+    )  ;
+    
+    return res.data
+  }
+  catch(error){
+    
+  }
+}
+Model.prototype.findByConditions=async function(options,callback) {
+  if(!U._isObj(options)){
+    throw new TypeError('findByConditions "options" param must be an object')
+  }
+  if(!U._isArray(options.conditions)){
+    throw new TypeError(' "options.conditions" must be an array')
+  }
+  const obj={
+    offset:0,
+    limit:null,
+    operator:'and',
+     conditions:`object[]`,
+    attr:{category:'motivational'},
+    'get_attr':`string[]`,
+    
+  };
+  let res;
+  try{
+  res=await axios(
+    {
+      data:JSON.stringify({
+        'operation':'search_by_value',
+        'schema':`${this.SCHEMA_NAME}`,
+        'table':`${this.MODEL_NAME}`,
+        'search_attribute':`${obj.key}`,
+        'search_value':`${obj.val}`,
+        'get_attribute':['*']
+      })
+    }
+    )  ;
+    
+    return res.data
+  }
+  catch(error){
+    
+  }
+}
 module.exports = Model;

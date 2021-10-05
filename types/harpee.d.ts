@@ -23,8 +23,8 @@ export = Schema
  **/
 declare function Schema(options: {
     name?: string;
-    fields: Object;
-}): Object;
+    fields: object;
+}): object;
 export = Model;
 /** Creates a model for your project, the `modelName` represents a table in plural form.
  *
@@ -167,3 +167,8 @@ declare namespace Model {
  * response callback.
  */
 type responseCallback = (err: any, data: any) => any;
+interface Options {
+  get_attr:string[],
+  search_val:string,
+  search_attr:string
+}
