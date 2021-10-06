@@ -8,7 +8,7 @@ const U = require('../helpers/utils');
  * @returns {object} - returns an object.
  * */
 function Schema(options) {
-  if (!U._isObj(options)) {
+  if (!U.isObject(options)) {
     throw new TypeError('Schema options must be an object');
   }
   if (!options.fields) {

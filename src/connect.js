@@ -9,7 +9,7 @@ const axios = require("axios");
  * @return {void} .
  **/
 function connect(options) {
-  if (!U._isObj(options)) {
+  if (!U.isObject(options)) {
     throw new TypeError("connection options must be an Object");
   }
   if (!options.host) {

@@ -3,7 +3,7 @@ const U = require("../helpers/utils");
 const VALIDATOR = require("../helpers/validators");
 
 function Model(modelName, schema) {
-  if (!modelName || !U._isStr(modelName)) {
+  if (!modelName || !U.isString(modelName)) {
     throw new Error("modelName is required and it must be a String");
   }
   if (modelName && !schema) {
@@ -12,7 +12,7 @@ function Model(modelName, schema) {
   const SCHEMA_NAME = schema.name;
   this.SCHEMA_NAME = SCHEMA_NAME;
 
-  const MODEL_NAME = `${modelName}s`;
+  const MODEL_NAME = `${modelName}`;
   this.MODEL_NAME = MODEL_NAME;
 
   this.SCHEMA_FIELDS = schema && schema.fields;
@@ -40,6 +40,19 @@ function Model(modelName, schema) {
             schema: `${SCHEMA_NAME}`,
             table: `${MODEL_NAME}`,
             hash_attribute: `${PRIMARY_KEY}`,
+          }),
+        });
+      } catch (err) {
+        // console.error(err)
+      }
+      try {
+        // @ts-ignore
+        await axios({
+          data: JSON.stringify({
+            operation: "create_attribute",
+            schema: `${SCHEMA_NAME}`,
+            table: `${MODEL_NAME}`,
+            attribute:'__hid__',
           }),
         });
       } catch (err) {
@@ -132,8 +145,8 @@ Model.prototype.describeModel = async function(callback) {
 Model.prototype.find = async function(arr, callback) {
   let findArr = arr;
   if (
-    !U._isArray(arr) ||
-    U._isEmpty(arr) ||
+    !U.isArray(arr) ||
+    U.isEmpty(arr) ||
     (arr.length && arr[0] === "*".trim())
   ) {
     findArr = ["*"];
@@ -185,9 +198,9 @@ Model.prototype.findById = async function(id, callback) {
   let err;
   let idKey = "id";
   let idValue = id;
-  if (U._isObj(id)) {
-    idKey = U._splitObj(id).keys.join(",");
-    idValue = U._splitObj(id).values.join('","');
+  if (U.isObject(id)) {
+    idKey = U.splitObj(id).keys.join(",");
+    idValue = U.splitObj(id).values.join('","');
   }
   try {
     // @ts-ignore
@@ -231,13 +244,13 @@ Model.prototype.findMany = async function(id, arr, callback) {
   let idValue = id;
   let findArr = arr;
 
-  if (U._isObj(id)) {
-    idKey = U._splitObj(id).keys.join(",");
-    idValue = U._splitObj(id).values.join('","');
+  if (U.isObject(id)) {
+    idKey = U.splitObj(id).keys.join(",");
+    idValue = U.splitObj(id).values.join('","');
   }
   if (
-    !U._isArray(arr) ||
-    U._isEmpty(arr) ||
+    !U.isArray(arr) ||
+    U.isEmpty(arr) ||
     (arr.length && arr[0] === "*".trim())
   ) {
     findArr = ["*"];
@@ -284,9 +297,9 @@ Model.prototype.findByIdAndRemove = async function(id, callback) {
   let err;
   let idKey = "id";
   let idValue = id;
-  if (U._isObj(id)) {
-    idKey = U._splitObj(id).keys.join(",");
-    idValue = U._splitObj(id).values.join("','");
+  if (U.isObject(id)) {
+    idKey = U.splitObj(id).keys.join(",");
+    idValue = U.splitObj(id).values.join("','");
   }
 
   try {
@@ -331,15 +344,15 @@ Model.prototype.update = async function(id, obj, callback) {
   let idValue = id;
   if (!obj) {
     throw new Error("please include an object of the data to be updated");
-  } else if (obj && !U._isObj(obj)) {
+  } else if (obj && !U.isObject(obj)) {
     throw new Error("the data to be updated must be an object");
   }
-  const UPDATE_ARR = U._objToArray(obj, "=").join(",");
+  const UPDATE_ARR = U.objectToArrayay(obj, "=").join(",");
 
-  if (U._isObj(id)) {
-    idKey = U._splitObj(id).keys.join(",");
-    idValue = U._splitObj(id).values.join("','");
-  } else if (U._isArray(id)) {
+  if (U.isObject(id)) {
+    idKey = U.splitObj(id).keys.join(",");
+    idValue = U.splitObj(id).values.join("','");
+  } else if (U.isArray(id)) {
     idValue = idValue.join("','");
   }
 
@@ -383,7 +396,7 @@ Model.prototype.create = async function(obj, callback) {
   let err;
   let
     data;
-  if (!U._isObj(obj)) {
+  if (!U.isObject(obj)) {
     throw new TypeError("must be an object");
   }
   VALIDATOR(this.SCHEMA_FIELDS, obj);
@@ -431,7 +444,7 @@ Model.prototype.importFromCsv = async function(options, callback) {
     err;
   const CSV_DATA = options.csv;
   const ACTION = options && options.action ? options.action : "insert";
-  if (!CSV_DATA || !U._isStr(CSV_DATA)) {
+  if (!CSV_DATA || !U.isString(CSV_DATA)) {
     throw new Error(" csv is required and it should be in string format");
   }
 
@@ -477,12 +490,12 @@ Model.prototype.importFromCsvFile = async function(options, callback) {
   let data;
   let
     err;
-  if (!options || !U._isObj(options)) {
+  if (!options || !U.isObject(options)) {
     throw new TypeError("options is required and must be object");
   }
   const ACTION = options && options.action ? options.action : "insert";
   const FILE_PATH = options.filePath;
-  if (!FILE_PATH || !U._isStr(FILE_PATH)) {
+  if (!FILE_PATH || !U.isString(FILE_PATH)) {
     throw new Error("filePath is required and it should be a string");
   }
 
@@ -528,13 +541,13 @@ Model.prototype.importFromCsvUrl = async function(options, callback) {
   let data;
   let
     err;
-  if (!options || !U._isObj(options)) {
+  if (!options || !U.isObject(options)) {
     throw new TypeError("options is required and must be object");
   }
 
   const ACTION = options && options.action ? options.action : "insert";
   const FILE_URL = options.fileUrl;
-  if (!FILE_URL || !U._isStr(FILE_URL)) {
+  if (!FILE_URL || !U.isString(FILE_URL)) {
     throw new Error("fileUrl is required and it should be string");
   }
 
@@ -580,7 +593,7 @@ Model.prototype.importFromS3 = async function(options, callback) {
   let data;
   let
     err;
-  if (!U._isObj(options)) {
+  if (!U.isObject(options)) {
     throw new TypeError("options must be an object");
   }
   const ACTION = options.action ? options.action : "insert";
@@ -593,8 +606,8 @@ Model.prototype.importFromS3 = async function(options, callback) {
   }
   if (
     s3Filename &&
-    (U._getExtname(s3Filename) !== "csv" ||
-      U._getExtname(s3Filename) !== "json")
+    (U.getExtname(s3Filename) !== "csv" ||
+      U.getExtname(s3Filename) !== "json")
   ) {
     throw new Error(
       "the file extension is invalid , only a .csv or .json file is acceptable",
@@ -687,7 +700,7 @@ Model.prototype.clearAll = async function(callback) {
   }
 };
 `SELECT * FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' FETCH NEXT '+ LIMIT +' ROWS': ''} ${OFFSET ? ' OFFSET '+ OFFSET+' ROWS' : ''} `
-`SELECT ${GET_ATTR.join(',')} FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${OFFSET ? ' OFFSET '+ OFFSET : ''} ${ORDERBY ? ' ORDER BY '+ORDERBY : ' ORDER BY '+this.PRIMARY_KEY} ${DESC ? ' DESC ' : ' ASC '} `
+`SELECT ${GET_ATTR.join(',')} FROM dev.table ${WHERE ? ' WHERE '+ ${obj.where.key+'='+obj.where.value}' : ''} ${ORDERBY ? ' ORDER BY '+ORDERBY : ' ORDER BY '+ this.PRIMARY_KEY} ${DESC ? ' DESC ' : ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
 `{
   desc?:boolean,
   offset?:number,
@@ -696,13 +709,13 @@ Model.prototype.clearAll = async function(callback) {
   get_attr?:array
   }`
 Model.prototype.findByAttribute = async function(options, callback) {
-  if (!U._isObj(options)) {
+  if (!U.isObject(options)) {
     throw new TypeError('findByAttribute "options" param must be an object')
   }
-  if (!U._isObj(options.attr)) {
+  if (!U.isObject(options.attr)) {
     throw new TypeError('"options.attr" property must be an object')
   }
-  if (options.get_attr && !U._isArray(options.get_attr)) {
+  if (options.get_attr && !U.isArray(options.get_attr)) {
     throw new Error('"options.get_attr" must be an array')
   }
   const GET_ATTR = options.get_attr ? options.get_attr : ['*'];
@@ -732,10 +745,10 @@ Model.prototype.findByAttribute = async function(options, callback) {
   }
 }
 Model.prototype.findByConditions = async function(options, callback) {
-  if (!U._isObj(options)) {
+  if (!U.isObject(options)) {
     throw new TypeError('findByConditions "options" param must be an object')
   }
-  if (!U._isArray(options.conditions)) {
+  if (!U.isArray(options.conditions)) {
     throw new TypeError(' "options.conditions" must be an array')
   }
   const obj = {

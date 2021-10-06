@@ -11,10 +11,10 @@ function validator(fields, newData) {
   const REQUIRED_KEYS = [];
   const IS_EQUAL_TYPE = [];
 
-  const FIELDS_KEYS = Utils._splitObjSorted(fields).keys;
-  const FIELDS_VALUES = Utils._splitObjSorted(fields).values;
-  const NEW_DATA_KEYS = Utils._splitObjSorted(newData).keys;
-  const NEW_DATA_VALUES = Utils._splitObjSorted(newData).values;
+  const FIELDS_KEYS = Utils.splitObjectSorted(fields).keys;
+  const FIELDS_VALUES = Utils.splitObjectSorted(fields).values;
+  const NEW_DATA_KEYS = Utils.splitObjectSorted(newData).keys;
+  const NEW_DATA_VALUES = Utils.splitObjectSorted(newData).values;
 
   validateDataKeysLength({
     dataKeys: NEW_DATA_KEYS,
@@ -27,7 +27,7 @@ function validator(fields, newData) {
   });
 
   for (let i = 0; i < NEW_DATA_KEYS.length; i++) {
-    const FIELDS_VALUE_TYPE = Utils._isObj(FIELDS_VALUES[i])
+    const FIELDS_VALUE_TYPE = Utils.isObject(FIELDS_VALUES[i])
       ? FIELDS_VALUES[i].type
       : FIELDS_VALUES[i];
 
@@ -42,8 +42,8 @@ function validator(fields, newData) {
     NEW_DATA_VALUES_TYPE.push(NEW_DATA_VALUES[i]);
 
     const CHECK_TYPE =
-      Utils._getType(FIELDS_TYPES[i]) ===
-      Utils._getType(NEW_DATA_VALUES_TYPE[i]);
+      Utils.getType(FIELDS_TYPES[i]) ===
+      Utils.getType(NEW_DATA_VALUES_TYPE[i]);
 
     IS_EQUAL_TYPE.push(CHECK_TYPE);
   }
