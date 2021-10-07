@@ -25,8 +25,8 @@ function Model(modelName, schema) {
       try {
         await axios({
           data: JSON.stringify({
-            operation: "create_schema",
-            schema: `${SCHEMA_NAME}`,
+            'operation': "create_schema",
+            'schema': `${SCHEMA_NAME}`,
           }),
         });
       } catch (err) {
@@ -36,10 +36,10 @@ function Model(modelName, schema) {
         // @ts-ignore
         await axios({
           data: JSON.stringify({
-            operation: "create_table",
-            schema: `${SCHEMA_NAME}`,
-            table: `${MODEL_NAME}`,
-            hash_attribute: `${PRIMARY_KEY}`,
+            'operation': "create_table",
+            'schema': `${SCHEMA_NAME}`,
+            'table': `${MODEL_NAME}`,
+            'hash_attribute': `${PRIMARY_KEY}`,
           }),
         });
       } catch (err) {
@@ -143,7 +143,7 @@ Model.prototype.describeModel = async function(callback) {
 };
 
 Model.prototype.findAll = async function(options, callback) {
-    if (!U.isObject(options)) {
+  if (!U.isObject(options)) {
     throw new TypeError(' findAll "options" param must be an object')
   }
   `
@@ -156,7 +156,7 @@ Model.prototype.findAll = async function(options, callback) {
   }
   `
   if (options.get_attribute && !U.isArray(options.get_attribute)) {
-    options.get_attribute=[options.get_attribute];
+    options.get_attribute = [options.get_attribute];
   }
   const LIMIT = options.limit ? options.limit : null
   const OFFSET = options.offset ? options.offset : null;
@@ -173,8 +173,7 @@ Model.prototype.findAll = async function(options, callback) {
     res = await axios({
       data: JSON.stringify({
         'operation': "sql",
-        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME}  ${ORDER_BY ? ' ORDER BY '+ ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${ORDER_BY && DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
-,
+        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME}  ${ORDER_BY ? ' ORDER BY '+ ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${ORDER_BY && DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `,
       }),
     });
     data = res.data;
@@ -470,10 +469,10 @@ Model.prototype.create = async function(obj, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "insert",
-        schema: `${this.SCHEMA_NAME}`,
-        table: `${this.MODEL_NAME}`,
-        records: [obj],
+        'operation': "insert",
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'records': [obj],
       }),
     });
     data = res.data;
@@ -518,11 +517,11 @@ Model.prototype.importFromCsv = async function(options, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "csv_data_load",
-        action: `${ACTION}`,
-        schema: `${this.SCHEMA_NAME}`,
-        table: `${this.MODEL_NAME}`,
-        data: `${CSV_DATA}`,
+        'operation': "csv_data_load",
+        'action': `${ACTION}`,
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'data': `${CSV_DATA}`,
       }),
     });
     data = res.data;
@@ -569,11 +568,11 @@ Model.prototype.importFromCsvFile = async function(options, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "csv_file_load",
-        action: `${ACTION}`,
-        schema: `${this.SCHEMA_NAME}`,
-        table: `${this.MODEL_NAME}`,
-        file_path: `${FILE_PATH}`,
+        'operation': "csv_file_load",
+        'action': `${ACTION}`,
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'file_path': `${FILE_PATH}`,
       }),
     });
     data = res.data;
@@ -621,11 +620,11 @@ Model.prototype.importFromCsvUrl = async function(options, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "csv_url_load",
-        action: `${ACTION}`,
-        schema: `${this.SCHEMA_NAME}`,
-        table: `${this.MODEL_NAME}`,
-        csv_url: `${FILE_URL}`,
+        'operation': "csv_url_load",
+        'action': `${ACTION}`,
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        'csv_url': `${FILE_URL}`,
       }),
     });
     data = res.data;
@@ -676,18 +675,18 @@ Model.prototype.importFromS3 = async function(options, callback) {
       U.getExtname(s3Filename) !== "json")
   ) {
     throw new Error(
-      "the file extension is invalid , only a .csv or .json file is acceptable",
+      "the file extension is invalid , only a `.csv` or `.json` file is acceptable",
     );
   }
   try {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "import_from_s3",
-        action: `${ACTION}`,
-        schema: `${this.SCHEMA_NAME}`,
-        table: `${this.MODEL_NAME}`,
-        s3: `{
+        'operation': "import_from_s3",
+        'action': `${ACTION}`,
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`,
+        's3': `{
           'aws_access_key_id':'${s3Key}',
           'aws_secret_access_key':'${s3Secret}',
           'bucket':'${s3Bucket}',
@@ -736,8 +735,8 @@ Model.prototype.clearAll = async function(callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "sql",
-        sql: `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}]`,
+        'operation': "sql",
+        'sql': `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}]`,
       }),
     });
     data = res.data;
