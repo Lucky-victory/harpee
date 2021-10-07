@@ -45,19 +45,19 @@ function Model(modelName, schema) {
       } catch (err) {
         // console.error(err)
       }
-      try {
-        // @ts-ignore
-        await axios({
-          data: JSON.stringify({
-            operation: "create_attribute",
-            schema: `${SCHEMA_NAME}`,
-            table: `${MODEL_NAME}`,
-            attribute:'__hid__',
-          }),
-        });
-      } catch (err) {
-        // console.error(err)
-      }
+      // try {
+      //   // @ts-ignore
+      //   await axios({
+      //     data: JSON.stringify({
+      //       operation: "create_attribute",
+      //       schema: `${SCHEMA_NAME}`,
+      //       table: `${MODEL_NAME}`,
+      //       attribute: '__hid__',
+      //     }),
+      //   });
+      // } catch (err) {
+      //   // console.error(err)
+      // }
 
     }());
   }
@@ -71,8 +71,8 @@ Model.prototype.query = async function(sqlQuery, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "sql",
-        sql: sqlQuery,
+        'operation': "sql",
+        'sql': sqlQuery,
       }),
     });
     data = res.data;
@@ -109,9 +109,9 @@ Model.prototype.describeModel = async function(callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "describe_table",
-        schema: `${this.SCHEMA_NAME}`,
-        table: `${this.MODEL_NAME}`
+        'operation': "describe_table",
+        'schema': `${this.SCHEMA_NAME}`,
+        'table': `${this.MODEL_NAME}`
       }),
     });
     data = res.data;
@@ -142,15 +142,28 @@ Model.prototype.describeModel = async function(callback) {
 
 };
 
-Model.prototype.find = async function(arr, callback) {
-  let findArr = arr;
-  if (
-    !U.isArray(arr) ||
-    U.isEmpty(arr) ||
-    (arr.length && arr[0] === "*".trim())
-  ) {
-    findArr = ["*"];
+Model.prototype.findAll = async function(options, callback) {
+    if (!U.isObject(options)) {
+    throw new TypeError(' findAll "options" param must be an object')
   }
+  `
+  {
+    limit?:number,
+    offset?:number,
+    get_attribute?:array,
+    orderby?:string,
+    desc?:boolean
+  }
+  `
+  if (options.get_attribute && !U.isArray(options.get_attribute)) {
+    options.get_attribute=[options.get_attribute];
+  }
+  const LIMIT = options.limit ? options.limit : null
+  const OFFSET = options.offset ? options.offset : null;
+  const ORDER_BY = options.orderby ? options.orderby : this.PRIMARY_KEY;
+  const DESC = options.desc ? options.desc : false;
+  const GET_ATTR = options.get_attribute ? options.get_attribute : ['*'];
+
   let res;
   let err;
   let
@@ -159,10 +172,9 @@ Model.prototype.find = async function(arr, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "sql",
-        sql: `SELECT ${findArr.join(",")} from ${this.SCHEMA_NAME}.${
-          this.MODEL_NAME
-        } `,
+        'operation': "sql",
+        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME}  ${ORDER_BY ? ' ORDER BY '+ ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${ORDER_BY && DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
+,
       }),
     });
     data = res.data;
@@ -192,7 +204,12 @@ Model.prototype.find = async function(arr, callback) {
 
 };
 
-Model.prototype.findById = async function(id, callback) {
+Model.prototype.findById = async function(options, callback) {
+  {
+    get_attr: array,
+    id: Object
+
+  }
   let res;
   let data;
   let err;
@@ -207,7 +224,56 @@ Model.prototype.findById = async function(id, callback) {
     res = await axios({
       data: JSON.stringify({
         operation: "sql",
-        sql: `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
+        sql: `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
+      }),
+    });
+    data = res.data;
+    if (callback) callback(null, await data[0]);
+
+    return data[0];
+
+  } catch (error) {
+    if (error.request) {
+      err = {
+        message: error.message,
+        data: error.request.response,
+        status: error.request.status,
+      };
+    } else if (error.response) {
+      err = {
+        message: error.message,
+        data: error.response.data,
+        status: error.response.status,
+      };
+    } else {
+      err = error;
+    }
+
+    if (callback) callback(err, null);
+    throw (err);
+  }
+};
+Model.prototype.findOne = async function(options, callback) {
+  {
+    get_attr: array
+    attr: {}
+
+  }
+  let res;
+  let data;
+  let err;
+  let attrKey = "id";
+  let attrValue = Object.keys(options);
+  if (U.isObject(id)) {
+    idKey = U.splitObj(id).keys.join(",");
+    idValue = U.splitObj(id).values.join('","');
+  }
+  try {
+    // @ts-ignore
+    res = await axios({
+      data: JSON.stringify({
+        operation: "sql",
+        sql: `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
       }),
     });
     data = res.data;
@@ -347,7 +413,7 @@ Model.prototype.update = async function(id, obj, callback) {
   } else if (obj && !U.isObject(obj)) {
     throw new Error("the data to be updated must be an object");
   }
-  const UPDATE_ARR = U.objectToArrayay(obj, "=").join(",");
+  const UPDATE_ARR = U.objectToArray(obj, "=").join(",");
 
   if (U.isObject(id)) {
     idKey = U.splitObj(id).keys.join(",");
@@ -699,8 +765,9 @@ Model.prototype.clearAll = async function(callback) {
     return err;
   }
 };
+
 `SELECT * FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' FETCH NEXT '+ LIMIT +' ROWS': ''} ${OFFSET ? ' OFFSET '+ OFFSET+' ROWS' : ''} `
-`SELECT ${GET_ATTR.join(',')} FROM dev.table ${WHERE ? ' WHERE '+ ${obj.where.key+'='+obj.where.value}' : ''} ${ORDERBY ? ' ORDER BY '+ORDERBY : ' ORDER BY '+ this.PRIMARY_KEY} ${DESC ? ' DESC ' : ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
+`SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME} ${WHERE ? " WHERE "+ obj.where.key+'='+obj.where.value : ''} ${ORDER_BY ? ' ORDER BY '+ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
 `{
   desc?:boolean,
   offset?:number,
@@ -718,6 +785,10 @@ Model.prototype.findByAttribute = async function(options, callback) {
   if (options.get_attr && !U.isArray(options.get_attr)) {
     throw new Error('"options.get_attr" must be an array')
   }
+  const LIMIT = options.limit ? options.limit : null
+  const OFFSET = options.offset ? options.offset : null;
+  const ORDER_BY = options.orderby ? options.orderby : this.PRIMARY_KEY;
+  const DESC = options.desc ? options.desc : false;
   const GET_ATTR = options.get_attr ? options.get_attr : ['*'];
   const obj = {
     attr: { category: 'motivational' },
@@ -729,12 +800,9 @@ Model.prototype.findByAttribute = async function(options, callback) {
     res = await axios(
     {
       data: JSON.stringify({
-        'operation': 'search_by_value',
-        'schema': `${this.SCHEMA_NAME}`,
-        'table': `${this.MODEL_NAME}`,
-        'search_attribute': `${obj.key}`,
-        'search_value': `${obj.val}`,
-        'get_attribute': ['*']
+        'operation': 'sql',
+        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME} ${WHERE ? " WHERE "+ obj.where.key+'='+obj.where.value : ''} ${ORDER_BY ? ' ORDER BY '+ ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
+
       })
     });
 
@@ -780,4 +848,6 @@ Model.prototype.findByConditions = async function(options, callback) {
 
   }
 }
+
+
 module.exports = Model;
