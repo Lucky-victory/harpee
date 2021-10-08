@@ -3,7 +3,7 @@ const Utils = {
    * @param { * } obj - the value to be checked
    * */
 
-  _isObj: function(obj) {
+  isObject: function(obj) {
     if (Object.prototype.toString.call(obj) === '[object Object]') {
       return true
     }
@@ -15,7 +15,7 @@ const Utils = {
    * @param { * } arr - the value to be checked
    * */
 
-  _isArray: function(arr) {
+  isArray: function(arr) {
     if (Array.isArray(arr)) {
       return true
     }
@@ -27,7 +27,7 @@ const Utils = {
    * @param { * } str - the value to be checked
    * */
 
-  _isStr: function(str) {
+  isString: function(str) {
     if (Object.prototype.toString.call(str) === '[object String]') {
       return true
     }
@@ -39,7 +39,7 @@ const Utils = {
    * @param { * } num - the value to be checked
    * */
 
-  _isNum: function(num) {
+  isNumber: function(num) {
     if (Object.prototype.toString.call(num) === '[object Number]') {
       return true
     }
@@ -51,7 +51,7 @@ const Utils = {
    * @param { * } bool - the value to be checked
    * */
 
-  _isBool: function(bool) {
+  isBoolean: function(bool) {
     if (Object.prototype.toString.call(bool) === '[object Boolean]') {
       return true
     }
@@ -63,7 +63,7 @@ const Utils = {
    * @param { * } val - the value to be checked
    * */
 
-  _isUndefined: function(val) {
+  isUndefined: function(val) {
     if (Object.prototype.toString.call(val) === '[object Undefined]' || typeof val === 'undefined') {
       return true
     }
@@ -75,7 +75,7 @@ const Utils = {
    * @param { * } val - the value to be checked
    * */
 
-  _isNull: function(val) {
+  isNull: function(val) {
     if (Object.prototype.toString.call(val) === '[object Null]') {
       return true
     }
@@ -86,7 +86,7 @@ const Utils = {
   /** Checks if the value is a Date.
    * @param { * } date - the value to be checked
    * */
-  _isDate: function(date) {
+  isDate: function(date) {
     if (Object.prototype.toString.call(date) === '[object Date]') {
       return true
     }
@@ -99,7 +99,7 @@ const Utils = {
    * @param { string } str - the string to find .
    * 
    * */
-  _itHasStr: function(STR, str) {
+  itHas: function(STR, str) {
     if (STR.toLowerCase().includes(str.toLowerCase())) {
       return true
     }
@@ -123,8 +123,8 @@ const Utils = {
   /** Checks if an object or an array is empty.
    * @param {(array | object)} arg - the value to be checked.
    * */
-  _isEmpty: function(arg) {
-    if (Utils._isArray(arg) || Utils._isObj(arg)) {
+  isEmpty: function(arg) {
+    if (Utils.isArray(arg) || Utils.isObject(arg)) {
       if (Object.keys(arg).length === 0) {
         return true
       }
@@ -141,7 +141,7 @@ const Utils = {
   /** Checks if a string is empty.
    * @param {string} arg - the value to be checked.
    * */
-  _isEmptyStr: function(arg) {
+  isEmptyStr: function(arg) {
     if (arg === '') {
       return true
     }
@@ -152,9 +152,9 @@ const Utils = {
   /** Splits an object to an object of `keys` array and `values` array.
    * @param { object} obj - the object to be splitted.
    * */
-  _splitObj: function(obj) {
-    const keys = [],
-      values = [];
+  splitObject: function(obj) {
+    const keys = [];
+     const values = [];
     for (let key in obj) {
       keys.push(key);
       values.push(obj[key])
@@ -164,9 +164,9 @@ const Utils = {
   /** Splits an object to an object of `keys` sorted array and `values` sorted array .
    * @param { object} obj - the object to be splitted.
    * */
-  _splitObjSorted: function(obj) {
-    const keys = [],
-      values = [];
+  splitObjectSorted: function(obj) {
+    const keys = [];
+     const values = [];
     Object.keys(obj).sort().forEach(function(key) {
       keys.push(key);
       values.push(obj[key])
@@ -177,7 +177,7 @@ const Utils = {
    * @param {string} str - the string to be splitted.
    * 
    */
-  _getExtname: function(str) {
+  getExtname: function(str) {
     return str.split('.').pop();
   },
   /** Splits a string by a seperator and returns the first string
@@ -194,7 +194,7 @@ const Utils = {
    * 
    * 
    */
-  _objToArray: function(obj, seperator = ',') {
+  objectToArray: function(obj, seperator = ',') {
     const arr = [];
     for (let key in obj) {
       arr.push(`${key}${seperator}'${obj[key]}'`)
@@ -205,36 +205,36 @@ const Utils = {
    * @param { * } arg - the value to find the type.
    * 
    * */
-  _getType: function(arg) {
+  getType: function(arg) {
     let type;
 
-    if (Utils._isStr(arg) || arg === String) {
+    if (Utils.isString(arg) || arg === String) {
 
       type = 'String';
     }
 
-    else if (Utils._isObj(arg) || arg === Object) {
+    else if (Utils.isObject(arg) || arg === Object) {
 
       type = 'Object';
     }
-    else if (Utils._isArray(arg) || arg === Array) {
+    else if (Utils.isArray(arg) || arg === Array) {
 
       type = 'Array';
     }
 
-    else if (Utils._isNum(arg) || arg === Number) {
+    else if (Utils.isNumber(arg) || arg === Number) {
       type = 'Number';
     }
-    else if (Utils._isBool(arg) || arg === Boolean) {
+    else if (Utils.isBoolean(arg) || arg === Boolean) {
       type = 'Boolean';
     }
-    else if (Utils._isDate(arg) || arg === Date) {
+    else if (Utils.isDate(arg) || arg === Date) {
       type = 'Date';
     }
-    else if (Utils._isNull(arg) || arg === null) {
+    else if (Utils.isNull(arg) || arg === null) {
       type = 'Null';
     }
-    else if (Utils._isUndefined(arg) || arg === undefined) {
+    else if (Utils.isUndefined(arg) || arg === undefined) {
       type = 'Undefined';
     }
     else {
@@ -247,7 +247,7 @@ const Utils = {
    * @param {string[]} arr - an array of string.
    * @param { string } str - the string to find in the array.
    */
-  _findStr: function(arr, str) {
+  findString: function(arr, str) {
     let itHas;
     arr.find((val) => {
       if (val.toLowerCase().trim() === str.toLowerCase().trim()) {
@@ -264,7 +264,7 @@ const Utils = {
    * @param {string[]} arr - an array of string.
    * @param { string } str - the string to find in the array.
    */
-  _findStrInArr: function(arr, str) {
+  findStringInArray: function(arr, str) {
     let itHas;
     if (arr.includes(str)) {
       itHas = true
@@ -278,7 +278,7 @@ const Utils = {
    * @param { array } arr - the array to perform the operation on.
    * @param { * } val - the value to find in the array.
    * */
-  _findMultipleIndex: function(arr, val) {
+  findMultipleIndex: function(arr, val) {
     const INDEXES = arr.reduce((accum, value, index) => {
       if (val === value) {
         accum.push(index);

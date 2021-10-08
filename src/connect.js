@@ -1,7 +1,7 @@
-const U = require("../utils/helpers");
+const U = require("../helpers/utils");
 const axios = require("axios");
-/** function to Connect to your database.
- * @param {Object} options - An object that takes in `host`, `username`,`password`,`token`.
+/** Create a Connection to your database.
+ * @param {object} options - An object that takes in `host`, `username`,`password` and `token`.
  * @param {string} options.host - your harperdb host url.
  * @param {string} options.username - your harperdb username.
  * @param {string} options.password - your harperdb password.
@@ -9,7 +9,7 @@ const axios = require("axios");
  * @return {void} .
  **/
 function connect(options) {
-  if (!U._isObj(options)) {
+  if (!U.isObject(options)) {
     throw new TypeError("connection options must be an Object");
   }
   if (!options.host) {
