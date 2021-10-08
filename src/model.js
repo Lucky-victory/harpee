@@ -16,7 +16,7 @@ function Model(modelName, schema) {
   this.MODEL_NAME = MODEL_NAME;
 
   this.SCHEMA_FIELDS = schema && schema.fields;
-  const PRIMARY_KEY = schema.primary_key;
+  const PRIMARY_KEY = schema.primary_key ;
   this.PRIMARY_KEY = PRIMARY_KEY;
   if (SCHEMA_NAME && MODEL_NAME) {
     (async function() {
@@ -142,9 +142,9 @@ Model.prototype.describeModel = async function(callback) {
 
 };
 
-Model.prototype.findAll = async function(options, callback) {
+Model.prototype.find = async function(options, callback) {
   if (!U.isObject(options)) {
-    throw new TypeError(' findAll "options" param must be an object')
+    throw new TypeError(' find "options" param must be an object')
   }
   `
   {
@@ -204,11 +204,11 @@ Model.prototype.findAll = async function(options, callback) {
 };
 
 Model.prototype.findById = async function(options, callback) {
-  {
+  `{
     get_attr: array,
     id: Object
 
-  }
+  }`
   let res;
   let data;
   let err;
@@ -218,12 +218,13 @@ Model.prototype.findById = async function(options, callback) {
     idKey = U.splitObj(id).keys.join(",");
     idValue = U.splitObj(id).values.join('","');
   }
+  
   try {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "sql",
-        sql: `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
+     'operation': "sql",
+        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
       }),
     });
     data = res.data;
@@ -271,8 +272,8 @@ Model.prototype.findOne = async function(options, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "sql",
-        sql: `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
+        'operation': "sql",
+        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
       }),
     });
     data = res.data;
@@ -325,8 +326,8 @@ Model.prototype.findMany = async function(id, arr, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "sql",
-        sql: `SELECT ${findArr.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
+        'operation': "sql",
+        'sql': `SELECT ${findArr.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}IN ('${idValue}')`,
       }),
     });
     data = res.data;
@@ -360,19 +361,20 @@ Model.prototype.findByIdAndRemove = async function(id, callback) {
   let res;
   let data;
   let err;
-  let idKey = "id";
-  let idValue = id;
-  if (U.isObject(id)) {
+  let idKey,idValue;
+  if(!U.isObject(id)){
+    throw new Error('`id` param must be an object')
+  }
+  
     idKey = U.splitObj(id).keys.join(",");
     idValue = U.splitObj(id).values.join("','");
-  }
 
   try {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "sql",
-        sql: `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
+        'operation': "sql",
+        'sql': `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
       }),
     });
     data = res.data;
@@ -425,8 +427,8 @@ Model.prototype.update = async function(id, obj, callback) {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
-        operation: "sql",
-        sql: `UPDATE ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] SET ${UPDATE_ARR} WHERE ${idKey} IN ('${idValue}')`,
+        'operation': "sql",
+        'sql': `UPDATE ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] SET ${UPDATE_ARR} WHERE ${idKey} IN ('${idValue}')`,
       }),
     });
     data = res.data;

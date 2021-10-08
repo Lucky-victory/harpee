@@ -153,8 +153,8 @@ const Utils = {
    * @param { object} obj - the object to be splitted.
    * */
   splitObject: function(obj) {
-    const keys = [],
-      values = [];
+    const keys = [];
+     const values = [];
     for (let key in obj) {
       keys.push(key);
       values.push(obj[key])
@@ -165,8 +165,8 @@ const Utils = {
    * @param { object} obj - the object to be splitted.
    * */
   splitObjectSorted: function(obj) {
-    const keys = [],
-      values = [];
+    const keys = [];
+     const values = [];
     Object.keys(obj).sort().forEach(function(key) {
       keys.push(key);
       values.push(obj[key])
