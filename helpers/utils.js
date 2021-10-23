@@ -184,7 +184,7 @@ const Utils = {
    * @param {string} str - the string to be splitted.
    * 
    */
-  _getFirst: function(str, seperator) {
+  getFirst: function(str, seperator) {
     return str.split(seperator).shift();
   },
   /** Converts an object into an array seperated by a seperator
