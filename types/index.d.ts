@@ -7,13 +7,13 @@ export = connect;
  * @param {string} [options.token] - your generated JWT token.
  * @return {void} .
  **/
-declare function connect(options: {
+export declare function connect(options: {
     host: string;
     username: string;
     password: string;
     token?: string;
 }): void;
-export = Schema
+
 /** creates a schema .
   *
   * @param {Object} options - an object takes in `name` and `fields` .
@@ -22,12 +22,12 @@ export = Schema
   * @param {object} options.fields - an object to specify the table columns.
   * @returns {object} - returns an object.
   * */
-declare function Schema(options: {
+export declare function Schema(options: {
     name?: string;
     fields: object;
     primary_key?:string
 }): object;
-export = Model;
+
 /** Creates a model for your project, the `modelName` represents a table in plural form.
  *
  * @param {string} modelName - the `modelName` is used to create a table.
@@ -40,12 +40,12 @@ export = Model;
  *
  *
  */
-declare function Model(modelName: string, schema: {
+export declare function Model(modelName: string, schema: {
     name: string;
     fields: object;
     primary_key:string;
 }): void;
-declare class Model {
+export declare class Model {
     /** Creates a model for your project, the `modelName` represents a table in plural form.
      *
      * @param {string} modelName - the `modelName` is used to create a table.
@@ -178,4 +178,7 @@ interface Options {
   get_attr:string[],
   search_val:string,
   search_attr:string
+}
+export interface harpeeSchema{
+  
 }
