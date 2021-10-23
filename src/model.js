@@ -934,4 +934,5 @@ Model.prototype.findByValue= async function(options, callback) {
 }
 
 
+export default Model
 module.exports = Model;
