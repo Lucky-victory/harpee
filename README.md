@@ -2,7 +2,7 @@
 > As of version `2.1.0`, harpee now has a `.query()` method for executing custom sql queries. 
 
 # Introduction.
-**Harpee** is an asynchronous object modeling tool for [HarperDB](https://harperdb.io/?utm_source=luckyvictory), harpee supports both callbacks and promises.
+**Harpee** is a modeling tool for [HarperDB](https://harperdb.io/?utm_source=luckyvictory), harpee supports both callbacks and promises.
 
 
 ## Installation.
@@ -17,8 +17,11 @@ or
 require it in your application.
 
 ```js
-
+// commonjs
 const harpee = require("harpee");
+
+// as ES6 module
+import harpee from "harpee"
 
 // create a connection.
 
