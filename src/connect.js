@@ -43,4 +43,5 @@ function connect(options) {
   // @ts-ignore
   axios.defaults.method = "post";
 }
+export default connect;
 module.exports = connect;

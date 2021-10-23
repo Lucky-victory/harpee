@@ -22,5 +22,5 @@ function Schema(options) {
     primary_key:PRIMARY_KEY
   };
 }
-
+export default Schema;
 module.exports = Schema;

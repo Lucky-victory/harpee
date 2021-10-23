@@ -9,7 +9,7 @@
     "ecmaVersion": 2018
   },
   "rules": {
-    "no-underscore-dangle": "warn",
+    "no-underscore-dangle": "error",
     "no-undef": "warn",
     "no-console":"off",
     "no-restricted-syntax": "off",
