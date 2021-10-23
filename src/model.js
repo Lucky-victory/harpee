@@ -146,15 +146,15 @@ Model.prototype.find = async function(options, callback) {
   if (!U.isObject(options)) {
     throw new TypeError(' find "options" param must be an object')
   }
-  `
-  {
-    limit?:number,
-    offset?:number,
-    get_attribute?:array,
-    orderby?:string,
-    desc?:boolean
-  }
-  `
+  // 
+  // {
+  //   limit?:number,
+  //   offset?:number,
+  //   get_attribute?:array,
+  //   orderby?:string,
+  //   desc?:boolean
+  // }
+  
   if (options.get_attribute && !U.isArray(options.get_attribute)) {
     options.get_attribute = [options.get_attribute];
   }
@@ -173,7 +173,7 @@ Model.prototype.find = async function(options, callback) {
     res = await axios({
       data: JSON.stringify({
         'operation': "sql",
-        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME}  ${ORDER_BY ? ' ORDER BY '+ ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${ORDER_BY && DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `,
+        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME}  ${ORDER_BY ? ' ORDER BY '+ ORDER_BY : ' ORDER BY __createdtime__' } ${ORDER_BY && DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `,
       }),
     });
     data = res.data;
@@ -183,15 +183,15 @@ Model.prototype.find = async function(options, callback) {
   } catch (error) {
     if (error.request) {
       err = {
-        message: error.message,
-        data: error.request.response,
-        status: error.request.status,
+        'message': error.message,
+        'data': error.request.response,
+        'status': error.request.status,
       };
     } else if (error.response) {
       err = {
-        message: error.message,
-        data: error.response.data,
-        status: error.response.status,
+        'message': error.message,
+        'data': error.response.data,
+        'status': error.response.status,
       };
     } else {
       err = error;
@@ -203,19 +203,15 @@ Model.prototype.find = async function(options, callback) {
 
 };
 
-Model.prototype.findById = async function(options, callback) {
-  `{
-    get_attr: array,
-    id: Object
-
-  }`
+Model.prototype.findById = async function(idObject, callback) {
+  
   let res,data, err,idKey, idValue
-  if(!U.isObject(id)){
-    throw new Error('`options.id` must be an object')
+  if(!U.isObject(idObject)){
+    throw new Error('`idObject` must be an object')
   }
-  if (U.isObject(id)) {
-    idKey = U.splitObject(id).keys[0];
-    idValue = U.splitObject(id).values[0];
+  else{
+    idKey = U.splitObject(idObject).keys[0];
+    idValue = U.splitObject(idObject).values[0];
   }
   
   try {
@@ -223,7 +219,7 @@ Model.prototype.findById = async function(options, callback) {
     res = await axios({
       data: JSON.stringify({
      'operation': "sql",
-        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
+        'sql': `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey}='${idValue}'`,
       }),
     });
     data = res.data;
@@ -234,15 +230,15 @@ Model.prototype.findById = async function(options, callback) {
   } catch (error) {
     if (error.request) {
       err = {
-        message: error.message,
-        data: error.request.response,
-        status: error.request.status,
+        'message': error.message,
+        'data': error.request.response,
+        'status': error.request.status,
       };
     } else if (error.response) {
       err = {
-        message: error.message,
-        data: error.response.data,
-        status: error.response.status,
+        'message': error.message,
+        'data': error.response.data,
+        'status': error.response.status,
       };
     } else {
       err = error;
@@ -253,11 +249,11 @@ Model.prototype.findById = async function(options, callback) {
   }
 };
 Model.prototype.findNested = async function(options, callback) {
-  `{
-    get_attr: array,
-    id: Object
+  
+   // get_attr: array,
+    // id: Object
 
-  }`
+  
   let res;
   let data;
   let err;
@@ -302,27 +298,23 @@ Model.prototype.findNested = async function(options, callback) {
     throw (err);
   }
 };
-Model.prototype.findOne = async function(options, callback) {
-  {
-    get_attr: array
-    attr: {}
-
+Model.prototype.findOne = async function(attribute, callback) {
+  
+  let res,data,err,attrKey,
+  attrValue;
+  if(!U.isObject(attribute)){
+    throw new TypeError('`attribute` must be an object');
   }
-  let res;
-  let data;
-  let err;
-  let attrKey = "id";
-  let attrValue = Object.keys(options);
-  if (U.isObject(id)) {
-    idKey = U.splitObject(id).keys.join(",");
-    idValue = U.splitObject(id).values.join('","');
+  else{
+    attrKey = U.splitObject(attribute).keys[0];
+    attrValue = U.splitObject(attribute).values[0];
   }
   try {
     // @ts-ignore
     res = await axios({
       data: JSON.stringify({
         'operation': "sql",
-        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
+        'sql': `SELECT * FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${attrKey} IN ('${attrValue}')`,
       }),
     });
     data = res.data;
@@ -353,10 +345,7 @@ Model.prototype.findOne = async function(options, callback) {
 };
 Model.prototype.findMany = async function(id, arr, callback) {
   let res;
-  let data;
-  let err;
-  let idKey = "id";
-  let idValue = id;
+  let data,err,Keys,Values = id;
   let findArr = arr;
 
   if (U.isObject(id)) {
@@ -422,6 +411,49 @@ Model.prototype.findByIdAndRemove = async function(id, callback) {
       data: JSON.stringify({
         'operation': "sql",
         'sql': `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${idKey} IN ('${idValue}')`,
+      }),
+    });
+    data = res.data;
+    if (callback) callback(null, await data);
+
+    return data;
+
+  } catch (error) {
+    if (error.request) {
+      err = {
+        message: error.message,
+        data: error.request.response,
+        status: error.request.status,
+      };
+    } else if (error.response) {
+      err = {
+        message: error.message,
+        data: error.response.data,
+        status: error.response.status,
+      };
+    } else {
+      err = error;
+    }
+    if (callback) callback(err, null);
+    return err;
+  }
+};
+Model.prototype.findAndRemove = async function(attr, callback) {
+  let res,data, err,
+   attrKey,attrValue;
+  if(!U.isObject(attr)){
+    throw new Error('`attr` param must be an object')
+  }
+  
+    idKey = U.splitObject(attr).keys[0];
+    idValue = U.splitObject(attr).values[0];
+
+  try {
+    // @ts-ignore
+    res = await axios({
+      data: JSON.stringify({
+        'operation': "sql",
+        'sql': `DELETE FROM ${this.SCHEMA_NAME}.[${this.MODEL_NAME}] WHERE ${attrKey}='${attrValue}'`,
       }),
     });
     data = res.data;
@@ -604,7 +636,7 @@ Model.prototype.importFromCsvFile = async function(options, callback) {
   const ACTION = options && options.action ? options.action : "insert";
   const FILE_PATH = options.filePath;
   if (!FILE_PATH || !U.isString(FILE_PATH)) {
-    throw new Error("filePath is required and it should be a string");
+    throw new Error("filePath is required and must be a string");
   }
 
   try {
@@ -808,52 +840,52 @@ Model.prototype.clearAll = async function(callback) {
   }
 };
 
-`SELECT * FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' FETCH NEXT '+ LIMIT +' ROWS': ''} ${OFFSET ? ' OFFSET '+ OFFSET+' ROWS' : ''} `
-`SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME} ${WHERE ? " WHERE "+ obj.where.key+'='+obj.where.value : ''} ${ORDER_BY ? ' ORDER BY '+ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
-`{
-  desc?:boolean,
-  offset?:number,
-  limit?:number,
-  attr:object,
-  get_attr?:array
-  }`
-Model.prototype.findByAttribute = async function(options, callback) {
-  if (!U.isObject(options)) {
-    throw new TypeError('findByAttribute "options" param must be an object')
-  }
-  if (!U.isObject(options.attr)) {
-    throw new TypeError('"options.attr" property must be an object')
-  }
-  if (options.get_attr && !U.isArray(options.get_attr)) {
-    throw new Error('"options.get_attr" must be an array')
-  }
-  const LIMIT = +options.limit ? options.limit : null
-  const OFFSET = +options.offset ? options.offset : null;
-  const ORDER_BY = options.orderby ? options.orderby : this.PRIMARY_KEY;
-  const DESC = options.desc ? options.desc : false;
-  const GET_ATTR = options.get_attr ? options.get_attr : ['*'];
-  const obj = {
-    attr: { category: 'motivational' },
-    'get_attr': `string[]`,
+// `SELECT * FROM dev.table WHERE ${obj.where.key}='${obj.where.value}' ${LIMIT ? ' FETCH NEXT '+ LIMIT +' ROWS': ''} ${OFFSET ? ' OFFSET '+ OFFSET+' ROWS' : ''} `
+// `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME} ${WHERE ? " WHERE "+ obj.where.key+'='+obj.where.value : ''} ${ORDER_BY ? ' ORDER BY '+ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
+// `{
+//   desc?:boolean,
+//   offset?:number,
+//   limit?:number,
+//   attr:object,
+//   get_attr?:array
+//   }`
+// Model.prototype.findByAttribute = async function(options, callback) {
+//   if (!U.isObject(options)) {
+//     throw new TypeError('findByAttribute "options" param must be an object')
+//   }
+//   if (!U.isObject(options.attr)) {
+//     throw new TypeError('"options.attr" property must be an object')
+//   }
+//   if (options.get_attr && !U.isArray(options.get_attr)) {
+//     throw new Error('"options.get_attr" must be an array')
+//   }
+//   const LIMIT = +options.limit ? options.limit : null
+//   const OFFSET = +options.offset ? options.offset : null;
+//   const ORDER_BY = options.orderby ? options.orderby : this.PRIMARY_KEY;
+//   const DESC = options.desc ? options.desc : false;
+//   const GET_ATTR = options.get_attr ? options.get_attr : ['*'];
+//   const obj = {
+//     attr: { category: 'motivational' },
+//     'get_attr': `string[]`,
 
-  };
-  let res;
-  try {
-    res = await axios(
-    {
-      data: JSON.stringify({
-        'operation': 'sql',
-        'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME} ${WHERE ? " WHERE "+ obj.where.key+'='+obj.where.value : ''} ${ORDER_BY ? ' ORDER BY '+ ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
+//   };
+//   let res;
+//   try {
+//     res = await axios(
+//     {
+//       data: JSON.stringify({
+//         'operation': 'sql',
+//         'sql': `SELECT ${GET_ATTR.join(',')} FROM ${this.SCHEMA_NAME}.${this.MODEL_NAME} ${WHERE ? " WHERE "+ obj.where.key+'='+obj.where.value : ''} ${ORDER_BY ? ' ORDER BY '+ ORDER_BY : ' ORDER BY '+ this.PRIMARY_KEY} ${DESC ? ' DESC ': ' ASC '} ${LIMIT ? ' LIMIT '+ LIMIT : ''} ${LIMIT && OFFSET ? ' OFFSET '+ OFFSET : ''}  `
 
-      })
-    });
+//       })
+//     });
 
-    return res.data
-  }
-  catch (error) {
+//     return res.data
+//   }
+//   catch (error) {
 
-  }
-}
+//   }
+// }
 Model.prototype.findByConditions = async function(options, callback) {
   if (!U.isObject(options)) {
     throw new TypeError('findByConditions "options" param must be an object')
@@ -903,11 +935,11 @@ Model.prototype.findByValue= async function(options, callback) {
   if (!U.isArray(options.get_attribute)) {
     options.get_attribute=[options.get_attribute]
   }
-  const obj = {
-    attribute?:object,
-    get_attribute?: `string[]`,
+  // const obj = {
+  //   attribute?:object,
+  //   get_attribute?: `string[]`,
 
-  };
+  // };
   let res;
   
   const ATTR_KEY=U.splitObject(options.attribute).keys[0];
