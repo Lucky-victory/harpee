@@ -190,6 +190,8 @@ export interface HarpeeSchema{
 }
 type HarpeeSchemaObject={
   schemaName:string;
+  fields:object;
+  primaryKey:string;
   
 }
 
