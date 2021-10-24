@@ -1,1 +1,16 @@
-{ "compilerOptions": { "module": "es2015", "lib": ["dom", "es2015"], "types": [], "moduleResolution": "node", "strict": true, "noEmit": true, "baseUrl": ".", "paths": { "harpee": ["."] } } }
+{ "compilerOptions":
+{ 
+"module": "es2015", 
+"lib": ["dom", "es2015"],
+"types": [], 
+"moduleResolution": "node", 
+"strict": true, 
+"noEmit": true, 
+"baseUrl": ".",
+"paths": {
+  "harpee": ["."]
+  } 
+  
+} 
+  
+}
