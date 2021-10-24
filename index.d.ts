@@ -1,4 +1,4 @@
-export = connect;
+
 /** function to Connect to your database.
  * @param {Object} options - An object that takes in `host`, `username`,`password`,`token`.
  * @param {string} options.host - your harperdb host url.
@@ -7,13 +7,18 @@ export = connect;
  * @param {string} [options.token] - your generated JWT token.
  * @return {void} .
  **/
-export declare function connect(options: {
-    host: string;
-    username: string;
-    password: string;
-    token?: string;
-}): void;
-
+// declare function connect(options: {
+//     host: string;
+//     username: string;
+//     password: string;
+//     token?: string;
+// }): void;
+export interface HarpeeConnect {
+  host: string;
+  username: string;
+  password: string;
+  token ? : string;
+}
 /** creates a schema .
   *
   * @param {Object} options - an object takes in `name` and `fields` .
@@ -22,11 +27,11 @@ export declare function connect(options: {
   * @param {object} options.fields - an object to specify the table columns.
   * @returns {object} - returns an object.
   * */
-export declare function Schema(options: {
-    name?: string;
-    fields: object;
-    primary_key?:string
-}): object;
+// declare function Schema(options: {
+//     name?: string;
+//     fields: object;
+//     primary_key?:string
+// }): object;
 
 /** Creates a model for your project, the `modelName` represents a table in plural form.
  *
@@ -40,12 +45,11 @@ export declare function Schema(options: {
  *
  *
  */
-export declare function Model(modelName: string, schema: {
-    name: string;
-    fields: object;
-    primary_key:string;
-}): void;
-export declare class Model {
+ export interface HarpeeModel{
+   modelName:string;
+   schema:object
+ }
+ export declare class Model implements HarpeeModel {
     /** Creates a model for your project, the `modelName` represents a table in plural form.
      *
      * @param {string} modelName - the `modelName` is used to create a table.
@@ -60,7 +64,7 @@ export declare class Model {
     constructor(modelName: string, schema: {
         name: string;
         fields: object;
-        primary_key:string;
+        primary_key?:string;
     });
     /** Gets all data from a table.
      * @param {(any[] | string[]) } arr - an empty array or an array of strings.
@@ -179,6 +183,39 @@ interface Options {
   search_val:string,
   search_attr:string
 }
-export interface harpeeSchema{
+export interface HarpeeSchema{
+  name?:string;
+  fields:object;
+  primary_key?:string;
+}
+type HarpeeSchemaObject={
+  schemaName:string;
+  fields:object;
+  primaryKey:string;
   
 }
+
+export interface Harpee {
+  
+/** function to Connect to your database.
+ * @param {Object} options - An object that takes in `host`, `username`,`password`,`token`.
+ * @param {string} options.host - your harperdb host url.
+ * @param {string} options.username - your harperdb username.
+ * @param {string} options.password - your harperdb password.
+ * @param {string} [options.token] - your generated JWT token.
+ * @return {void} .
+ **/
+  connect(options:HarpeeConnect): void;
+  /** creates a schema .
+   *
+   * @param {Object} options - an object takes in `name` and `fields` .
+   * @param {string } [options.name=defaultShema] - the name of your schema.
+   * 
+   * */
+   Schema(options:HarpeeSchema):HarpeeSchemaObject;
+   Model(modelName:string,schema:HarpeeSchemaObject):Model
+   
+}
+
+
+export const harpee : Harpee

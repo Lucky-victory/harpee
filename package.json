@@ -3,23 +3,16 @@
   "version": "2.2.0-beta",
   "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
   "main": "index.js",
-  "types": "./types/index.d.ts",
+  "types": "index.d.ts",
   "scripts": {
     "test": "jest --coverage",
     "lint": "eslint . --fix",
     "example": "cd example && node index.js"
   },
-  "files": [
-    "src",
-    "utils",
-    "harpee.js",
-    "types"
-  ],
   "keywords": [
     "model",
     "harperdb",
     "database",
-    "document",
     "harpee",
     "sql",
     "noSql"
@@ -30,7 +23,7 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
-    "express": "^4.17.1",
+    "typescript":"^4.3.5",
     "@types/jest": "^26.0.24",
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
