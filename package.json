@@ -6,7 +6,8 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "jest --coverage",
-    "lint": "eslint . --fix",
+    "lint": "eslint --fix ./lib/**/*.js",
+    "build:pack":" rm ./dist/** && webpack -c",
     "example": "cd example && node index.js"
   },
   "keywords": [
@@ -19,8 +20,11 @@
   ],
   "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
   "license": "MIT",
+  "unpkg":"dist/harpee.min.js",
+  "jsdelivr":"dist/harpee.min.js",
+  "typings":"./index.d.ts",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.23.0"
   },
   "devDependencies": {
     "typescript":"^4.3.5",
