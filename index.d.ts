@@ -187,5 +187,5 @@ export interface Harpee {
    
 }
 
-
-export const harpee : Harpee
+const harpee : Harpee
+export default harpee
