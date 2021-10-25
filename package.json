@@ -1,13 +1,13 @@
 {
   "name": "harpee",
-  "version": "2.2.0-beta",
+  "version": "2.1.6",
   "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "test": "jest --coverage",
     "lint": "eslint --fix ./lib/**/*.js",
-    "build:pack":" rm ./dist/** && webpack -c",
+    "build:pack":" webpack",
     "example": "cd example && node index.js"
   },
   "keywords": [
