@@ -1,12 +1,13 @@
 {
   "name": "harpee",
-  "version": "2.2.0-beta",
+  "version": "2.1.6",
   "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "test": "jest --coverage",
-    "lint": "eslint . --fix",
+    "lint": "eslint --fix ./lib/**/*.js",
+    "build:pack":" webpack",
     "example": "cd example && node index.js"
   },
   "keywords": [
@@ -19,8 +20,11 @@
   ],
   "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
   "license": "MIT",
+  "unpkg":"dist/harpee.min.js",
+  "jsdelivr":"dist/harpee.min.js",
+  "typings":"./index.d.ts",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.23.0"
   },
   "devDependencies": {
     "typescript":"^4.3.5",
@@ -31,7 +35,9 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.6",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "webpack":"^5.40.0",
+    "webpack-cli":"^4.9.1"
   },
   "repository": {
     "type": "git",
