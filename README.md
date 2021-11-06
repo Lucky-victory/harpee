@@ -25,7 +25,7 @@ import harpee from "harpee"
 
 // create a connection.
 
-harpee.connect({host:
+harpee.createConnection({host:
 // "https://localhost:9925" or https://xxxxxxxx.harperdbcloud.com,
   username:"YOUR-DB-USERNAME",
   password:"YOUR-DB-PASSWORD",
@@ -92,8 +92,8 @@ Users.findById({user_id:1},(err,data)=>{
 > To better understand how **Harpee** works, you should check out [HarperDB docs](https://harperdb.io/docs/overview/?utm_source=luckyvictory) to learn more about HarperDB.
 
 
-**Harpee** has 3 main functions, `connect`,`Schema`, and `Model`;
-- **connect** : the `connect` function creates a connection with your database. it takes in an object with the following properties.
+**Harpee** has 3 main functions, `createConnection`,`Schema`, and `Model`;
+- **createConnection** : the `createConnection` function creates a connection with your database. it takes in an object with the following properties.
   - `host` *Type - String* : your HarperDB url, *https://localhost:9925* or *https://xxxxxxxxxx.harperdbcloud.com*.
   - `username` *Type - String* : your HarperDB username.
   - `password` *Type - String* : your HarperDB password.

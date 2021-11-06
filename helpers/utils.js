@@ -287,7 +287,34 @@ const Utils = {
     }, [])
 
     return INDEXES;
-  }
+  },
+  setSuccess(result){
+    if(Utils.isString(result)){
+      result= JSON.parse(result)
+    }
+    return {
+      message:'SUCCESS',
+      statusCode:result.statusCode,
+      
+    }
+  },
+  setError(result){
+    if(Utils.isString(result)){
+      result=JSON.parse(result)
+    }
+    return{
+      message:'FAILED',
+      statusCode:result.statusCode
+    }
+  },
+  prepareSuccessOrFailure(result){
+if(result.statusCode === 200){
+  return setSuccess(result)
+}
+else{
+  throw setError(result)
+}
+}
 
 }
 
