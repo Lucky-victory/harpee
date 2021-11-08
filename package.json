@@ -5,8 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "jest --coverage",
-    "lint": "eslint --fix ./lib/**/*.js",
+  "lint": "eslint --fix ./lib/**/*.js",
     "build:pack":" webpack",
     "example": "cd example && node index.js"
   },
@@ -28,13 +27,11 @@
   },
   "devDependencies": {
     "typescript":"^4.3.5",
-    "@types/jest": "^26.0.24",
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
-    "jest": "^27.0.6",
     "prettier": "^2.3.2",
     "webpack":"^5.40.0",
     "webpack-cli":"^4.9.1"
