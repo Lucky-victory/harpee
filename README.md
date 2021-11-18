@@ -45,9 +45,9 @@ harpee.createConnection({host:
   })
 
 
-// create a model, the model name represents a table in plural form, if you declare "User" as your model name, a table of "Users" will be created.
+// create a model, the model name represents a table.
 
-const Users = new harpee.Model("User",myUsersSchema);
+const Users = new harpee.Model("Users",myUsersSchema);
 
 ```
 ## Usage.
@@ -64,17 +64,17 @@ user_id:1,
 ```
 ```js
 // this returns every data  from the `Users` table.
-Users.find([], (err,data)=>{
+Users.find({}, (err,data)=>{
   if(err) throw err;
   console.log(data)
 });
 
 // or
-Users.find([]).then(data => console.log(data));
+Users.find({}).then(data => console.log(data));
 
 
 // you can specify the columns to be returned.
-Users.find(["username"],(err,data)=>{
+Users.find({get_attribute:["username"]},(err,data)=>{
   if(err) throw(err);
   console.log(data)
 }) // this will return only usernames.
@@ -93,16 +93,21 @@ Users.findById({user_id:1},(err,data)=>{
 
 
 **Harpee** has 3 main functions, `createConnection`,`Schema`, and `Model`;
-- **createConnection** : the `createConnection` function creates a connection with your database. it takes in an object with the following properties.
+### createConnection(config)
+`createConnection` function creates a connection with your database. it takes in an object with the following properties.
   - `host` *Type - String* : your HarperDB url, *https://localhost:9925* or *https://xxxxxxxxxx.harperdbcloud.com*.
   - `username` *Type - String* : your HarperDB username.
   - `password` *Type - String* : your HarperDB password.
   - `token` *Type - String* : A generated JWT token, token is *optional*,you should only include it as a replacement of `username` and `password`. 
 
-- **Schema** : the `Schema` function creates a Schema, it takes in an object with the following properties, 
-   - `name` *Type - String* : this **name** option is *optional*, if not specified a default schema named **defaultSchema** will be created, but if you want your schema to have a different name, then you should specify this option. 
+### Schema(options)
+ `Schema` function creates a Schema, it takes in an object with the following properties, 
+   - `name` *Type - String* : this **name** option is *optional*, if not specified a default schema named **defaultSchema** will be created, but if you want your schema to have a different name, then you should specify this option.   
+   - `primary_key` *Type - String* _*optional*_: this option allows you to set a *hash_attribute*, if not specified, will default to `id`.
+   - `silent` *Type - boolean* : Turns off errors when `Schema.fields` properties doesn't match `Model.create()` properties, default is `false`.
    - `fields` *Type - Object* : this option represents the table columns that will be created in your database,
-  > Note: the properties and data-types declared in **fields** must be same with properties and data-types that will be specified at `model.create()`, otherwise an error will be thrown. 
+ 
+  > Note: the properties and data-types declared in **fields** must be same with properties and data-types that will be specified at `Model.create()`, otherwise an error will be thrown, you can turn this off by setting `silent` option of `Schema` function to `true` . 
 ```js
 const ArticleSchema = harpee.Schema({name:"MyArticlesSchema"},fields:{
   title:String,
@@ -112,16 +117,21 @@ const ArticleSchema = harpee.Schema({name:"MyArticlesSchema"},fields:{
 })
 ```
  
-- **Model**: the `Model` should be instantiated with `new` keyword. the model functions takes the following options.
-  - `modelName` *Type - Striníg* : this modelName represents a table in plural form, that is, if you specify **Article** as your modelName, a table called **Articles** will be created.
-  - `schema` Type - Schema(Object) : this option takes in an Object returned from the `Schema` function.
+### Model(modelName,SchemaObject)
+
+> This function should be instantiated with the `new` keyword. 
+
+the model function takes the following options.
+   - `modelName` *Type - String* : this modelName represents a table that will be created.
+  - `schemaObject` Type - Schema(Object) : this option takes in an Object returned from the `Schema` function.
 ```js
-const Articles = new harpee.Model("Article",ArticleSchema);
+const Articles = new harpee.Model("Articles",ArticleSchema);
 
 ```
+#### Methods.
 
-   **Model** has the following methods. all model methods supports both callbacks and promises, the callback function takes two parameters `err` and `data`.
-  - `create`: inserts new data into the table, takes in an object of the data to be created. **whenever you create a new data, an id is automatically generated**.
+**Model** has the following methods. all methods supports both callbacks and promises, the callback function takes two parameters `err` and `data`.
+  - `create`: inserts new data into the table, takes in an object of the data to be created.
 
   ```js
   // inserts new data into Articles table.
@@ -132,13 +142,22 @@ const Articles = new harpee.Model("Article",ArticleSchema);
     
   })
   ```
-  - `find` : the **find** method returns all data from the table. to do this, pass an empty array `[]` or wildcard `["*"]` as the first argument, you can also choose to return specific data, for example, in order to return only *Articles titles*, 
+  ##### Find([options],callback)
+  
+  the **find** method returns all data from the table. to do this, pass an empty array `[]` or wildcard `["*"]` as the first argument, you can also choose to return specific data, for example, in order to return only *Articles titles*, 
   ```js
   // this will return only Articles titles.
   Articles.find(["title"],(err,data)=>{
     console.log(data)
   })
   ```
+the **find** method also takes an object with options, this let's do some advanced filtering.
+  - `limit`: *Type - Number* *optional*: 
+      - `get_attribute`:*Type - Array* *optional*
+      - `offset`: **Type - Number ** *optional*, 
+      - `desc`: **Type - boolean** *optional*
+      - `orderBy` : **Type - String** *optional* 
+
   - `findById` : the **findById** method returns a single data, based on the specified `id`, takes in an object of id key and value or an array of id string. 
   - `findByIdAndRemove` *param - Object* : deletes a single data from the table based on the specified `id`, takes in an *Object* of id key and value or an *Array* of id string.
   - `update`: updates the table with the new data based on the specified id, takes in the following.
