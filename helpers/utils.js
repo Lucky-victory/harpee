@@ -4,95 +4,62 @@ const Utils = {
    * */
 
   isObject: function(obj) {
-    if (Object.prototype.toString.call(obj) === '[object Object]') {
-      return true
-    }
-    else {
-      return false
-    }
+    return (Object.prototype.toString.call(obj) === '[object Object]');
   },
   /** Checks if the value is an Array.
    * @param { * } arr - the value to be checked
    * */
 
   isArray: function(arr) {
-    if (Array.isArray(arr)) {
-      return true
-    }
-    else {
-      return false
-    }
+    return (Array.isArray(arr));
   },
   /** Checks if the value is a String.
    * @param { * } str - the value to be checked
    * */
 
   isString: function(str) {
-    if (Object.prototype.toString.call(str) === '[object String]') {
-      return true
-    }
-    else {
-      return false
-    }
+    return (Object.prototype.toString.call(str) === '[object String]'); 
   },
   /** Checks if the value is a Number.
    * @param { * } num - the value to be checked
    * */
 
   isNumber: function(num) {
-    if (Object.prototype.toString.call(num) === '[object Number]') {
-      return true
-    }
-    else {
-      return false
-    }
+    return (Object.prototype.toString.call(num) === '[object Number]') 
   },
   /** Checks if the value is a Boolean.
    * @param { * } bool - the value to be checked
    * */
 
   isBoolean: function(bool) {
-    if (Object.prototype.toString.call(bool) === '[object Boolean]') {
-      return true
-    }
-    else {
-      return false
-    }
+  return (Object.prototype.toString.call(bool) === '[object Boolean]') 
+  },
+  /** Checks if the value is a Function.
+   * @param { * } val - the value to be checked
+   * */
+
+  isFunction: function(val) {
+    return(Object.prototype.toString.call(val) === '[object Function]');
   },
   /** Checks if the value is a Undefined.
    * @param { * } val - the value to be checked
    * */
 
   isUndefined: function(val) {
-    if (Object.prototype.toString.call(val) === '[object Undefined]' || typeof val === 'undefined') {
-      return true
-    }
-    else {
-      return false
-    }
+    return (Object.prototype.toString.call(val) === '[object Undefined]' || typeof val === 'undefined')
   },
   /** Checks if the value is a Null.
    * @param { * } val - the value to be checked
    * */
 
   isNull: function(val) {
-    if (Object.prototype.toString.call(val) === '[object Null]') {
-      return true
-    }
-    else {
-      return false
-    }
+    return (Object.prototype.toString.call(val) === '[object Null]') 
   },
   /** Checks if the value is a Date.
    * @param { * } date - the value to be checked
    * */
   isDate: function(date) {
-    if (Object.prototype.toString.call(date) === '[object Date]') {
-      return true
-    }
-    else {
-      return false
-    }
+    return (Object.prototype.toString.call(date) === '[object Date]');
   },
   /** Evaluates two strings and checks if they have same or similar values.
    * @param { string } STR - the string to be evaluated.
@@ -100,12 +67,7 @@ const Utils = {
    * 
    * */
   itHas: function(STR, str) {
-    if (STR.toLowerCase().includes(str.toLowerCase())) {
-      return true
-    }
-    else {
-      return false
-    }
+    return (STR.toLowerCase().includes(str.toLowerCase())) 
   },
   /** Evaluates two strings and checks if they have the same  values.
    * @param { string } STR - the string to be evaluated.
@@ -113,25 +75,14 @@ const Utils = {
    * 
    * */
   _sameStrStrict: function(STR, str) {
-    if (STR.toLowerCase().trim() === str.toLowerCase().trim()) {
-      return true
-    }
-    else {
-      return false
-    }
+    return (STR.toLowerCase().trim() === str.toLowerCase().trim()) ;
   },
   /** Checks if an object or an array is empty.
    * @param {(array | object)} arg - the value to be checked.
    * */
   isEmpty: function(arg) {
     if (Utils.isArray(arg) || Utils.isObject(arg)) {
-      if (Object.keys(arg).length === 0) {
-        return true
-      }
-      else {
-        return false
-      }
-
+      return (Object.keys(arg).length === 0);
     }
     else {
       console.error('argument should be an array or an object');
@@ -142,12 +93,7 @@ const Utils = {
    * @param {string} arg - the value to be checked.
    * */
   isEmptyStr: function(arg) {
-    if (arg === '') {
-      return true
-    }
-    else {
-      return false
-    }
+   return (arg === '')
   },
   /** Splits an object to an object of `keys` array and `values` array.
    * @param { object} obj - the object to be splitted.
