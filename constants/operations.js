@@ -18,7 +18,7 @@ const operations={
   DELETE:'delete',
   IMPORT_FROM_S3:'import_from_s3',
   EXPORT_TO_S3:'export_to_s3',
-  EXPORT_TO_LOCAL:'export_to_local',
+  EXPORT_LOCAL:'export_local',
   ADD_USER:'add_user',
   LIST_USERS:'list_users',
   ADD_ROLE:'add_role',

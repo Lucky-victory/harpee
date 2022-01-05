@@ -95,6 +95,18 @@ const utils = {
   isEmptyStr: function(arg) {
    return (arg === '')
   },
+  /** Turns the String to lowercase
+  * @param {string} str - the string to be transformed
+  */
+  toLower:function(str){
+     return (String(str).toLowerCase())
+  },
+  /** Turns the String to uppercase
+  * @param {string} str - the string to be transformed
+  */
+  toUpper:function(str){
+     return (String(str).toUpperCase())
+  },
   /** Splits an object to an object of `keys` array and `values` array.
    * @param { object} obj - the object to be splitted.
    * */
