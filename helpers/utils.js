@@ -1,4 +1,4 @@
-const Utils = {
+const utils = {
   /** Checks if the value is an Object.
    * @param { * } obj - the value to be checked
    * */
@@ -81,7 +81,7 @@ const Utils = {
    * @param {(array | object)} arg - the value to be checked.
    * */
   isEmpty: function(arg) {
-    if (Utils.isArray(arg) || Utils.isObject(arg)) {
+    if (utils.isArray(arg) || utils.isObject(arg)) {
       return (Object.keys(arg).length === 0);
     }
     else {
@@ -154,33 +154,33 @@ const Utils = {
   getType: function(arg) {
     let type;
 
-    if (Utils.isString(arg) || arg === String) {
+    if (utils.isString(arg) || arg === String) {
 
       type = 'String';
     }
 
-    else if (Utils.isObject(arg) || arg === Object) {
+    else if (utils.isObject(arg) || arg === Object) {
 
       type = 'Object';
     }
-    else if (Utils.isArray(arg) || arg === Array) {
+    else if (utils.isArray(arg) || arg === Array) {
 
       type = 'Array';
     }
 
-    else if (Utils.isNumber(arg) || arg === Number) {
+    else if (utils.isNumber(arg) || arg === Number) {
       type = 'Number';
     }
-    else if (Utils.isBoolean(arg) || arg === Boolean) {
+    else if (utils.isBoolean(arg) || arg === Boolean) {
       type = 'Boolean';
     }
-    else if (Utils.isDate(arg) || arg === Date) {
+    else if (utils.isDate(arg) || arg === Date) {
       type = 'Date';
     }
-    else if (Utils.isNull(arg) || arg === null) {
+    else if (utils.isNull(arg) || arg === null) {
       type = 'Null';
     }
-    else if (Utils.isUndefined(arg) || arg === undefined) {
+    else if (utils.isUndefined(arg) || arg === undefined) {
       type = 'Undefined';
     }
     else {
@@ -225,17 +225,17 @@ const Utils = {
    * @param { * } val - the value to find in the array.
    * */
   findMultipleIndex: function(arr, val) {
-    const INDEXES = arr.reduce((accum, value, index) => {
+    const indexes = arr.reduce((accum, value, index) => {
       if (val === value) {
         accum.push(index);
       }
       return accum;
     }, [])
 
-    return INDEXES;
+    return indexes;
   },
   setSuccess(result){
-    if(Utils.isString(result)){
+    if(utils.isString(result)){
       result= JSON.parse(result)
     }
     return {
@@ -245,7 +245,7 @@ const Utils = {
     }
   },
   setError(result){
-    if(Utils.isString(result)){
+    if(utils.isString(result)){
       result=JSON.parse(result)
     }
     return{
@@ -264,4 +264,4 @@ else{
 
 }
 
-module.exports = Utils;
+module.exports = utils;

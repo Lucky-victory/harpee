@@ -1,10 +1,12 @@
 
 const operations={
   SQL:'sql',
-  DESCRIBE_SCHEMA:'describe_schema',
-  DESCRIBE_TABLE:'describe_table',
   CREATE_SCHEMA:'create_schema',
+  DESCRIBE_SCHEMA:'describe_schema',
+  DROP_SCHEMA:'drop_schema',
   CREATE_TABLE:'create_table',
+  DESCRIBE_TABLE:'describe_table',
+  DROP_TABLE:'drop_table',
   SEARCH_BY_VALUE:'search_by_value',
   SEARCH_BY_HASH:'search_by_hash',
   SEARCH_BY_CONDITIONS:'search_by_conditions',
@@ -17,6 +19,9 @@ const operations={
   IMPORT_FROM_S3:'import_from_s3',
   EXPORT_TO_S3:'export_to_s3',
   EXPORT_TO_LOCAL:'export_to_local',
-  ADD_USER:'add_user'
+  ADD_USER:'add_user',
+  LIST_USERS:'list_users',
+  ADD_ROLE:'add_role',
+  TRANSACTION_LOGS:'transaction_logs',
 }
 module.exports=operations
