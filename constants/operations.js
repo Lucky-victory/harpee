@@ -20,8 +20,16 @@ const operations={
   EXPORT_TO_S3:'export_to_s3',
   EXPORT_LOCAL:'export_local',
   ADD_USER:'add_user',
+  ALTER_USER:'alter_user',
+  DROP_USER:'drop_user',
   LIST_USERS:'list_users',
+  LIST_ROLES:'list_roles',
+  ALTER_ROLE:'list_role',
   ADD_ROLE:'add_role',
-  TRANSACTION_LOGS:'transaction_logs',
+  READ_TRANSACTION_LOG:'read_transaction_log',
+  READ_LOGS:'read_logs',
+  GET_JOB:'get_job',
+  CREATE_AUTHENTICATION_TOKENS:'create_authentication_tokens',
+  REFRESH_TOKEN:'refresh_token',
 }
 module.exports=operations
