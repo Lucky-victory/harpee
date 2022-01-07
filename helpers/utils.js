@@ -1,4 +1,4 @@
-const utils = {
+const Util = {
   /** Checks if the value is an Object.
    * @param { * } obj - the value to be checked
    * */
@@ -81,7 +81,7 @@ const utils = {
    * @param {(array | object)} arg - the value to be checked.
    * */
   isEmpty: function(arg) {
-    if (utils.isArray(arg) || utils.isObject(arg)) {
+    if (Util.isArray(arg) || Util.isObject(arg)) {
       return (Object.keys(arg).length === 0);
     }
     else {
@@ -166,33 +166,33 @@ const utils = {
   getType: function(arg) {
     let type;
 
-    if (utils.isString(arg) || arg === String) {
+    if (Util.isString(arg) || arg === String) {
 
       type = 'String';
     }
 
-    else if (utils.isObject(arg) || arg === Object) {
+    else if (Util.isObject(arg) || arg === Object) {
 
       type = 'Object';
     }
-    else if (utils.isArray(arg) || arg === Array) {
+    else if (Util.isArray(arg) || arg === Array) {
 
       type = 'Array';
     }
 
-    else if (utils.isNumber(arg) || arg === Number) {
+    else if (Util.isNumber(arg) || arg === Number) {
       type = 'Number';
     }
-    else if (utils.isBoolean(arg) || arg === Boolean) {
+    else if (Util.isBoolean(arg) || arg === Boolean) {
       type = 'Boolean';
     }
-    else if (utils.isDate(arg) || arg === Date) {
+    else if (Util.isDate(arg) || arg === Date) {
       type = 'Date';
     }
-    else if (utils.isNull(arg) || arg === null) {
+    else if (Util.isNull(arg) || arg === null) {
       type = 'Null';
     }
-    else if (utils.isUndefined(arg) || arg === undefined) {
+    else if (Util.isUndefined(arg) || arg === undefined) {
       type = 'Undefined';
     }
     else {
@@ -247,7 +247,7 @@ const utils = {
     return indexes;
   },
   setSuccess(result){
-    if(utils.isString(result)){
+    if(Util.isString(result)){
       result= JSON.parse(result)
     }
     return {
@@ -257,7 +257,7 @@ const utils = {
     }
   },
   setError(result){
-    if(utils.isString(result)){
+    if(Util.isString(result)){
       result=JSON.parse(result)
     }
     return{
@@ -276,4 +276,4 @@ else{
 
 }
 
-module.exports = utils;
+module.exports = Util;
