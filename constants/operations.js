@@ -27,9 +27,12 @@ const operations={
   ALTER_ROLE:'list_role',
   ADD_ROLE:'add_role',
   READ_TRANSACTION_LOG:'read_transaction_log',
-  READ_LOGS:'read_logs',
+  DELETE_TRANSACTION_LOGS:'delete_transaction_logs_before',
+  DELETE_RECORDS_BEFORE:'delete_records_before',
+  READ_LOG:'read_log',
   GET_JOB:'get_job',
   CREATE_AUTHENTICATION_TOKENS:'create_authentication_tokens',
   REFRESH_TOKEN:'refresh_token',
+  SEARCH_JOBS_BY_START_DATE:'search_jobs_by_start_date',
 }
 module.exports=operations
