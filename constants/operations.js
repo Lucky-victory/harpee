@@ -1,6 +1,11 @@
 
 const operations={
   SQL:'sql',
+  SYSTEM_INFORMATION:'system_information',
+  CLUSTER_STATUS:'cluster_status',
+  ADD_NODE:'add_node',
+  UPDATE_NODE:'update_node',
+  REMOVE_NODE:'remove_node',
   CREATE_SCHEMA:'create_schema',
   DESCRIBE_SCHEMA:'describe_schema',
   DROP_SCHEMA:'drop_schema',
@@ -32,7 +37,15 @@ const operations={
   READ_LOG:'read_log',
   GET_JOB:'get_job',
   CREATE_AUTHENTICATION_TOKENS:'create_authentication_tokens',
-  REFRESH_TOKEN:'refresh_token',
+  REFRESH_OPERATION_TOKEN:'refresh_operation_token',
   SEARCH_JOBS_BY_START_DATE:'search_jobs_by_start_date',
+  GET_CUSTOM_FUNCTIONS:
+  'get_custom_functions',
+  GET_CUSTOM_FUNCTION:
+  'get_custom_function',
+  DEPLOY_CUSTOM_FUNCTION_PROJECT:
+  'deploy_custom_function_project',
+  PACKAGE_CUSTOM_FUNCTION_PROJECT:
+  'package_custom_function_project',
 }
 module.exports=operations
