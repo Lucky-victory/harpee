@@ -2,8 +2,8 @@
     "name": "harpee",
     "version": "3.0.0",
     "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
-    "main": "index.js",
-    "types": "index.d.ts",
+    "main": "harpee.js",
+    "types": "harpee.d.ts",
     "scripts": {
         "lint": "eslint --fix ./lib/**/*.js",
         "build:pack": " webpack",
@@ -22,7 +22,7 @@
     "license": "MIT",
     "unpkg": "dist/harpee.min.js",
     "jsdelivr": "dist/harpee.min.js",
-    "typings": "./index.d.ts",
+    "typings": "./types",
     "dependencies": {
         "axios": "^0.23.0"
     },
