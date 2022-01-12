@@ -18,6 +18,7 @@
         "sql",
         "noSql"
     ],
+    "files":["constants","dist","helpers"],
     "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
     "license": "MIT",
     "typings": "./index.d.ts",

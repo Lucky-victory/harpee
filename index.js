@@ -1,8 +1,7 @@
+const {createConnection,connect}=require('./lib/connect');
 module.exports = {
-    createConnection: require("./lib/connect"),
-    /**
-     *
-     */
+    createConnection,
+    connect,
     Schema: require("./lib/schema"),
     Model: require("./lib/model"),
     Utilities: require("./lib/utilities"),
