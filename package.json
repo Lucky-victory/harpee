@@ -3,9 +3,9 @@
     "version": "3.0.0",
     "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
     "main": "./dist/index.js",
-    "types": "index.d.ts",
+    "types": "./types/index.d.ts",
     "scripts": {
-        "compile": "babel index.js -d dist",
+        "compile": "babel -d dist/ lib/",
         "example": "cd example && node index.js",
         "build:types": "npx -p typescript tsc",
         "publish:pack":"npm run build:types && npm run compile"
@@ -21,7 +21,7 @@
     "files":["constants","dist","helpers"],
     "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
     "license": "MIT",
-    "typings": "./index.d.ts",
+    "typings": "./types/index.d.ts",
     "dependencies": {
         "axios": "^0.23.0"
     },

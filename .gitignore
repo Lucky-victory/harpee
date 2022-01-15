@@ -80,3 +80,5 @@ jspm_packages/
 *.html
 example/
 dist/
+# vscode
+*.code-workspace
