@@ -5,6 +5,7 @@ const operations = {
     ADD_NODE: "add_node",
     UPDATE_NODE: "update_node",
     REMOVE_NODE: "remove_node",
+    DESCRIBE_ALL: "describe_all",
     CREATE_SCHEMA: "create_schema",
     DESCRIBE_SCHEMA: "describe_schema",
     DROP_SCHEMA: "drop_schema",
