@@ -240,7 +240,8 @@ const Util = {
         }
         return {
             message: "SUCCESS",
-            statusCode: result.statusCode,
+            statusCode: result.status,
+            data:result.data
         };
     },
     setError(result) {
@@ -249,11 +250,12 @@ const Util = {
         }
         return {
             message: "FAILED",
-            statusCode: result.statusCode,
+            statusCode: result.status,
+            data:result.data
         };
     },
     prepareSuccessOrFailure(result) {
-        if (result.statusCode === 200) {
+        if (result.status === 200) {
             return setSuccess(result);
         } else {
             throw setError(result);
