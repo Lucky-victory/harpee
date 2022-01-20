@@ -23,7 +23,9 @@
     "license": "MIT",
     "typings": "./types/index.d.ts",
     "dependencies": {
-        "axios": "^0.23.0"
+        "axios": "^0.23.0",
+        "buffer": "^6.0.3",
+        "node-fetch": "^2.4.6"
     },
     "devDependencies": {
         "typescript": "^4.3.5",

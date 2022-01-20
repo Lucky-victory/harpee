@@ -256,9 +256,9 @@ const Util = {
     },
     prepareSuccessOrFailure(result) {
         if (result.status === 200) {
-            return setSuccess(result);
+            return Util.setSuccess(result);
         } else {
-            throw setError(result);
+            throw Util.setError(result);
         }
     },
 };
