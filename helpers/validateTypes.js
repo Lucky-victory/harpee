@@ -1,18 +1,18 @@
-const Util = require("./utils");
+const util = require("./utils");
 
-function validateTypes({ types, dataTypes, dataKeys, fieldsType }) {
-  const TYPES_INDEX = Util.findMultipleIndex(types, false);
+function validateTypes({ types, dataTypes, dataKeys, fieldTypes }) {
+  const typesIndexes = util.findMultipleIndex(types, false);
 
-  if (TYPES_INDEX.length) {
-    for (const INDEX of TYPES_INDEX) {
-      const DATA_VALUE_TYPE = Util.getType(dataTypes[INDEX]);
+  if (typesIndexes.length) {
+    for (const index of typesIndexes) {
+      const dataValueType = util.getType(dataTypes[index]);
 
-      const DATA_KEY = dataKeys[INDEX];
+      const dataKey = dataKeys[index];
 
-      const FIELD_VALUE_TYPE = Util.getType(fieldsType[INDEX]);
+      const fieldValueType = util.getType(fieldsType[index]);
 
       throw new Error(
-        `you are trying to assign '${DATA_VALUE_TYPE}', to '${DATA_KEY}', that has a data type of ' ${FIELD_VALUE_TYPE} '`
+        `you are trying to assign '${dataValueType}', to '${dataKey}', that has a data type of ' ${fieldValueType} '`
       );
     }
   }

@@ -1,4 +1,4 @@
-const Util = {
+const util = {
     /** Checks if the value is an Object.
      * @param { * } obj - the value to be checked
      * */
@@ -84,7 +84,7 @@ const Util = {
      * @param {(array | object)} arg - the value to be checked.
      * */
     isEmpty: function (arg) {
-        if (Util.isArray(arg) || Util.isObject(arg)) {
+        if (util.isArray(arg) || util.isObject(arg)) {
             return Object.keys(arg).length === 0;
         } else {
             console.error("argument should be an array or an object");
@@ -169,21 +169,21 @@ const Util = {
     getType: function (arg) {
         let type;
 
-        if (Util.isString(arg) || arg === String) {
+        if (util.isString(arg) || arg === String) {
             type = "String";
-        } else if (Util.isObject(arg) || arg === Object) {
+        } else if (util.isObject(arg) || arg === Object) {
             type = "Object";
-        } else if (Util.isArray(arg) || arg === Array) {
+        } else if (util.isArray(arg) || arg === Array) {
             type = "Array";
-        } else if (Util.isNumber(arg) || arg === Number) {
+        } else if (util.isNumber(arg) || arg === Number) {
             type = "Number";
-        } else if (Util.isBoolean(arg) || arg === Boolean) {
+        } else if (util.isBoolean(arg) || arg === Boolean) {
             type = "Boolean";
-        } else if (Util.isDate(arg) || arg === Date) {
+        } else if (util.isDate(arg) || arg === Date) {
             type = "Date";
-        } else if (Util.isNull(arg) || arg === null) {
+        } else if (util.isNull(arg) || arg === null) {
             type = "Null";
-        } else if (Util.isUndefined(arg) || arg === undefined) {
+        } else if (util.isUndefined(arg) || arg === undefined) {
             type = "Undefined";
         } else {
             type = "Unknown";
@@ -235,7 +235,7 @@ const Util = {
         return indexes;
     },
     setSuccess(result) {
-        if (Util.isString(result)) {
+        if (util.isString(result)) {
             result = JSON.parse(result);
         }
         return {
@@ -245,7 +245,7 @@ const Util = {
         };
     },
     setError(result) {
-        if (Util.isString(result)) {
+        if (util.isString(result)) {
             result = JSON.parse(result);
         }
         return {
@@ -256,11 +256,11 @@ const Util = {
     },
     prepareSuccessOrFailure(result) {
         if (result.status === 200) {
-            return Util.setSuccess(result);
+            return util.setSuccess(result);
         } else {
-            throw Util.setError(result);
+            throw util.setError(result);
         }
     },
 };
 
-module.exports = Util;
+module.exports = util;

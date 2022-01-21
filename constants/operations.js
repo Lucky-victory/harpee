@@ -41,7 +41,13 @@ const operations = {
     SEARCH_JOBS_BY_START_DATE: "search_jobs_by_start_date",
     GET_CUSTOM_FUNCTIONS: "get_custom_functions",
     GET_CUSTOM_FUNCTION: "get_custom_function",
+    DROP_CUSTOM_FUNCTION: "drop_custom_function",
     DEPLOY_CUSTOM_FUNCTION_PROJECT: "deploy_custom_function_project",
+    ADD_CUSTOM_FUNCTION_PROJECT: "add_custom_function_project",
     PACKAGE_CUSTOM_FUNCTION_PROJECT: "package_custom_function_project",
+    RESTART:'restart',
+    RESTART_SERVICE:'restart_service',
+    GET_CONFIGUATION:
+    'get_configuation'
 };
 module.exports = operations;

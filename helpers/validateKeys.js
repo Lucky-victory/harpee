@@ -1,19 +1,18 @@
-const Util = require("./utils");
-
+const util = require("./utils");
 function validateKeys({ fieldsKeys, dataKeys }) {
-  const ALL_KEYS = [];
+  const allKeys = [];
   for (let k = 0; k < fieldsKeys.length; k++) {
-    ALL_KEYS.push(Util.findStringInArray(fieldsKeys, dataKeys[k]));
+    allKeys.push(util.findStringInArray(fieldsKeys, dataKeys[k]));
   }
-  const COMPARE_KEYS = Util.findMultipleIndex(ALL_KEYS, false);
-  if (COMPARE_KEYS.length) {
-    for (let key = 0; key < COMPARE_KEYS.length; key++) {
-      if (Util.isUndefined(dataKeys[COMPARE_KEYS[key]])) {
+  const compareKeys = util.findMultipleIndex(allKeys, false);
+  if (compareKeys.length) {
+    for (let key = 0; key < compareKeys.length; key++) {
+      if (util.isUndefined(dataKeys[compareKeys[key]])) {
         throw new Error(
-          "you are trying to create less columns than your schema, you should exclude them in your schema or add a placeholder for it. ex: an empty string"
+          "you are trying to create less columns than your schema, you should exclude them in your schema or add a placeholder for it"
         );
       }
-      throw new Error(dataKeys[COMPARE_KEYS[key]] + " is not in your schema");
+      throw new Error(dataKeys[compareKeys[key]] + " is not in your schema");
     }
   }
 }

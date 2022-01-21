@@ -5,10 +5,9 @@
     "main": "./dist/index.js",
     "types": "./types/index.d.ts",
     "scripts": {
-        "compile": "babel -d dist/ lib/",
-        "example": "cd example && node index.js",
+        "compile": "babel -d dist/ lib/ --no-comments",
         "build:types": "npx -p typescript tsc",
-        "publish:pack":"npm run build:types && npm run compile"
+        "prepublish":"npm run build:types && npm run compile"
     },
     "keywords": [
         "model",

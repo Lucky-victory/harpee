@@ -1,26 +1,26 @@
-const Util = require("./utils");
+const util = require("./utils");
 
 function validateRequired({ fieldsKeys, dataValues, requiredKeys }) {
-  const REQUIRED_KEYS = Util.findMultipleIndex(requiredKeys, true);
+  const requiredKeys = util.findMultipleIndex(requiredKeys, true);
 
-  if (REQUIRED_KEYS.length) {
-    for (const REQUIRED of REQUIRED_KEYS) {
+  if (requiredKeys.length) {
+    for (const required of requiredKeys) {
       if (
-        Util.isObject(dataValues[REQUIRED]) ||
-        Util.isArray(dataValues[REQUIRED])
+        util.isObject(dataValues[required]) ||
+        util.isArray(dataValues[required])
       ) {
-        if (Util.isEmpty(dataValues[REQUIRED])) {
+        if (util.isEmpty(dataValues[required])) {
           throw new Error(
-            `you can't leave '${fieldsKeys[REQUIRED]}' object empty because it is required`
+            `you can't leave '${fieldsKeys[required]}' object empty because it is required`
           );
         }
       } else {
         if (
-          Util.isUndefined(dataValues[REQUIRED]) ||
-          Util.isEmptyStr(dataValues[REQUIRED])
+          util.isUndefined(dataValues[required]) ||
+          util.isEmptyStr(dataValues[required])
         ) {
           throw new Error(
-            `you can't leave '${fieldsKeys[REQUIRED]}' empty because it is required`
+            `you can't leave '${fieldsKeys[required]}' empty because it is required`
           );
         }
       }

@@ -1,63 +1,63 @@
 
-const Util = require("./utils");
+const util = require("./utils");
 const validateTypes=require('./validateTypes');
 const validateDataKeysLength=require('./validateKeysLength');
 const validateKeys=require('./validateKeys');
 const validateRequired=require('./validateRequired');
 
-function validator(fields, newData) {
-  const FIELDS_TYPES = [];
-  const NEW_DATA_VALUES_TYPE = [];
-  const REQUIRED_KEYS = [];
-  const IS_EQUAL_TYPE = [];
+function validator(fields, newRecord) {
+  const fieldTypes = [];
+  const newRecordValuesType = [];
+  const requiredKeys = [];
+  const isEqualType = [];
 
-  const FIELDS_KEYS = Util.splitObjectSorted(fields).keys;
-  const FIELDS_VALUES = Util.splitObjectSorted(fields).values;
-  const NEW_DATA_KEYS = Util.splitObjectSorted(newData).keys;
-  const NEW_DATA_VALUES = Util.splitObjectSorted(newData).values;
+  const fieldsKeys = util.splitObjectSorted(fields).keys;
+  const fieldsValues = util.splitObjectSorted(fields).values;
+  const newRecordKeys = util.splitObjectSorted(newRecord).keys;
+  const newRecordValues = util.splitObjectSorted(newRecord).values;
 
   validateDataKeysLength({
-    dataKeys: NEW_DATA_KEYS,
-    fieldsKeys: FIELDS_KEYS,
+    dataKeys: newRecordKeys,
+    fieldsKeys,
   });
 
   validateKeys({
-    fieldsKeys: FIELDS_KEYS,
-    dataKeys: NEW_DATA_KEYS,
+    fieldsKeys,
+    dataKeys: newRecordKeys,
   });
 
-  for (let i = 0; i < NEW_DATA_KEYS.length; i++) {
-    const FIELDS_VALUE_TYPE = Util.isObject(FIELDS_VALUES[i])
-      ? FIELDS_VALUES[i].type
-      : FIELDS_VALUES[i];
+  for (let i = 0; i < newRecordKeys.length; i++) {
+    const fieldsValueType = util.isObject(fieldsValues[i])
+      ? fieldsValues[i].type
+      : fieldsValues[i];
 
-    const IT_HAS_REQUIRED = FIELDS_VALUES[i].required
-      ? FIELDS_VALUES[i].required
+    const itHasRequired = fieldsValues[i].required
+      ? fieldsValues[i].required
       : null;
 
-    REQUIRED_KEYS.push(IT_HAS_REQUIRED);
+    requiredKeys.push(itHasRequired);
 
-    FIELDS_TYPES.push(FIELDS_VALUE_TYPE);
+    fieldTypes.push(fieldsValueType);
 
-    NEW_DATA_VALUES_TYPE.push(NEW_DATA_VALUES[i]);
+    newRecordValuesType.push(newRecordValues[i]);
 
-    const CHECK_TYPE =
-      Util.getType(FIELDS_TYPES[i]) ===
-      Util.getType(NEW_DATA_VALUES_TYPE[i]);
+    const checkType =
+      util.getType(fieldTypes[i]) ===
+      util.getType(newRecordValuesType[i]);
 
-    IS_EQUAL_TYPE.push(CHECK_TYPE);
+    isEqualType.push(checkType);
   }
 
   validateTypes({
-    types: IS_EQUAL_TYPE,
-    dataKeys: NEW_DATA_KEYS,
-    dataTypes: NEW_DATA_VALUES_TYPE,
-    fieldsType: FIELDS_TYPES,
+    types: isEqualType,
+    dataKeys: newRecordKeys,
+    dataTypes: newRecordValuesType,
+    fieldTypes
   });
   validateRequired({
-    fieldsKeys: FIELDS_KEYS,
-    dataValues: NEW_DATA_VALUES,
-    requiredKeys: REQUIRED_KEYS,
+    fieldsKeys,
+    dataValues: newRecordValues,
+    requiredKeys
   });
 }
 
