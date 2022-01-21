@@ -77,7 +77,6 @@ jspm_packages/
 .upm/
 
 # test
-*.html
 example/
 dist/
 # vscode
