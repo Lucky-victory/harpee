@@ -22,7 +22,6 @@
     "license": "MIT",
     "typings": "./types/index.d.ts",
     "dependencies": {
-        "buffer": "^6.0.3",
         "node-fetch": "^2.4.6"
     },
     "devDependencies": {
