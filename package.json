@@ -7,7 +7,7 @@
     "scripts": {
         "compile": "babel -d dist/ lib/ --no-comments",
         "build:types": "npx -p typescript tsc",
-        "prepublish":"npm run build:types && npm run compile"
+        "prepublishOnly":"npm run build:types && npm run compile"
     },
     "keywords": [
         "model",
@@ -22,7 +22,7 @@
     "license": "MIT",
     "typings": "./types/index.d.ts",
     "dependencies": {
-        "node-fetch": "^2.4.6"
+        "node-fetch": "^3.2.0"
     },
     "devDependencies": {
         "typescript": "^4.3.5",

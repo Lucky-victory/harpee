@@ -50,4 +50,4 @@ const operations = {
     GET_CONFIGUATION:
     'get_configuation'
 };
-module.exports = operations;
+export default operations;

@@ -1,7 +1,7 @@
-const util = require("./utils");
+import util from "./utils";
 
 function validateRequired({ fieldsKeys, dataValues, requiredKeys }) {
-  const requiredKeys = util.findMultipleIndex(requiredKeys, true);
+   requiredKeys = util.findMultipleIndex(requiredKeys, true);
 
   if (requiredKeys.length) {
     for (const required of requiredKeys) {
@@ -27,4 +27,4 @@ function validateRequired({ fieldsKeys, dataValues, requiredKeys }) {
     }
   }
 }
-module.exports=validateRequired;
+export default validateRequired;

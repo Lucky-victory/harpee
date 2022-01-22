@@ -1,4 +1,6 @@
-const util = require("./utils");
+import util  from "./utils";
+
+
 function validateKeys({ fieldsKeys, dataKeys }) {
   const allKeys = [];
   for (let k = 0; k < fieldsKeys.length; k++) {
@@ -16,4 +18,4 @@ function validateKeys({ fieldsKeys, dataKeys }) {
     }
   }
 }
-module.exports=validateKeys;
+export default validateKeys;

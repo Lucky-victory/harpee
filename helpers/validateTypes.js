@@ -1,4 +1,4 @@
-const util = require("./utils");
+import util from "./utils";
 
 function validateTypes({ types, dataTypes, dataKeys, fieldTypes }) {
   const typesIndexes = util.findMultipleIndex(types, false);
@@ -18,4 +18,4 @@ function validateTypes({ types, dataTypes, dataKeys, fieldTypes }) {
   }
 }
 
-module.exports= validateTypes;
+export default validateTypes;

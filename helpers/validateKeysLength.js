@@ -6,4 +6,4 @@ function validateDataKeysLength({ dataKeys, fieldsKeys }) {
     );
   }
 }
-module.exports=validateDataKeysLength;
+export default validateDataKeysLength;
