@@ -1,50 +1,41 @@
 {
-  "name": "harpee",
-  "version": "2.1.6",
-  "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
-  "main": "index.js",
-  "types": "index.d.ts",
-  "scripts": {
-    "test": "jest --coverage",
-    "lint": "eslint --fix ./lib/**/*.js",
-    "build:pack":" webpack",
-    "example": "cd example && node index.js"
-  },
-  "keywords": [
-    "model",
-    "harperdb",
-    "database",
-    "harpee",
-    "sql",
-    "noSql"
-  ],
-  "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
-  "license": "MIT",
-  "unpkg":"dist/harpee.min.js",
-  "jsdelivr":"dist/harpee.min.js",
-  "typings":"./index.d.ts",
-  "dependencies": {
-    "axios": "^0.23.0"
-  },
-  "devDependencies": {
-    "typescript":"^4.3.5",
-    "@types/jest": "^26.0.24",
-    "eslint": "^7.31.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-prettier": "^3.4.0",
-    "jest": "^27.0.6",
-    "prettier": "^2.3.2",
-    "webpack":"^5.40.0",
-    "webpack-cli":"^4.9.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lucky-victory/harpee.git"
-  },
-  "bugs": {
-    "url": "https://github.com/lucky-victory/harpee/issues"
-  },
-  "homepage": "https://github.com/lucky-victory/harpee#readme"
+    "name": "harpee",
+    "version": "3.0.0",
+    "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
+    "main": "./dist/index.js",
+    "types": "./types/index.d.ts",
+    "scripts": {
+        "compile": "babel -d dist/ lib/ --no-comments",
+        "build:types": "npx -p typescript tsc",
+        "prepublishOnly":"npm run build:types && npm run compile"
+    },
+    "keywords": [
+        "model",
+        "harperdb",
+        "database",
+        "harpee",
+        "sql",
+        "noSql"
+    ],
+    "files":["dist"],
+    "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
+    "license": "MIT",
+    "typings": "./types/index.d.ts",
+    "dependencies": {
+        "node-fetch": "^2.4.6"
+    },
+    "devDependencies": {
+        "typescript": "^4.3.5",
+        "@babel/cli":"7.16.8",
+        "@babel/core":"7.16.7",
+        "@babel/preset-env":"7.16.8"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lucky-victory/harpee.git"
+    },
+    "bugs": {
+        "url": "https://github.com/lucky-victory/harpee/issues"
+    },
+    "homepage": "https://github.com/lucky-victory/harpee#readme"
 }
