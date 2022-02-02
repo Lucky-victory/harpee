@@ -7,7 +7,7 @@
     "scripts": {
         "compile": "babel -d dist/ lib/ --no-comments",
         "build:types": "npx -p typescript tsc",
-        "prepublishOnly":"npm run build:types && npm run compile"
+        "prepublishOnly": "npm run build:types && npm run compile"
     },
     "keywords": [
         "model",
@@ -17,7 +17,10 @@
         "sql",
         "noSql"
     ],
-    "files":["dist","types"],
+    "files": [
+        "dist",
+        "types"
+    ],
     "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
     "license": "MIT",
     "typings": "./types/index.d.ts",
@@ -26,9 +29,9 @@
     },
     "devDependencies": {
         "typescript": "^4.3.5",
-        "@babel/cli":"7.16.8",
-        "@babel/core":"7.16.7",
-        "@babel/preset-env":"7.16.8"
+        "@babel/cli": "7.16.8",
+        "@babel/core": "7.16.7",
+        "@babel/preset-env": "7.16.8"
     },
     "repository": {
         "type": "git",
