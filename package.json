@@ -1,6 +1,6 @@
 {
     "name": "harpee",
-    "version": "3.0.0",
+    "version": "3.0.2",
     "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
     "main": "./dist/index.js",
     "types": "./types/index.d.ts",
@@ -37,5 +37,5 @@
     "bugs": {
         "url": "https://github.com/lucky-victory/harpee/issues"
     },
-    "homepage": "https://github.com/lucky-victory/harpee#readme"
+    "homepage": "https://harpee-docs.netlify.app"
 }
