@@ -53,8 +53,8 @@ harpee.createConnection({host:
 // create a model, the model name represents a table.
 
 const Users = new harpee.Model("Users",myUsersSchema);
+
 // Next, initialize it.
-// this will create the schema/table if they don't exist yet.
 // i recommend you get rid of this method after running your app.
 
 Users.init();
