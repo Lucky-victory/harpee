@@ -1,6 +1,6 @@
 {
     "name": "harpee",
-    "version": "3.0.5",
+    "version": "3.0.6",
     "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
     "main": "./dist/index.js",
     "types": "./types/index.d.ts",
@@ -25,7 +25,7 @@
     "license": "MIT",
     "typings": "./types/index.d.ts",
     "dependencies": {
-        "node-fetch": "^2.4.6"
+        "axios":"^0.25.0"
     },
     "devDependencies": {
         "typescript": "^4.3.5",

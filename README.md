@@ -55,7 +55,7 @@ harpee.createConnection({host:
 const Users = new harpee.Model("Users",myUsersSchema);
 
 // Next, initialize it.
-// i recommend you get rid of this method after running your app.
+// Recommended: you may get rid of this method after running your app for the first time.
 
 Users.init();
 
@@ -121,7 +121,7 @@ Users.findById({user_id:[1,2],getAttributes:["username","email"]},(err,result)=>
   - `token` *Type - String* : A generated JWT token, token is *optional*,you should only include it in place of `username` and `password`. 
 
 ### Schema(options)
- `Schema` function creates a Schema, it takes in an object with the following props, 
+ `Schema` class creates a Schema, it takes in an object with the following props, 
    - `name` *Type - String* :  *optional*, if not specified a default schema named **defaultSchema** will be created, but if you want your schema to have a different name, then you should specify this option.   
    - `primaryKey` *Type - String* _*optional*_: this option allows you to set a *hash_attribute*, if not specified, will default to `id`.
    - `silent` *Type - boolean* : *optional* Turns on/off errors when `Schema.fields` properties doesn't match `Model.create()` properties, default is `false`.
@@ -177,14 +177,15 @@ inserts new data into the table, takes in an object of the data to be inserted.
 the **find** method also takes an object with options, this let's do some advanced filtering.
   - `limit`: *Type - Number* *optional*: 
       - `getAttributes`:*Type - Array* *optional*
-      - `offset`: **Type - Number ** *optional*, 
-      - `desc`: **Type - boolean** *optional*
+      - `limit`: **Type - Number** *optional*, 
+      - `offset`: **Type - Number** *optional*, 
+      - `order`: **Type - String** *optional*
       - `orderBy` : **Type - String** *optional* 
 
 You can find more methods on the [documentation](https://harpee-docs.netlify.app/model) page.
 
 ### Bugs or Feature Request.
-For bugs or feature request, please create an [issue](https://github.com/lucky-victory/harpee/issues) on github.
+For bugs or feature request, please create an [issue](https://github.com/lucky-victory/harpee/issues).
 
 ### Support this project.
-Want to support this project? [![Buy me a coffee](https://raw.githubusercontent.com/Lucky-victory/folio/main/files/images/yellow-button.png)](https://buymeacoffee.com/luckyvictory).
+Want to support this project? [![Buy me a coffee](https://raw.githubusercontent.com/Lucky-victory/folio/main/files/images/blue-button.png)](https://buymeacoffee.com/luckyvictory).
