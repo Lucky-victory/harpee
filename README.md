@@ -108,10 +108,10 @@ Users.findById({user_id:[1,2],getAttributes:["username","email"]},(err,result)=>
 
 - **`createConnection`**: *function*
 - **`Schema`**: *class*
-- **`Model`**: *class*
-- **`Logger`**: *class*
+- **[Model](https://harpee-docs.netlify.app/model)**: *class*
+- **[Logger](https://harpee-docs.netlify.app/logger)**: *class*
 - **`Utilities`**: *class*
-- **`Sqler`**: *class*
+- **[Sqler](https://harpee-docs.netlify.app/sqler)**: *class*
 
 ### createConnection(config)
 `createConnection` function creates a connection with your harperDB instance. it takes in an object with the following props.
@@ -180,7 +180,7 @@ the **find** method also takes an object with options, this let's do some advanc
       - `limit`: **Type - Number** *optional*, 
       - `offset`: **Type - Number** *optional*, 
       - `order`: **Type - String** *optional*
-      - `orderBy` : **Type - String** *optional* 
+      - `orderby` : **Type - String** *optional* 
 
 You can find more methods on the [documentation](https://harpee-docs.netlify.app/model) page.
 
