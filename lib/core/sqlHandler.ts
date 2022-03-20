@@ -1,7 +1,7 @@
 import util from "../helpers/util"
 
 class SqlHandler implements SqlhandlerT{
-     private query:string=``;
+   query:string=``;
    constructor() {
    
    }
@@ -9,7 +9,7 @@ class SqlHandler implements SqlhandlerT{
     * @param {Array<string>} columns - an array of column names.
     * @param {boolean} [distinct=false] - whether to include 'DISTINCT' keyword, default is `false`.
     */
-   select(columns:string[], distinct?:boolean = false) {
+   select(columns:string[], distinct:boolean = false) {
       this.query += columns ? ` SELECT ${distinct ? ' DISTINCT ' :''}${columns.join(",")}` : "";
       return this;
    }
@@ -80,13 +80,16 @@ class SqlHandler implements SqlhandlerT{
       this.query += schema && table ? ` UPDATE ${schema}.[${table}]` : '';
       return this;
    }
-      
+     as(title:string){
+      this.query += title? ` AS ${title}` : '';
+      return this;
+     } 
    insertInto(options:{schema:string,table:string,records:object[]}):SqlHandler{
       const {schema,table,records}=options;
       
       if(Array.isArray(records)){
          
-   const {keys,values}=records.reduce((accum:{keys:string[],values:string[]},item:object)=>{
+   const {keys,values}=records.reduce((accum:{keys:string[],values:string[]},item:{}):({keys:string[],values:string[]})=>{
       if(util.isObject(item)){
          
  for(let prop in item){
@@ -111,7 +114,7 @@ else{
    
    set(records:object[]):SqlHandler{
       if(Array.isArray(records)){
-   const keysAndValues:string[]=records.reduce((accum:string[],item:object)=>{
+   const keysAndValues:string[]=records.reduce((accum:string[],item:object):string[]=>{
       if(util.isObject(item)){
       
  for(let prop in item){
@@ -140,7 +143,7 @@ this.query+=` SET ${keysAndValues.join(',')}`
       return this;
    }
    
-   equalTo(val:string|number):SqlhandlerT {
+   equalTo(val:string|number):SqlHandler {
       this.query += val ? ` ='${val}'` : "";
       return this;
    }
@@ -156,7 +159,7 @@ this.query+=` SET ${keysAndValues.join(',')}`
       }
       
       like(pattern:string):SqlHandler {
-         this.query += values ? ` LIKE '${pattern}'` : "";
+         this.query += pattern ? ` LIKE '${pattern}'` : "";
          return this;
       }
 
@@ -228,8 +231,8 @@ this.query+=` SET ${keysAndValues.join(',')}`
 }
 
 export interface SqlhandlerT{
-   query:string;
-   select:(columns:string[], distinct?:boolean = false)=>SqlHandler;
+    query:string;
+   select:(columns:string[], distinct?:boolean)=>SqlHandler;
    
    selectCount:(column:string)=>SqlHandler;
    
@@ -294,5 +297,4 @@ export interface SqlhandlerT{
    rightOuterJoin:(schema:string, table:string)=>SqlHandler;
 
 }
-
 export default SqlHandler;

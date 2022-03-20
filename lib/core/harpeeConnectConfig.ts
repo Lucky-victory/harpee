@@ -1,9 +1,9 @@
 import {ConnectionConfig} from "./harpeeConnect";
-ConnectionConfig
+
 
 class HarpeeConnectConfig {
    private config:ConnectionConfig;
-    constructor(config?:ConnectionConfig = {}) {
+    constructor(config?:ConnectionConfig) {
         this.config = config;
     }
     setConfig(config:ConnectionConfig):void {

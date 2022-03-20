@@ -1,19 +1,14 @@
 import axios from  'axios';
-import util from "../helpers/util";
+import util from '../helpers/util';
+import {ConnectionConfig} from "./harpeeConnect"
 
-interface Config{
-   host:string;
-   username:string;
-   password:string;
-   token?:string;
-}
-class HarpeeHttp {
-      private config:Config ;
-   constructor(config:Config = {}) {
+const HarpeeHttp: HarpeeHttpConstructor = class HarpeeHttp implements HarpeeHttpStatic{
+     private  config:ConnectionConfig ;
+   constructor(config:ConnectionConfig) {
       this.config=config;
    }
    
-  protected $requestHandler(reqBody:object, callback:(err:any,data:any)=> void) {
+  private $requestHandler(reqBody:ReqBody<{}>, callback:Callback) {
       
       let auth:string;
       const username:string = this.config.username;
@@ -57,7 +52,7 @@ class HarpeeHttp {
          });
    }
 
-  protected $callbackOrPromise(reqBody:object, callback?:(err:any,result:any)=>void, single?:boolean = false):void|Promise<any> {
+  protected $callbackOrPromise(reqBody:ReqBody<{}>, callback?:(err:any,result:any)=>void, single:boolean = false):void|Promise<any> {
       if (util.isUndefined(callback)) {
          return new Promise((resolve, reject) => {
             this.$requestHandler(reqBody, (err, result) => {
@@ -89,6 +84,18 @@ class HarpeeHttp {
          }
       });
    }
+}
+
+export type ReqBody<T>=T & {[key:string]:unknown};
+export type Callback=(err:any,data:any)=>void;
+export interface HarpeeHttpConstructor{
+   new(config:ConnectionConfig):HarpeeHttpStatic
+}
+export interface HarpeeHttpStatic{
+   config:ConnectionConfig;
+$requestHandler(reqBody:ReqBody<{}>,callback:Callback):void;
+$callbackOrPromise(reqBody:ReqBody<{}>,callback:Callback):void;
+
 }
 
 export default HarpeeHttp;

@@ -1,5 +1,5 @@
 import util from "../helpers/util";
-
+import HarpeeSchema from "./harpeeSchema";
 import harpeeConnectConfig from "./harpeeConnectConfig";
 
 /** 

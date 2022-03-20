@@ -1,6 +1,6 @@
 import util from "../helpers/util";
 
-const HarpeeSchema:HarpeeSchemaConstructor= class HarpeeSchema implements HarpeeSchemaT{
+const HarpeeSchema:HarpeeSchemaConstructor= class HarpeeSchema implements HarpeeSchemaStatic{
    /** 
  * Let's you specify your schema name, also configure your table's column names and types.
  * @param {string } [schemaConfig.name="defaultShema"] - the name of your schema, default is 'defaultSchema'.
@@ -40,9 +40,9 @@ export interface SchemaConfig{
    fields:Fields<{}>
 }
 interface HarpeeSchemaConstructor{
-   new(schemaConfig:SchemaConfig):HarpeeSchemaT
+   new(schemaConfig:SchemaConfig):HarpeeSchemaStatic
 }
-export interface HarpeeSchemaT{
+export interface HarpeeSchemaStatic{
 
    
 }

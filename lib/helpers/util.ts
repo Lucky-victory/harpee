@@ -149,7 +149,7 @@ const util:Util = {
      * @param {object} obj - the object to be converted
      *
      */
-    objectToArray(obj:object, seperator?:string = ","):string[] {
+    objectToArray(obj:object, seperator:string = ","):string[] {
         const arr:string[] = [];
         for (let key in obj) {
             arr.push(`${key}${seperator}'${obj[key]}'`);
@@ -218,8 +218,8 @@ const util:Util = {
 
 
 export interface KeysValuesObject{
-   keys:string[];
-   values:string[];
+   keys:(number|string)[];
+   values:(number|string)[];
 }
 export type StrOrNum=(string|number);
 export interface Util{
