@@ -1,27 +1,24 @@
-const util = require("../helpers/util");
+import util from "../helpers/util";
 
-const harpeeConnectConfig = require("./harpeeConnectConfig");
+import harpeeConnectConfig from "./harpeeConnectConfig";
 
 /** 
  * Creates a Connection to your harperDB instance, this is the only connection you will need. it covers the connections required for `Utilities` and `Logger` classes.
- * @param {object} config - config object that takes in `host`, `username`,`password` and `token`.
  * @param {string} config.host - your harperdb host url.
  * @param {string} config.username - your harperdb username.
  * @param {string} config.password - your harperdb password.
  * @param {string} [config.token] - your generated JWT token.
- * @returns {void}
+ * 
  **/
-function createConnection(config) {
+function createConnection(config:ConnectionConfig):void {
     if (!util.isObject(config)) {
         throw new TypeError("connection `config` must be an Object");
     }
     if (!config.host) {
         throw new Error("`host` is required");
     }
-    const host = config.host || null;
-    const username = config.username || null;
-    const password = config.password || null;
-    const token = config.token || null;
+   
+    const {password,username,host,token}= config;
 
     if ((username && !password) || (password && !username)) {
         throw new Error("you must include both `username` and `password`");
@@ -31,8 +28,7 @@ function createConnection(config) {
             "you should include `username` and `password` or only `token`"
         );
     }
-    const connectionConfig = { host, username, password, token };
-    harpeeConnectConfig.setConfig(connectionConfig);
+    harpeeConnectConfig.setConfig({ host, username, password, token });
 }
 
 /** 
@@ -40,9 +36,15 @@ function createConnection(config) {
  * @deprecated
  * 
  **/
-function connect(config) {
+function connect(config:ConnectionConfig):void {
    createConnection(config) 
    
 }
 
-module.exports= {createConnection,connect};
+export interface ConnectionConfig{
+   host:string;
+   password:string;
+   username:string;
+   token?:string;
+}
+export {createConnection,connect};
