@@ -1,35 +1,35 @@
-const axios = require('axios').default;
-const  util =require("../helpers/util");
+import axios from  'axios';
+import util from "../helpers/util";
 
+interface Config{
+   host:string;
+   username:string;
+   password:string;
+   token?:string;
+}
 class HarpeeHttp {
-   constructor(config = {}) {
-      /**
-       * @private
-       */
-      this.config = config;
+      private config:Config ;
+   constructor(config:Config = {}) {
+      this.config=config;
    }
-   /**
-    *
-    * @param {Object} reqBody
-    * @param {function} callback
-    * @protected
-    */
-   $requestHandler(reqBody, callback) {
-      let auth;
-      const username = this.config.username;
-      const password = this.config.password;
-      const token = this.config.token;
+   
+  protected $requestHandler(reqBody:object, callback:(err:any,data:any)=> void) {
+      
+      let auth:string;
+      const username:string = this.config.username;
+      const password:string = this.config.password;
+      const token:string|undefined = this.config.token;
       if (token) {
          auth = "Bearer " + token;
       }
       else if (username && password) {
-         auth =
+      auth =
             "Basic " +
             Buffer.from(username + ":" + password, "utf-8").toString(
                "base64"
             );
       }
-      const errorObj = {};
+      const errorObj:object = {};
       axios({url:this.config.host, 
             method: "post",
             headers: {
@@ -57,16 +57,7 @@ class HarpeeHttp {
          });
    }
 
-   /**
-    *
-    * @param {Object} reqBody
-    * @param {function} [callback]
-    * @param {boolean} [single=false]
-    * @returns {(void|Promise<any>)}
-    * @protected
-    */
-
-   $callbackOrPromise(reqBody, callback, single = false) {
+  protected $callbackOrPromise(reqBody:object, callback?:(err:any,result:any)=>void, single?:boolean = false):void|Promise<any> {
       if (util.isUndefined(callback)) {
          return new Promise((resolve, reject) => {
             this.$requestHandler(reqBody, (err, result) => {
@@ -100,5 +91,5 @@ class HarpeeHttp {
    }
 }
 
-module.exports= HarpeeHttp;
+export default HarpeeHttp;
 

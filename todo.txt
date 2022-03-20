@@ -1,0 +1,5 @@
+fix: get attributes errors at findByValue
+ 
+implement: findById with search by hash
+implement: rewrite module with typescript
+implement: linting

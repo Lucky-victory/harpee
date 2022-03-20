@@ -1,4 +1,4 @@
-const operations = {
+const operations:Operations = {
     SQL: "sql",
     SYSTEM_INFORMATION: "system_information",
     CLUSTER_STATUS: "cluster_status",
@@ -45,9 +45,64 @@ const operations = {
     DEPLOY_CUSTOM_FUNCTION_PROJECT: "deploy_custom_function_project",
     ADD_CUSTOM_FUNCTION_PROJECT: "add_custom_function_project",
     PACKAGE_CUSTOM_FUNCTION_PROJECT: "package_custom_function_project",
-    RESTART:'restart',
-    RESTART_SERVICE:'restart_service',
+    RESTART:"restart",
+    RESTART_SERVICE:"restart_service",
     GET_CONFIGUATION:
-    'get_configuation'
+    "get_configuation"
 };
-module.exports=operations;
+
+export interface Operations{
+    SQL: string;
+    SYSTEM_INFORMATION: string,
+    CLUSTER_STATUS: string,
+    ADD_NODE: string,
+    UPDATE_NODE: string,
+    REMOVE_NODE: string,
+    DESCRIBE_ALL: string,
+    CREATE_SCHEMA: string,
+    DESCRIBE_SCHEMA: string,
+    DROP_SCHEMA: string,
+    CREATE_TABLE: string,
+    DESCRIBE_TABLE: string,
+    DROP_TABLE: string,
+    SEARCH_BY_VALUE: string,
+    SEARCH_BY_HASH: string,
+    SEARCH_BY_CONDITIONS: string,
+    CSV_DATA_LOAD: string,
+    CSV_URL_LOAD: string,
+    CSV_FILE_LOAD: string,
+    INSERT: string,
+    UPDATE: string,
+    DELETE: string,
+    IMPORT_FROM_S3: string,
+    EXPORT_TO_S3:string,
+    EXPORT_LOCAL: string,
+    ADD_USER: string,
+    ALTER_USER: string,
+    DROP_USER: string,
+    LIST_USERS: string,
+    LIST_ROLES: string,
+    ALTER_ROLE: string,
+    ADD_ROLE: string,
+    READ_TRANSACTION_LOG: string,
+    DELETE_TRANSACTION_LOGS:string,
+    DELETE_RECORDS_BEFORE: string,
+    READ_LOG: string,
+    GET_JOB: string,
+    CREATE_AUTHENTICATION_TOKENS: string,
+    REFRESH_OPERATION_TOKEN: string,
+    SEARCH_JOBS_BY_START_DATE:string,
+    GET_CUSTOM_FUNCTIONS: string,
+    GET_CUSTOM_FUNCTION: string,
+    DROP_CUSTOM_FUNCTION: string,
+    DEPLOY_CUSTOM_FUNCTION_PROJECT:string,
+    ADD_CUSTOM_FUNCTION_PROJECT: string,
+    PACKAGE_CUSTOM_FUNCTION_PROJECT: string,
+    RESTART:string,
+    RESTART_SERVICE:string,
+    GET_CONFIGUATION:
+    string;
+};
+
+
+export default operations;

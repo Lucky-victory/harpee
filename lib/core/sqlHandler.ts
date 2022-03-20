@@ -1,124 +1,96 @@
-const util = require("../helpers/util");
+import util from "../helpers/util"
 
-class SqlHandler {
+class SqlHandler implements SqlhandlerT{
+     private query:string=``;
    constructor() {
-      /**
-       * @protected
-       */
-      this.query = ``;
+   
    }
    /**
     * @param {Array<string>} columns - an array of column names.
     * @param {boolean} [distinct=false] - whether to include 'DISTINCT' keyword, default is `false`.
     */
-   select(columns, distinct = false) {
+   select(columns:string[], distinct?:boolean = false) {
       this.query += columns ? ` SELECT ${distinct ? ' DISTINCT ' :''}${columns.join(",")}` : "";
       return this;
    }
-   /**
-    * @param {string} column
-    * */
-   selectCount(column) {
+   
+   selectCount(column:string) {
       this.query += column ? ` SELECT COUNT(${column})` : '';
       return this;
    }
-   /**
-    * @@param {string} column
-    */
-
-   selectAvg(column) {
+   
+   selectAvg(column:string) {
       this.query += column ? ` SELECT AVG(${column})` : '';
       return this;
    }
-   /**
-    * @param {string} column
-    */
-   selectSum(column) {
+
+   selectSum(column:string) {
       this.query += column ? ` SELECT SUM(${column})` : '';
       return this;
    }
-   /**
-    * @param {string} schema 
-    * @param {string} table 
-    */
-   from(schema, table) {
+
+   from(schema:string, table:string) {
       this.query += table ? ` FROM ${schema}.[${table}]` : "";
       return this;
    }
-   /**
-    * @param {number} limit - specifying the max records.
-    * 
-    * */
-   limit(limit) {
+   
+   limit(limit:number){
       this.query += limit ? ` LIMIT ${limit}` : "";
       return this;
+   
    }
 
-   /**
-    *
-    * @param {number} offset - the number of rows to skip.
-    */
-   offset(offset) {
+   offset(offset:number):SqlHandler {
       this.query += offset ? ` OFFSET ${offset}` : "";
       return this;
+   
    }
    /**
     * @param {number} offset - the number of rows to skip.
     */
-   offsetRows(offset) {
+   offsetRows(offset:number):SqlHandler {
       this.query += offset ? ` OFFSET ${offset} ROWS` : '';
       return this
    }
    /**
     * @param {number} rows - the number of rows to fetch.
     */
-   fetchNextRows(rows) {
+   fetchNextRows(rows:number):SqlHandler {
       this.query += rows ? ` FETCH NEXT ${rows} ROWS ONLY` : '';
       return this;
    }
-   /**
-    * @param {string[]} columns
-    * */
-   orderBy(columns) {
+
+   orderBy(columns:string[]):SqlHandler {
       this.query += columns ? ` ORDER BY  ${columns.join(',')}` : "";
       return this;
    }
-   /**
-    * @param {('DESC'|'ASC')} order 
-    * */
-   order(order) {
+   
+   order(order:"DESC"|"ASC") {
       this.query += order ? ` ${order}` : "";
       return this;
+   
    }
 
-   delete() {
+   delete():SqlHandler {
       this.query += " DELETE";
       return this;
    }
-      /**
-    * @param {string} schema 
-    * @param {string} table 
-    */
-
-   update(schema,table) {
+   
+   update(schema:string,table:string):SqlHandler {
       this.query += schema && table ? ` UPDATE ${schema}.[${table}]` : '';
       return this;
    }
-      /**
-   * @param {Object} options
-   * @param {string} options.schema
-   * @param {string} options.table
-   * @param {Object[]} options.records - an array of objects 
-   */
-
-   insertInto(options){
+      
+   insertInto(options:{schema:string,table:string,records:object[]}):SqlHandler{
       const {schema,table,records}=options;
+      
       if(Array.isArray(records)){
          
-   const {keys,values}=records.reduce((accum,item)=>{
+   const {keys,values}=records.reduce((accum:{keys:string[],values:string[]},item:object)=>{
       if(util.isObject(item)){
          
  for(let prop in item){
+    
       accum.keys.push(prop)
       accum.values.push(item[prop])
    }
@@ -136,14 +108,12 @@ else{
       
       return this;
    }
-   /**
-   * @param {Object[]} records - an array of objects 
-   */
-   set(records){
+   
+   set(records:object[]):SqlHandler{
       if(Array.isArray(records)){
-   const keysAndValues=records.reduce((accum,item)=>{
+   const keysAndValues:string[]=records.reduce((accum:string[],item:object)=>{
       if(util.isObject(item)){
-         
+      
  for(let prop in item){
       accum.push(`\`${prop}\`="${item[prop]}"`)
    }
@@ -159,145 +129,170 @@ this.query+=` SET ${keysAndValues.join(',')}`
       
       return this;
    }
-   /**
-    * @param {string} condition 
-    * */
-   where(condition) {
+   
+   where(condition:string):SqlHandler {
       this.query += condition ? ` WHERE ${condition}` : "";
       return this;
    }
-   /**
-    * @param {string} condition 
-    * */
-   whereNot(condition) {
+   
+   whereNot(condition:string):SqlHandler {
       this.query += condition ? ` WHERE NOT ${condition}` : "";
       return this;
    }
-   /**
-    * @param {(string | number)} val 
-    * */
-   equalTo(val) {
+   
+   equalTo(val:string|number):SqlhandlerT {
       this.query += val ? ` ='${val}'` : "";
       return this;
    }
-   /**
-    * @param {string} table 
-    * @param {string} column
-    *
-    * */
-   isEqual(table, column) {
+
+   isEqual(table:string, column:string):SqlHandler {
          this.query += table && column ? `=${table}.[${column}]` : "";
          return this;
       }
-      /**
-       * @param {(number[]|string[])} values 
-       *
-       */
-      in (values) {
+   
+      in (values:number[]|string[]):SqlHandler {
          this.query += values ? ` IN ("${values.join('","')}")` : "";
          return this;
       }
-      /**
-       * @param {string} pattern
-       *
-       */
-      like(pattern) {
+      
+      like(pattern:string):SqlHandler {
          this.query += values ? ` LIKE '${pattern}'` : "";
          return this;
       }
 
-   /**
-    * @param {string} table
-    * @param {string} column 
-    */
-   on(table, column) {
+   
+   on(table:string, column:string) :SqlHandler{
       this.query += table && column ? ` ON ${table}.\`${column}\`` : "";
       return this;
    }
 
-   isNotNull() {
+   isNotNull():SqlHandler {
       this.query += ` IS NOT NULL`
       return this;
    }
-   isNull() {
+   isNull():SqlHandler {
       this.query += ` IS NULL`
       return this;
    }
-   /**
-    * @param {number} value 
-    */
-   greaterThan(value) {
+   
+   greaterThan(value:number):SqlHandler {
       this.query += value ? ` > ${value}` : "";
       return this;
    }
-   /**
-    * @param {number} value 
-    */
-   lessThan(value) {
+
+   lessThan(value:number):SqlHandler {
       this.query += value ? ` < ${value}` : "";
       return this;
    }
-   /**
-    * @param {(string|number)} val
-    * */
-   between(val) {
+   
+   between(val:string|number):SqlHandler {
       this.query += val ? ` BETWEEN ${val}` : "";
       return this;
    }
-   /**
-    * @param {(string|number)} condition
-    */
-   and(condition) {
+   
+   and(condition:string|number):SqlHandler {
       this.query += condition ? ` AND ${condition}` : "";
       return this;
    }
-   /**
-    * @param {(string|number)} condition
-    */
-   or(condition) {
+   
+   or(condition:string|number):SqlHandler {
       this.query += condition ? ` OR  ${condition}` : "";
       return this;
    }
-   /**
-    * @param {string} schema - the schema name
-    * @param {string} table - the table name
-    */
-   crossJoin(schema, table) {
+   crossJoin(schema:string, table:string):SqlHandler {
       this.query += schema && table ? ` CROSS JOIN ${schema}.[${table}]` : "";
       return this;
    }
-   /**
-    * @param {string} schema - the schema name
-    * @param {string} table - the table name
-    */
-   fullOuterJoin(schema, table) {
+
+   fullOuterJoin(schema:string, table:string):SqlHandler {
       this.query += schema && table ? ` FULL OUTER JOIN ${schema}.[${table}]` : "";
       return this;
    }
-   /**
-    * @param {string} schema - the schema name
-    * @param {string} table - the table name
-    */
-   innerJoin(schema, table) {
+   
+   innerJoin(schema:string, table:string):SqlHandler {
       this.query += schema && table ? ` INNER JOIN ${schema}.[${table}]` : "";
+   
       return this;
    }
-   /**
-    * @param {string} schema - the schema name
-    * @param {string} table - the table name
-    */
-   leftOuterJoin(schema, table) {
+   
+   leftOuterJoin(schema:string, table:string):SqlHandler {
       this.query += schema && table ? ` LEFT OUTER JOIN ${schema}.[${table}]` : "";
       return this;
    }
-   /**
-    * @param {string} schema - the schema name
-    * @param {string} table - the table name
-    */
-   rightOuterJoin(schema, table) {
+   
+   rightOuterJoin(schema:string, table:string):SqlHandler {
       this.query += schema && table ? ` RIGHT OUTER JOIN ${schema}.[${table}]` : "";
+   
       return this;
    }
 }
 
-module.exports= SqlHandler;
+export interface SqlhandlerT{
+   query:string;
+   select:(columns:string[], distinct?:boolean = false)=>SqlHandler;
+   
+   selectCount:(column:string)=>SqlHandler;
+   
+   selectAvg:(column:string)=>SqlHandler
+
+   selectSum:(column:string)=>SqlHandler;
+
+   from:(schema:string, table:string)=>SqlHandler;
+   
+   limit:(limit:number)=>SqlHandler;
+
+   offset:(offset:number)=>SqlHandler;
+   offsetRows:(offset:number)=>SqlHandler;
+   fetchNextRows:(rows:number)=>SqlHandler;
+
+   orderBy:(columns:string[])=>SqlHandler;
+   
+   order:(order:"DESC"|"ASC")=>SqlHandler;
+
+   delete:()=>SqlHandler;
+   
+   update:(schema:string,table:string)=>SqlHandler;
+      
+   insertInto:(options:{schema:string,table:string,records:object[]})=>SqlHandler;
+   
+   set:(records:object[])=>SqlHandler;
+   
+   where:(condition:string)=>SqlHandler;
+   
+   whereNot:(condition:string)=>SqlHandler;
+   
+   equalTo:(val:string|number)=>SqlHandler;
+
+   isEqual:(table:string, column:string)=>SqlHandler;
+   
+      in:(values:number[]|string[])=>SqlHandler;
+      
+      like:(pattern:string)=>SqlHandler;
+
+   
+   on:(table:string, column:string) =>SqlHandler;
+
+   isNotNull:()=>SqlHandler;
+   isNull:()=>SqlHandler;
+   
+   
+   greaterThan:(value:number)=>SqlHandler;
+
+   lessThan:(value:number)=>SqlHandler;
+   
+   between:(val:string|number)=>SqlHandler;
+   and:(condition:string|number)=>SqlHandler;
+   
+   
+   or:(condition:string|number)=>SqlHandler;
+   crossJoin:(schema:string, table:string)=>SqlHandler;
+
+   fullOuterJoin:(schema:string, table:string)=>SqlHandler;
+   
+   innerJoin:(schema:string, table:string)=>SqlHandler;
+   leftOuterJoin:(schema:string, table:string)=>SqlHandler;
+   rightOuterJoin:(schema:string, table:string)=>SqlHandler;
+
+}
+
+export default SqlHandler;
