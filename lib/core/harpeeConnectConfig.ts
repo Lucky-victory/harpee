@@ -1,7 +1,7 @@
 import {ConnectionConfig} from "./harpeeConnect";
 
 
-class HarpeeConnectConfig {
+class HarpeeConnectConfig implements HarpeeConnectConfigStatic {
    private config:ConnectionConfig;
     constructor(config?:ConnectionConfig) {
         this.config = config;
@@ -16,4 +16,9 @@ class HarpeeConnectConfig {
 
 const harpeeConnectConfig = new HarpeeConnectConfig();
 
-export default harpeeConnectConfig;
+
+export interface HarpeeConnectConfigStatic{
+   setConfig:(config:ConnectionConfig)=>void;
+   getConfig:()=>ConnectionConfig;
+}
+export default harpeeConnectConfig\;

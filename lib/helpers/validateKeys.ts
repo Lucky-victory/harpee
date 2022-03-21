@@ -1,12 +1,14 @@
-const util =require("./util");
+import util from "./util";
 
 
-function validateKeys({ fieldsKeys, dataKeys }) {
-  const allKeys = [];
+export type Keys={fieldsKeys:string[],dataKeys:string[]}
+declare function validateKeys(keys:Keys):void;
+function validateKeys({ fieldsKeys, dataKeys }:Keys) {
+  const allKeys:string[] = [];
   for (let k = 0; k < fieldsKeys.length; k++) {
     allKeys.push(util.findStringInArray(fieldsKeys, dataKeys[k]));
   }
-  const compareKeys = util.findMultipleIndex(allKeys, false);
+  const compareKeys:number[] = util.findMultipleIndex(allKeys, false);
   if (compareKeys.length) {
     for (const cKey of compareKeys) {
       if (util.isUndefined(dataKeys[cKey])) {
@@ -18,4 +20,5 @@ function validateKeys({ fieldsKeys, dataKeys }) {
     }
   }
 }
-module.exports= validateKeys;
+
+export default validateKeys;

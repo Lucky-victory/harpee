@@ -1,4 +1,5 @@
-
+import {Keys} from "./validateKeys";
+declare function validateKeysLength(arg:Keys):void;
 function validateKeysLength({ dataKeys, fieldsKeys }) {
   if (dataKeys.length > fieldsKeys.length) {
     throw new Error(
@@ -6,4 +7,4 @@ function validateKeysLength({ dataKeys, fieldsKeys }) {
     );
   }
 }
-module.exports=validateKeysLength;
+export default validateKeysLength;

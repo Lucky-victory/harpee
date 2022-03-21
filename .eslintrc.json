@@ -13,11 +13,11 @@
     "no-undef": "warn",
     "no-console":"warn",
     "no-restricted-syntax": "off",
-    "quotes": "off",
+    "quotes": "warn",
     "no-lonely-if": "off",
     "no-use-before-define": "warn",
-    "object-shorthand": "off",
-    "func-names":"off",
+    "object-shorthand": "warn",
+    "func-names":"warn",
     "no-useless-catch":"warn",
     "consistent-return":"off"
   }

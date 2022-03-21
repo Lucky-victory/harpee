@@ -7,7 +7,8 @@
     "scripts": {
         "compile": "babel -d dist/ lib/ --no-comments",
         "build:types": "npx -p typescript tsc",
-        "prepublishOnly": "npm run build:types && npm run compile"
+        "prepublishOnly": "npm run build:types && npm run compile",
+        "lint":"eslint --fix ./lib/**"
     },
     "keywords": [
         "model",

@@ -32,7 +32,7 @@ constructor(schemaConfig:SchemaConfig) {
     };
 }
 }
-export type Fields<T>=T & {[key:string]:unknown}
+export type Fields<T>=T & {[key:string]:any}
 export interface SchemaConfig{
    name:string;
    primaryKey?:string;

@@ -1,19 +1,25 @@
-const util = require("./util");
-const validateTypes =require('./validateTypes');
-const validateKeysLength =require('./validateKeysLength');
-const validateKeys =require('./validateKeys');
-const validateRequired =require('./validateRequired');
+import util from "./util";
+import validateTypes from "./validateTypes";
+import validateKeysLength from "./validateKeysLength";
+import validateKeys from "./validateKeys";
+import validateRequired from"./validateRequired";
 
+import {Fields} from "../core/harpeeSchema";
+
+// export type Fields<T>=T & {[key:string]:any}
+export type Records<T>=T & {[key:string]:any}
+
+declare function validator(fields:Fields<{}>,newRecord:Records<{}>):void;
 function validator(fields, newRecord) {
-   const fieldTypes = [];
-   const newRecordValuesType = [];
-   const requiredKeys = [];
-   const isEqualType = [];
+   const fieldTypes:string[] = [];
+   const newRecordValuesType:string[] = [];
+   const requiredKeys:string[] = [];
+   const isEqualType:boolean[] = [];
 
-   const fieldsKeys = util.splitObjectSorted(fields).keys;
-   const fieldsValues = util.splitObjectSorted(fields).values;
-   const newRecordKeys = util.splitObjectSorted(newRecord).keys;
-   const newRecordValues = util.splitObjectSorted(newRecord).values;
+   const fieldsKeys:string[] = util.splitObjectSorted(fields).keys;
+   const fieldsValues:string[] = util.splitObjectSorted(fields).values;
+   const newRecordKeys:string[] = util.splitObjectSorted(newRecord).keys;
+   const newRecordValues:string[] = util.splitObjectSorted(newRecord).values;
 
    validateKeysLength({
       dataKeys: newRecordKeys,
@@ -61,4 +67,4 @@ function validator(fields, newRecord) {
 }
 
 
-module.exports=validator;
+export default validator;

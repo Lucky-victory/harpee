@@ -1,6 +1,14 @@
-const util =require("./util");
+import util from "./util";
 
-function validateRequired({ fieldsKeys, dataValues, requiredKeys }) {
+
+export interface Options{
+   fieldsKeys:string[];
+   dataValues:string[];
+   requiredKeys:(number|string)[];
+   
+}
+declare function validateRequired(arg:Options):void;
+function validateRequired({ fieldsKeys, dataValues, requiredKeys }:Options) {
    requiredKeys = util.findMultipleIndex(requiredKeys, true);
 
   if (requiredKeys.length) {
@@ -23,4 +31,5 @@ function validateRequired({ fieldsKeys, dataValues, requiredKeys }) {
     }
   }
 }
-module.exports=validateRequired;
+
+export default validateRequired;

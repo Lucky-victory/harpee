@@ -1,8 +1,8 @@
-const harpeeModelConfig =  require("./harpeeModelConfig");
-const harpeeConnectConfig = require("./harpeeConnectConfig");
-const HarpeeHttp =require("./harpeeHttp");
-const operations =require("../constants/operations");
-const  util =require("../helpers/util");
+import harpeeModelConfig from "./harpeeModelConfig";
+import harpeeConnectConfig from "./harpeeConnectConfig";
+import HarpeeHttp from "./harpeeHttp";
+import operations from "../constants/operations";
+import util from "../helpers/util";
 
 /**
  * A class for handling logs for your harperDB instance.
@@ -15,7 +15,7 @@ const  util =require("../helpers/util");
  * @param {*} result - response data or null if an error occurs
  */
 
-class HarpeeLogger extends HarpeeHttp {
+class HarpeeLogger extends HarpeeHttp implements HarpeeLoggerStatic {
    constructor() {
       super(harpeeConnectConfig.getConfig());
       /**
@@ -25,36 +25,31 @@ class HarpeeLogger extends HarpeeHttp {
    }
    /**
     * Read Logs 
-    * @param {Object} options
-    * @param {number} [options.start=0] - an offset of records to be returned.
-    * @param {number} [options.limit=100] - limit of records to be returned.
-    * @param {('desc'|'asc')} [options.order='desc'] - an order to return the records by timestamp.
-    * @param {('error'|'info'|null)} [options.level='error'] - the level of logs to be read.
+    * 
     * @param {Date} [options.from] - a valid ISO Date String indicating when to start reading the logs, default is 3 years ago.
     * @param {Date} [options.until] - a valid ISO Date String indicating when to stop reading the logs, default is today.
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
+    * @param {ResponseCallback} [callback] 
 
     */
-   async readLog(options, callback) {
+   async readLog(options:ReadLogOptions, callback?:ResponseCallback) {
       try {
          let res;
          if (!util.isObject(options)) {
             throw new Error("`options` must be an object");
          }
-         const past2Years = new Date().getFullYear() - 2;
-         const past2YearsInMilliseconds = Date.parse(past2Years);
-         const past2YearsInISOString = new Date(
+         const past2Years:number = new Date().getFullYear() - 2;
+         const past2YearsInMilliseconds:number = Date.parse(past2Years);
+         const past2YearsInISOString:string = new Date(
             past2YearsInMilliseconds
          ).toISOString();
-         const todayInISOString = new Date().toISOString();
+         const todayInISOString:string = new Date().toISOString();
 
-         const start = options.start || 0;
+         const {start=0,limit=100,level="error",order="desc"} = options;
+      
          const from = options.from || past2YearsInISOString;
-         const limit = options.limit || 100;
+         
          const until = options.until || todayInISOString;
-         const level = options.level || 'error';
-         const order = options.order || "asc";
+      
 
          /**
           * @private
@@ -83,7 +78,7 @@ class HarpeeLogger extends HarpeeHttp {
      * 
      * @param {Object} options
      * @param {string} options.id - the id of the job you wish to view.
-     * @param {responseCallback} [callback] 
+     * @param {ResponseCallback} [callback] 
      * @returns {(Promise<any> | void)}
  
      */
@@ -115,7 +110,7 @@ class HarpeeLogger extends HarpeeHttp {
      * Returns transaction logs.
      * @param {string} [options.schema] - name of the schema where you want read the transactions, if not provided, will default to the schema name at your `Schema`.
      * @param {string} [options.table] - name of the table where you read the transactions, if not provided, will default to your `Model`.
-     * @param {responseCallback} [callback] 
+     * @param {ResponseCallback} [callback] 
     * @returns {(Promise<any> | void)}
 
      */
@@ -150,7 +145,7 @@ class HarpeeLogger extends HarpeeHttp {
      * @param {array} options.searchValues - an array with a maximum of two timestamps [from_timestamp,to_timestamp].
      * @param {string} [options.schema] - name of the schema where you want to read the transactions, if not provided, will default to the schema name at your `Schema`.
      * @param {string} [options.table] - name of the table where you want to read the transactions, if not provided, will default to your `Model`.
-     * @param {responseCallback} [callback] 
+     * @param {ResponseCallback} [callback] 
     * @returns {(Promise<any> | void)}
 
      */
@@ -191,7 +186,7 @@ class HarpeeLogger extends HarpeeHttp {
      * @param {array} options.searchValues - the user you wish to see their transaction logs.
    * @param {string} [options.schema] - name of the schema where you want to read the transactions, if not provided, will default to the schema name at your `Schema`.
      * @param {string} [options.table] - name of the table where you want to read the transactions, if not provided, will default to your `Model`.
-     *  @param {responseCallback} [callback] 
+     *  @param {ResponseCallback} [callback] 
       * @returns {(Promise<any> | void)}
      */
 
@@ -231,7 +226,7 @@ class HarpeeLogger extends HarpeeHttp {
        * @param {array} options.searchValues - an array of hash values.
    * @param {string} [options.schema] - name of the schema where you want to read the transactions, if not provided, will default to the schema name at your `Schema`.
      * @param {string} [options.table] - name of the table where you want to read the transactions, if not provided, will default to your `Model`.
-     * @param {responseCallback} [callback]
+     * @param {ResponseCallback} [callback]
      * @returns {(Promise<any> | void)}
        */
 
@@ -271,7 +266,7 @@ class HarpeeLogger extends HarpeeHttp {
     * @param {Date} options.date - records older than this date will be deleted.
     * @param {string} [options.schema] - name of the schema where you're deleting your data, if not provided, will default to the schema name at your `Schema`.
     * @param {string} [options.table] - name of the table where you deleting your data, if not provided, will default to your `Model`.
-    * @param {responseCallback} [callback] 
+    * @param {ResponseCallback} [callback] 
    * @returns {(Promise<any> | void)}
     */
    async deleteRecordsBefore(options, callback) {
@@ -308,7 +303,7 @@ class HarpeeLogger extends HarpeeHttp {
     * @param {Date|number} options.timestamp - transaction logs older than this date will be deleted, Date Format must be in milliseconds.
     * @param {string} [options.schema] - name of the schema where you're deleting your data, if not provided, will default to the schema name at your `Schema`.
     * @param {string} [options.table] - name of the table where you deleting your data, if not provided, will default to your `Model`.
-    * @param {responseCallback} [callback] 
+    * @param {ResponseCallback} [callback] 
    * @returns {(Promise<any> | void)}
 
     */
@@ -343,17 +338,13 @@ class HarpeeLogger extends HarpeeHttp {
 
    /**
     *  Search jobs by start date.
-    *@param {Object} options
     *@param {Date} options.fromDate - a valid ISO Date String,the date you wish to start the search. 
     *@param {Date} options.toDate - a valid ISO Date String, the date you wish to end the search. 
-    * @param {responseCallback} [callback]
-    *  @returns {(Promise<any> | void)}
-
     * 
     */
-   async searchJobsByStartDate(options, callback) {
+   async searchJobsByStartDate(options:SearchJobOptions, callback:ResponseCallback) {
       try {
-         let res;
+      
          if (!util.isObject(options)) {
             throw new Error("`options` must be an object");
          }
@@ -363,7 +354,7 @@ class HarpeeLogger extends HarpeeHttp {
             throw new Error("`fromDate` and `toDate` are required");
          }
 
-         res = await /** @private */ this.$callbackOrPromise(
+   const res = await this.$callbackOrPromise(
             {
                operation: operations.SEARCH_JOBS_BY_START_DATE,
                from_date,
@@ -380,4 +371,24 @@ class HarpeeLogger extends HarpeeHttp {
    }
 }
 
-module.expprts= HarpeeLogger;
+export type ResponseCallback=(err:any,result:any)=>void;
+export interface ReadLogOptions{
+   from:Date<string>;
+   until:Date<string>;
+   start?:number;
+   limit?:number;
+   order:("desc"|"asc");
+   level:("error"|"info"|null)
+}
+export interface SearchJobOptions{
+   fromDate:Date<string>;
+   toDate:Date<string>;
+}
+export interface HarpeeLoggerStatic{
+   getJob:(callback:ResponseCallback)=>void;
+   getJob:()=>Promise<any>;
+   readLog:(options:ReadLogOptions,callback:ResponseCallback)=>void;
+   readLog:(options:ReadLogOptions)=>Promise<any>;
+}
+
+export default HarpeeLogger;
