@@ -46,7 +46,7 @@ harpee.createConnection({host:
     phone:{type:Number}
   }
    primaryKey:'user_id' // optional, alias for hash_attribute, default 'id'
-   silent:true // optional, turn on/off error throwing when `Schema.fields` doesn't match `Model.create` value, default false
+   silent:true // optional, turn on/off error throwing when `Schema.fields` doesn't match `Model.create` value, default is true
   })
 
 
@@ -80,11 +80,11 @@ Users.find({}, (err,result)=>{
 });
 
 // or
-Users.find({}).then(result => console.log(result));
+Users.find([]).then(result => console.log(result));
 
 
 // you can specify the columns to be returned.
-Users.find({limit:5,offset:10,orderby:'user_id',order:'DESC'2,
+Users.find({limit:5,offset:10,orderby:'user_id',order:'DESC',where:'username="lucky"',
 getAttributes:["username"]},(err,result)=>{
   if(err) console.log(err);
   console.log(result)
@@ -94,7 +94,7 @@ getAttributes:["username"]},(err,result)=>{
 ```
 ```js
 // this will return only data based on the specified `ids`,
-Users.findById({user_id:[1,2],getAttributes:["username","email"]},(err,result)=>{
+Users.findById({id:[1,2],getAttributes:["username","email"]},(err,result)=>{
     if(err) console.log(err);
     console.log(result)
 });
@@ -140,9 +140,7 @@ const ArticleSchema = new harpee.Schema({name:"MyArticlesSchema"},fields:{
  
 ### Model(modelName,SchemaObject)
 
-> This class should be instantiated with the `new` keyword. 
-
-the Model class takes the following options.
+The Model class takes the following options.
    - `modelName` *Type - String* : this modelName represents a table that will be created.
   - `schemaObject` Type - Schema(Object) : this option takes in an Object returned from the `Schema` class.
   - 
@@ -165,9 +163,9 @@ inserts new data into the table, takes in an object of the data to be inserted.
     
   })
   ```
-  ##### Find([options],callback)
+  ##### find([options],callback)
   
-  the **find** method returns all data from the table. to do this, pass an empty array `[]` or wildcard `["*"]` as the first argument, you can also choose to return specific data, for example, in order to return only *Articles titles*, 
+  the **find** method returns all data from the table. to do this, pass an empty array `[]` or wildcard `["*"]` as the first argument, you can also choose to return specific data, for example, in order to return only *Article titles*, 
   ```js
   // this will return only Articles titles.
   Articles.find(["title"],(err,data)=>{
@@ -181,6 +179,8 @@ the **find** method also takes an object with options, this let's do some advanc
       - `offset`: **Type - Number** *optional*, 
       - `order`: **Type - String** *optional*
       - `orderby` : **Type - String** *optional* 
+      - `where` : **Type - String** *optional* 
+      - `and` : **Type - String|Number** *optional* 
 
 You can find more methods on the [documentation](https://harpee-docs.netlify.app/model) page.
 
