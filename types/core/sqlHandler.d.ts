@@ -1,4 +1,4 @@
-export default SqlHandler;
+export = SqlHandler;
 declare class SqlHandler {
     /**
      * @protected
@@ -26,6 +26,7 @@ declare class SqlHandler {
      * @param {string} table
      */
     from(schema: string, table: string): SqlHandler;
+    as(name: any): SqlHandler;
     /**
      * @param {number} limit - specifying the max records.
      *
@@ -53,6 +54,26 @@ declare class SqlHandler {
      * */
     order(order: ('DESC' | 'ASC')): SqlHandler;
     delete(): SqlHandler;
+    /**
+  * @param {string} schema
+  * @param {string} table
+  */
+    update(schema: string, table: string): SqlHandler;
+    /**
+ * @param {Object} options
+ * @param {string} options.schema
+ * @param {string} options.table
+ * @param {Object[]} options.records - an array of objects
+ */
+    insertInto(options: {
+        schema: string;
+        table: string;
+        records: any[];
+    }): SqlHandler;
+    /**
+    * @param {Object[]} records - an array of objects
+    */
+    set(records: any[]): SqlHandler;
     /**
      * @param {string} condition
      * */
@@ -134,4 +155,3 @@ declare class SqlHandler {
      */
     rightOuterJoin(schema: string, table: string): SqlHandler;
 }
-//# sourceMappingURL=sqlHandler.d.ts.map

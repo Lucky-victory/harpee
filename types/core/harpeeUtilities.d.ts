@@ -1,5 +1,4 @@
-export default HarpeeUtilities;
-export type responseCallback = (err: any, result: any) => any;
+export = HarpeeUtilities;
 /**
  * @callback responseCallback
  * @param {*} err - an error or null if no error
@@ -382,5 +381,8 @@ declare class HarpeeUtilities extends HarpeeHttp {
         name: string;
     }, callback?: responseCallback): (Promise<any> | void);
 }
-import HarpeeHttp from "./harpeeHttp";
-//# sourceMappingURL=harpeeUtilities.d.ts.map
+declare namespace HarpeeUtilities {
+    export { responseCallback };
+}
+import HarpeeHttp = require("./harpeeHttp");
+type responseCallback = (err: any, result: any) => any;

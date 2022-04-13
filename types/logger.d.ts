@@ -1,4 +1,3 @@
-export default Logger;
+export = Logger;
 declare const Logger: typeof HarpeeLogger;
-import HarpeeLogger from "./core/harpeeLogger";
-//# sourceMappingURL=logger.d.ts.map
+import HarpeeLogger = require("./core/harpeeLogger");

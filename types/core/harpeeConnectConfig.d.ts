@@ -1,4 +1,4 @@
-export default harpeeConnectConfig;
+export = harpeeConnectConfig;
 declare const harpeeConnectConfig: HarpeeConnectConfig;
 declare class HarpeeConnectConfig {
     constructor(config?: {});
@@ -6,4 +6,3 @@ declare class HarpeeConnectConfig {
     setConfig(config: any): void;
     getConfig(): {};
 }
-//# sourceMappingURL=harpeeConnectConfig.d.ts.map

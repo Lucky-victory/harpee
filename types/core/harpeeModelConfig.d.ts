@@ -1,4 +1,4 @@
-export default harpeeModelConfig;
+export = harpeeModelConfig;
 declare const harpeeModelConfig: HarpeeModelConfig;
 declare class HarpeeModelConfig {
     constructor(modelSchemaConfig?: {});
@@ -6,4 +6,3 @@ declare class HarpeeModelConfig {
     setConfig(modelSchemaConfig: any): void;
     getConfig(): {};
 }
-//# sourceMappingURL=harpeeModelConfig.d.ts.map

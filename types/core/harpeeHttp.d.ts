@@ -1,4 +1,4 @@
-export default HarpeeHttp;
+export = HarpeeHttp;
 declare class HarpeeHttp {
     constructor(config?: {});
     /**
@@ -22,4 +22,3 @@ declare class HarpeeHttp {
      */
     protected $callbackOrPromise(reqBody: any, callback?: Function, single?: boolean): (void | Promise<any>);
 }
-//# sourceMappingURL=harpeeHttp.d.ts.map

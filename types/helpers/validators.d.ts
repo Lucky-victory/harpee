@@ -1,3 +1,2 @@
-export default validator;
+export = validator;
 declare function validator(fields: any, newRecord: any): void;
-//# sourceMappingURL=validators.d.ts.map

@@ -1,19 +1,4 @@
-export default HarpeeModel;
-export type HarpeeSchemaObject = {
-    name?: string;
-    primaryKey?: string;
-    fields: any;
-    silent?: boolean;
-};
-export type responseCallback = (err: any, result: any) => any;
-/**
- * @typedef {Object} HarpeeSchemaObject
- * @property {string} [name=defaultSchema]
- * @property {string} [primaryKey=id]
- * @property {Object} fields
- * @property {boolean} [silent=false]
- *
- */
+export = HarpeeModel;
 /**
  * @callback responseCallback
  * @param {*} err - an error or null if no error.
@@ -23,9 +8,9 @@ declare class HarpeeModel extends HarpeeHttp {
     /**
      *
      * @param { string} modelName -
-     * @param {HarpeeSchemaObject} schemaObject .
+     * @param {HarpeeSchema} schemaObject
      */
-    constructor(modelName: string, schemaObject: HarpeeSchemaObject);
+    constructor(modelName: string, schemaObject: HarpeeSchema);
     /**
      *@private
      */
@@ -47,6 +32,12 @@ declare class HarpeeModel extends HarpeeHttp {
      */
     private silent;
     /**
+     * This creates the schema & table if they don't exist yet.
+     * **you should get rid of this after use.**
+     * @returns void;
+     */
+    init(): Promise<void>;
+    /**
      * Execute custom SQL queries.
      * @param {string} sqlQuery
      * @param {responseCallback} [callback]
@@ -63,35 +54,44 @@ declare class HarpeeModel extends HarpeeHttp {
     describeModel(callback?: responseCallback): (Promise<any> | void);
     /**
      * Returns all data from the table.
-     * @param {(string[]|Object)} options - an array of column names or an object with options.
-     * @param {number} [options.limit]
-     * @param {number} [options.offset]
-     * @param {string} [options.orderby]
-     * @param {('ASC'|'DESC')} [options.order]
-     * @param {array} [options.getAttributes]
+     * @param {(string[]|{limit?:number,offset?:number,orderby?:string,order?:'DESC'|'ASC',where?:string,and?:(string|number),getAttributes?:string[]
+     })} options - an array of columns or an object with options.
      * @param {responseCallback} [callback]
      * @returns {(Promise<any> | void)}
  
      */
-    find(options: (string[] | any), callback?: responseCallback): (Promise<any> | void);
+    find(options: (string[] | {
+        limit?: number;
+        offset?: number;
+        orderby?: string;
+        order?: 'DESC' | 'ASC';
+        where?: string;
+        and?: (string | number);
+        getAttributes?: string[];
+    }), callback?: responseCallback): (Promise<any> | void);
     /**
      * Returns one or more data from the table matching the specified `primaryKey` values.
-     * @param {(Array<string> | object)} ids
-     * @param {Array<string>} [ids.getAttributes]
+     * @param {((string|number)[] | {id:(string|number)[],getAttributes?:string[]})} ids
      * @param {responseCallback} [callback]
      * @returns {(Promise<any> | void)}
  
      */
-    findById(ids: (Array<string> | object), callback?: responseCallback): (Promise<any> | void);
+    findById(ids: ((string | number)[] | {
+        id: (string | number)[];
+        getAttributes?: string[];
+    }), callback?: responseCallback): (Promise<any> | void);
     /**
      * Returns a single data from the table matching the specified value.
      *
-     * @param {Object} attrObj
+     * @param {{[key:string]:any}} attrObj
+     * @param {string[]} [getAttributes]
      * @param {responseCallback} [callback]
      * @returns {(Promise<any> | void)}
  
      */
-    findOne(attrObj: any, callback?: responseCallback): (Promise<any> | void);
+    findOne(attrObj: {
+        [key: string]: any;
+    }, getAttributes?: string[], callback?: responseCallback, ...args: any[]): (Promise<any> | void);
     /**
      * Deletes data from the table, matching the specified ids.
      *
@@ -104,39 +104,47 @@ declare class HarpeeModel extends HarpeeHttp {
     /**
      * Deletes multiple data from the table based on the specified values.
      *
-     * @param {Object} attrObj
+     * @param {{[key:string]:any}} attrObj
      *@param {responseCallback} [callback]
      * @returns {(Promise<any> | void)}
  
      */
-    findAndRemove(attrObj: any, callback?: responseCallback): (Promise<any> | void);
+    findAndRemove(attrObj: {
+        [key: string]: any;
+    }, callback?: responseCallback): (Promise<any> | void);
     /**
      * Updates the table with the specified records.
-     * @param {Object[]} records - an array of one or more records to be updated, **Note: the records must include their ids**.
+     * @param {{[key:string]:any}[]} records - an array of one or more records to be updated, **Note: the records must include their ids**.
      * @param {responseCallback} [callback]
      * @returns {(Promise<any> | void)}
  
      */
-    update(records: any[], callback?: responseCallback): (Promise<any> | void);
+    update(records: {
+        [key: string]: any;
+    }[], callback?: responseCallback): (Promise<any> | void);
     /**
      * Inserts new record to the table,
      *
-     * @param {Object} newRecord - an object of the new record to be created.
+     * @param {{[key:string]:any}} newRecord - an object of the new record to be created.
      * @param {responseCallback} [callback]
      * @returns {(Promise<any> | void)}
  
      */
-    create(newRecord: any, callback?: responseCallback): (Promise<any> | void);
+    create(newRecord: {
+        [key: string]: any;
+    }, callback?: responseCallback): (Promise<any> | void);
     /**
      * Inserts multiple new records to the table,
      * **Note: this method does not validate the types in your schema.**
      *
-     * @param {Object[]} newRecords - an array of one or more records to be created.
+     * @param {{[key:string]:any}[]} newRecords - an array of one or more records to be created.
      * @param {responseCallback} [callback]
      * @returns {(Promise<any> | void)}
  
      */
-    createMany(newRecords: any[], callback?: responseCallback): (Promise<any> | void);
+    createMany(newRecords: {
+        [key: string]: any;
+    }[], callback?: responseCallback): (Promise<any> | void);
     /**
      * Load data to a table from a CSV string.
      * @param {Object} options
@@ -239,5 +247,9 @@ declare class HarpeeModel extends HarpeeHttp {
         searchValue: string;
     }, callback?: responseCallback): (Promise<any> | void);
 }
-import HarpeeHttp from "./harpeeHttp";
-//# sourceMappingURL=harpeeModel.d.ts.map
+declare namespace HarpeeModel {
+    export { responseCallback };
+}
+import HarpeeHttp = require("./harpeeHttp");
+type responseCallback = (err: any, result: any) => any;
+import HarpeeSchema = require("./harpeeSchema");

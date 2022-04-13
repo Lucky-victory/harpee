@@ -1,4 +1,3 @@
-export default Utilities;
+export = Utilities;
 declare const Utilities: typeof HarpeeUtilities;
-import HarpeeUtilities from "./core/harpeeUtilities";
-//# sourceMappingURL=utilities.d.ts.map
+import HarpeeUtilities = require("./core/harpeeUtilities");

@@ -19,4 +19,3 @@ export function createConnection(config: {
  *
  **/
 export function connect(config: any): void;
-//# sourceMappingURL=harpeeConnect.d.ts.map

@@ -1,63 +1,29 @@
-export default util;
-declare namespace util {
-    function isObject(obj: any): boolean;
-    function isArray(arr: any): boolean;
-    function isString(str: any): boolean;
-    function isNumber(num: any): boolean;
-    function isBoolean(bool: any): boolean;
-    function isFunction(val: any): boolean;
-    function isUndefined(val: any): boolean;
-    function isNull(val: any): boolean;
-    function isDate(date: any): boolean;
-    function itHas(STR: string, str: string): any;
-    function _sameStrStrict(STR: string, str: string): boolean;
-    function isEmpty(arg: any): boolean;
-    function isEmptyStr(arg: string): boolean;
-    function toLower(str: string): string;
-    function toUpper(str: string): string;
-    function splitObject(obj: any): {
-        keys: string[];
-        values: any[];
-    };
-    function splitObjectSorted(obj: any): {
-        keys: any[];
-        values: any[];
-    };
-    function getExtname(str: string): string;
-    function getFirst(str: string, seperator: any): string;
-    function objectToArray(obj: any, seperator?: string): any[];
-    function getType(arg: any): string;
-    function findStringInArray(arr: string[], str: string): any;
-    function findMultipleIndex(arr: any[], val: any): any;
-    function setSuccess(result: any): {
-        message: string;
-        statusCode: any;
-        data: any;
-    };
-    function setSuccess(result: any): {
-        message: string;
-        statusCode: any;
-        data: any;
-    };
-    function setError(result: any): {
-        message: string;
-        statusCode: any;
-        data: any;
-    };
-    function setError(result: any): {
-        message: string;
-        statusCode: any;
-        data: any;
-    };
-    function prepareSuccessOrFailure(result: any): {
-        message: string;
-        statusCode: any;
-        data: any;
-    };
-    function prepareSuccessOrFailure(result: any): {
-        message: string;
-        statusCode: any;
-        data: any;
-    };
-}
-//# sourceMappingURL=util.d.ts.map
+export function isObject(obj: any): boolean;
+export function isArray(arr: any): boolean;
+export function isString(str: any): boolean;
+export function isNumber(num: any): boolean;
+export function isBoolean(bool: any): boolean;
+export function isFunction(val: any): boolean;
+export function isUndefined(val: any): boolean;
+export function isNull(val: any): boolean;
+export function isDate(date: any): boolean;
+export function itHas(STR: string, str: string): any;
+export function _sameStrStrict(STR: string, str: string): boolean;
+export function isEmpty(arg: any): boolean;
+export function isEmptyStr(arg: string): boolean;
+export function toLower(str: string): string;
+export function toUpper(str: string): string;
+export function splitObject(obj: any): {
+    keys: string[];
+    values: any[];
+};
+export function splitObjectSorted(obj: any): {
+    keys: any[];
+    values: any[];
+};
+export function getExtname(str: string): string;
+export function getFirst(str: string, seperator: any): string;
+export function objectToArray(obj: any, seperator?: string): any[];
+export function getType(arg: any): string;
+export function findStringInArray(arr: string[], str: string): any;
+export function findMultipleIndex(arr: any[], val: any): any;

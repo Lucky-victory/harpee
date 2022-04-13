@@ -1,4 +1,3 @@
-export default Sqler;
+export = Sqler;
 declare const Sqler: typeof SqlHandler;
-import SqlHandler from "./core/sqlHandler";
-//# sourceMappingURL=sqler.d.ts.map
+import SqlHandler = require("./core/sqlHandler");
