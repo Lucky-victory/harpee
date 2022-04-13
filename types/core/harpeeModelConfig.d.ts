@@ -1,3 +1,4 @@
+
 export = harpeeModelConfig;
 declare const harpeeModelConfig: HarpeeModelConfig;
 declare class HarpeeModelConfig {
