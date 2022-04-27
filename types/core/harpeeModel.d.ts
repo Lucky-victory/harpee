@@ -13,27 +13,32 @@ declare class HarpeeModel extends HarpeeHttp {
     constructor(modelName: string, schemaObject: HarpeeSchema);
     /**
      *@private
+     @readonly
      */
-    private schemaName;
+    private readonly schemaName;
     /**
      *@private
+     @readonly
      */
-    private modelName;
+    private readonly modelName;
     /**
      * @private
+     * @readonly
      */
-    private schemaFields;
+    private readonly schemaFields;
     /**
      * @private
+     * @readonly
      */
-    private primaryKey;
+    private readonly primaryKey;
     /**
      * @private
+     * @readonly
      */
-    private silent;
+    private readonly silent;
     /**
-     * This creates the schema & table if they don't exist yet.
-     * **you should get rid of this after use.**
+     * This creates the schema, table, and the attributes specified in Schema.`fields`, if they don't exist.
+     * **you should get rid of this after running your app atleast once.**
      * @returns void;
      */
     init(): Promise<void>;

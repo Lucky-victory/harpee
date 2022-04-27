@@ -15,10 +15,14 @@ declare class HarpeeHttp {
     /**
      *
      * @param {Object} reqBody
-     * @param {function} [callback]
+     * @param {(err:any,result:({[key:string]:any}|{[key:string]:any}[]))=>void} [callback]
      * @param {boolean} [single=false]
      * @returns {(void|Promise<any>)}
      * @protected
      */
-    protected $callbackOrPromise(reqBody: any, callback?: Function, single?: boolean): (void | Promise<any>);
+    protected $callbackOrPromise(reqBody: any, callback?: (err: any, result: {
+        [key: string]: any;
+    } | {
+        [key: string]: any;
+    }[]) => void, single?: boolean): (void | Promise<any>);
 }

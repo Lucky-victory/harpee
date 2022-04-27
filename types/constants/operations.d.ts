@@ -5,6 +5,7 @@ export const ADD_NODE: string;
 export const UPDATE_NODE: string;
 export const REMOVE_NODE: string;
 export const DESCRIBE_ALL: string;
+export const CREATE_ATTRIBUTE: string;
 export const CREATE_SCHEMA: string;
 export const DESCRIBE_SCHEMA: string;
 export const DROP_SCHEMA: string;

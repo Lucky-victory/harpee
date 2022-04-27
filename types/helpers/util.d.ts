@@ -21,6 +21,24 @@ export function splitObjectSorted(obj: any): {
     keys: any[];
     values: any[];
 };
+/**
+ *
+ * @param {{[key:string]:any}[]} arrayOfObj - an array of objects
+ * @param {boolean} [keys] - when true, returns object keys otherwise object values
+ * @returns {string[]}
+ */
+export function ObjectArrayToStringArray(arrayOfObj: {
+    [key: string]: any;
+}[], keys?: boolean): string[];
+/**
+ *
+ * @param {{[key:string]:any}[]} arrayOfObj - an array of objects
+ * @param {boolean} [keys] - when true, returns object keys otherwise object values
+ * @returns {string[]}
+ */
+export function ObjectArrayToStringArray(arrayOfObj: {
+    [key: string]: any;
+}[], keys?: boolean): string[];
 export function getExtname(str: string): string;
 export function getFirst(str: string, seperator: any): string;
 export function objectToArray(obj: any, seperator?: string): any[];

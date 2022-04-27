@@ -5,7 +5,7 @@ export = HarpeeSchema;
  */
 declare class HarpeeSchema {
     /**
-  * Let's you specify your schema name, also configure your table's columns and types.
+  * Let's you specify the chema name, also configure your table's column names.
   *
   * @param {HarpeeSchemaConfig} schemaConfig
   */
