@@ -1,4 +1,6 @@
-const operations = {
+import { IOperations } from "../interfaces/operations";
+
+const operations: IOperations = {
     SQL: "sql",
     SYSTEM_INFORMATION: "system_information",
     CLUSTER_STATUS: "cluster_status",
@@ -6,7 +8,7 @@ const operations = {
     UPDATE_NODE: "update_node",
     REMOVE_NODE: "remove_node",
     DESCRIBE_ALL: "describe_all",
-    CREATE_ATTRIBUTE:"create_attribute",
+    CREATE_ATTRIBUTE: "create_attribute",
     CREATE_SCHEMA: "create_schema",
     DESCRIBE_SCHEMA: "describe_schema",
     DROP_SCHEMA: "drop_schema",
@@ -46,9 +48,9 @@ const operations = {
     DEPLOY_CUSTOM_FUNCTION_PROJECT: "deploy_custom_function_project",
     ADD_CUSTOM_FUNCTION_PROJECT: "add_custom_function_project",
     PACKAGE_CUSTOM_FUNCTION_PROJECT: "package_custom_function_project",
-    RESTART:'restart',
-    RESTART_SERVICE:'restart_service',
-    GET_CONFIGUATION:
-    'get_configuation'
+    RESTART: "restart",
+    RESTART_SERVICE: "restart_service",
+    GET_CONFIGUATION: "get_configuation",
 };
-module.exports=operations;
+
+export default operations;

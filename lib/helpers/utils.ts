@@ -5,7 +5,9 @@ import pick from "just-pick";
 import safeGet from "just-safe-get";
 import safeSet from "just-safe-set";
 import typeOf from "just-typeof";
-import reduce from "just-reduce-object";
+import { reduce } from "just-reduce-object";
+import sortBy from "just-sort-by";
+
 export default class Utils {
     /** Checks if the value is an Object.
      * @param { * } val- the value to be checked
@@ -52,7 +54,9 @@ export default class Utils {
     /** Checks if the value is a Undefined.
      * @param { * } val - the value to be checked
      * */
-
+    static notNullOrUndefined(val: unknown) {
+        return !Utils.isNull(val) && !Utils.isUndefined(val)
+    }
     static isUndefined(val: unknown) {
         return typeOf(val) === "undefined";
     }
@@ -124,9 +128,9 @@ export default class Utils {
     /** Splits an object to an object of `keys` sorted array and `values` sorted array .
      * @param { object} obj - the object to be splitted.
      * */
-    static splitObjectSorted(obj) {
-        const keys = [];
-        const values = [];
+    static splitObjectSorted<T extends object>(obj: T) {
+        const keys: string[] = [];
+        const values: string[] = [];
         Object.keys(obj)
             .sort()
             .forEach(function (key) {
@@ -148,7 +152,9 @@ export default class Utils {
         if (!Array.isArray(arrayOfObj)) {
             return [];
         }
-        // reduce();
+        for (const item of arrayOfObj) {
+            // reduce(item, (acc, key, value) => {}, []);
+        }
     }
 
     /** Splits a string by a seperator and returns the last string

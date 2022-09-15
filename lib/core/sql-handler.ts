@@ -1,302 +1,292 @@
-import util from "../helpers/utils";
+import Utils from "../helpers/utils";
+
 
 export default class SqlHandler {
-    protected query: string = "";
+    private _query: string = "";
     constructor() {
-        this.query = ``;
+        this._query = ``;
     }
+
     /**
-     * @param {Array<string>} columns - an array of column names.
-     * @param {boolean} [distinct=false] - whether to include 'DISTINCT' keyword, default is `false`.
+     * @param columns - an array of column names.
+     * @param distinct - whether to include 'DISTINCT' keyword, default is `false`.
      */
     select(columns: string[], distinct: boolean = false) {
-        this.query += columns
+        this._query += Utils.isArray(columns)
             ? ` SELECT ${distinct ? " DISTINCT " : ""}${columns.join(",")}`
             : "";
         return this;
     }
 
     selectCount(column: string) {
-        this.query += column ? ` SELECT COUNT(\`${column}\`)` : "";
+        this._query += column ? ` SELECT COUNT(\`${column}\`)` : "";
         return this;
     }
 
     selectAvg(column: string) {
-        this.query += column ? ` SELECT AVG(\`${column}\`)` : "";
+        this._query += column ? ` SELECT AVG(\`${column}\`)` : "";
         return this;
     }
 
     selectSum(column: string) {
-        this.query += column ? ` SELECT SUM(\`${column}\`)` : "";
+        this._query += column ? ` SELECT SUM(\`${column}\`)` : "";
         return this;
     }
-    /**
-     * @param {string} schema
-     * @param {string} table
-     */
+
     from(schema: string, table: string) {
-        this.query += table ? ` FROM ${schema}.\`${table}\`` : "";
+        this._query += table ? ` FROM ${schema}.\`${table}\`` : "";
         return this;
     }
     as(newName: string) {
-        this.query += newName ? ` AS \`${newName}\`` : "";
+        this._query += newName ? ` AS \`${newName}\`` : "";
         return this;
     }
     /**
-     * @param {number} limit - specifying the max records.
+     * @param limit - specifying the max records.
      *
      * */
-    limit(limit: string) {
-        this.query += limit ? ` LIMIT ${limit}` : "";
+    limit(limit: number) {
+        this._query += Utils.notNullOrUndefined(limit)
+            ? ` LIMIT ${limit}`
+            : "";
         return this;
     }
 
     /**
      *
-     * @param {number} offset - the number of rows to skip.
+     * @param offset - the number of rows to skip.
      */
-    offset(offset) {
-        this.query += offset ? ` OFFSET ${offset}` : "";
+    offset(offset:number) {
+        this._query += Utils.notNullOrUndefined(offset)
+            ? ` OFFSET ${offset}`
+            : "";
         return this;
     }
     /**
-     * @param {number} offset - the number of rows to skip.
+     * @param offset - the number of rows to skip.
      */
-    offsetRows(offset) {
-        this.query += offset ? ` OFFSET ${offset} ROWS` : "";
+    offsetRows(offset: number) {
+        this._query += Utils.notNullOrUndefined(offset)
+            ? ` OFFSET ${offset} ROWS`
+            : "";
         return this;
     }
     /**
-     * @param {number} rows - the number of rows to fetch.
+     * @param  rowCount - the number of rows to fetch.
      */
-    fetchNextRows(rows) {
-        this.query += rows ? ` FETCH NEXT ${rows} ROWS ONLY` : "";
+    fetchNextRows(rowCount: number) {
+        this._query += Utils.notNullOrUndefined(rowCount)
+            ? ` FETCH NEXT ${rowCount} ROWS ONLY `
+            : "";
         return this;
     }
-    /**
-     * @param {string[]} columns
-     * */
-    orderBy(columns) {
-        this.query += columns ? ` ORDER BY  ${columns.join(",")}` : "";
+
+    orderBy(columns: string[]) {
+        this._query += columns ? ` ORDER BY  ${columns.join(",")}` : "";
         return this;
     }
-    /**
-     * @param {('DESC'|'ASC')} order
-     * */
-    order(order) {
-        this.query += order ? ` ${order}` : "";
+
+    order(order: "DESC" | "ASC") {
+        this._query += order ? ` ${order}` : "";
         return this;
     }
 
     delete() {
-        this.query += " DELETE";
+        this._query += " DELETE";
         return this;
     }
-    /**
-     * @param {string} schema
-     * @param {string} table
-     */
 
-    update(schema, table) {
-        this.query += schema && table ? ` UPDATE ${schema}.\`${table}\`` : "";
+    update(schema: string, table: string) {
+        this._query += schema && table ? ` UPDATE ${schema}.\`${table}\`` : "";
         return this;
     }
-    /**
-     * @param {Object} options
-     * @param {string} options.schema
-     * @param {string} options.table
-     * @param {Object[]} options.records - an array of objects
-     */
 
-    insertInto(options) {
+    insertInto<T extends object>(options: InsertOpts<T>) {
         const { schema, table, records } = options;
-        if (Array.isArray(records)) {
+        if (Utils.isArray(records)) {
             const { keys, values } = records.reduce(
                 (accum, item) => {
-                    if (util.isObject(item)) {
-                        for (let prop in item) {
+                    if (Utils.isObject(item)) {
+                        for (const prop in item) {
                             accum.keys.push(prop);
                             accum.values.push(item[prop]);
                         }
                     }
                     return accum;
                 },
-                { keys: [], values: [] }
+                {
+                    keys: [] as string[],
+                    values: [] as T[Extract<keyof T, string>][],
+                }
             );
 
-            this.query += ` INSERT INTO ${schema}.\`${table}\` (${keys.join(
+            this._query += ` INSERT INTO ${schema}.\`${table}\` (${keys.join(
                 ","
             )}) VALUES("${values.join('","')}")`;
         } else {
-            this.query += "";
+            this._query += "";
         }
 
         return this;
     }
-    /**
-     * @param {Object[]} records - an array of objects
-     */
-    set(records) {
+
+    set<T extends object>(records: T[]) {
         if (Array.isArray(records)) {
             const keysAndValues = records.reduce((accum, item) => {
-                if (util.isObject(item)) {
-                    for (let prop in item) {
+                if (Utils.isObject(item)) {
+                    for (const prop in item) {
                         accum.push(`\`${prop}\`="${item[prop]}"`);
                     }
                 }
                 return accum;
-            }, []);
-            this.query += ` SET ${keysAndValues.join(",")}`;
+            }, [] as string[]);
+            this._query += ` SET ${keysAndValues.join(",")}`;
         } else {
-            this.query += "";
+            this._query += "";
         }
 
         return this;
     }
-    /**
-     * @param {string} condition
-     * */
-    where(condition) {
-        this.query += condition ? ` WHERE ${condition}` : "";
-        return this;
-    }
-    /**
-     * @param {string} condition
-     * */
-    whereNot(condition) {
-        this.query += condition ? ` WHERE NOT ${condition}` : "";
-        return this;
-    }
-    /**
-     * @param {(string | number)} val
-     * */
-    equalTo(val) {
-        this.query += val ? ` ='${val}'` : "";
-        return this;
-    }
-    /**
-     * @param {string} table
-     * @param {string} column
-     *
-     * */
-    isEqual(table, column) {
-        this.query += table && column ? `=${table}.\`${column}\`` : "";
-        return this;
-    }
-    /**
-     * @param {(number[]|string[])} values
-     *
-     */
-    in(values) {
-        this.query += values ? ` IN ("${values.join('","')}")` : "";
-        return this;
-    }
-    /**
-     * @param {string} pattern
-     *
-     */
-    like(pattern) {
-        this.query += values ? ` LIKE '${pattern}'` : "";
+
+    where(condition: string) {
+        this._query += condition ? ` WHERE ${condition}` : "";
         return this;
     }
 
-    /**
-     * @param {string} table
-     * @param {string} column
-     */
-    on(table, column) {
-        this.query += table && column ? ` ON ${table}.\`${column}\`` : "";
+    whereNot(condition: string) {
+        this._query += condition ? ` WHERE NOT ${condition}` : "";
+        return this;
+    }
+
+    equalTo(val: string | number) {
+        this._query += Utils.notNullOrUndefined(val) ? ` ='${val}'` : "";
+        return this;
+    }
+
+    isEqual(table: string, column: string) {
+        this._query += table && column ? `=${table}.\`${column}\`` : "";
+        return this;
+    }
+
+    in(values: string[] | number[]) {
+        this._query += Utils.isArray(values)
+            ? ` IN ("${values.join('","')}")`
+            : "";
+        return this;
+    }
+
+    like(pattern: string) {
+        this._query += pattern ? ` LIKE '${pattern}'` : "";
+        return this;
+    }
+
+    on(table: string, column: string) {
+        this._query += table && column ? ` ON ${table}.\`${column}\`` : "";
         return this;
     }
 
     isNotNull() {
-        this.query += ` IS NOT NULL`;
+        this._query += ` IS NOT NULL`;
         return this;
     }
     isNull() {
-        this.query += ` IS NULL`;
+        this._query += ` IS NULL`;
+        return this;
+    }
+
+    greaterThan(value: number) {
+        this._query += Utils.notNullOrUndefined(value) ? ` > ${value}` : "";
         return this;
     }
     /**
-     * @param {number} value
+     * same as greaterThan
      */
-    greaterThan(value) {
-        this.query += value ? ` > ${value}` : "";
+    gt(value: number) {
+        return this.greaterThan(value);
+    }
+
+    lessThan(value: number) {
+        this._query += Utils.notNullOrUndefined(value) ? ` < ${value}` : "";
         return this;
     }
     /**
-     * @param {number} value
+     * same as lessThan
+     * @param value
      */
-    lessThan(value) {
-        this.query += value ? ` < ${value}` : "";
+    lt(value: number) {
+        return this.lessThan(value);
+    }
+
+    between(val: string | number) {
+        this._query += Utils.notNullOrUndefined(val) ? ` BETWEEN ${val}` : "";
+        return this;
+    }
+
+    and(condition: string | number) {
+        this._query += Utils.notNullOrUndefined(condition)
+            ? ` AND ${condition}`
+            : "";
+        return this;
+    }
+
+    or(condition: string | number) {
+        this._query += Utils.notNullOrUndefined(condition)
+            ? ` OR  ${condition}`
+            : "";
         return this;
     }
     /**
-     * @param {(string|number)} val
-     * */
-    between(val) {
-        this.query += val ? ` BETWEEN ${val}` : "";
-        return this;
-    }
-    /**
-     * @param {(string|number)} condition
+     * @param schema - the schema name
+     * @param table - the table name
      */
-    and(condition) {
-        this.query += condition ? ` AND ${condition}` : "";
-        return this;
-    }
-    /**
-     * @param {(string|number)} condition
-     */
-    or(condition) {
-        this.query += condition ? ` OR  ${condition}` : "";
-        return this;
-    }
-    /**
-     * @param {string} schema - the schema name
-     * @param {string} table - the table name
-     */
-    crossJoin(schema, table) {
-        this.query +=
+    crossJoin(schema: string, table: string) {
+        this._query +=
             schema && table ? ` CROSS JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
     /**
-     * @param {string} schema - the schema name
-     * @param {string} table - the table name
+     * @param schema - the schema name
+     * @param table - the table name
      */
-    fullOuterJoin(schema, table) {
-        this.query +=
+    fullOuterJoin(schema: string, table: string) {
+        this._query +=
             schema && table ? ` FULL OUTER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
     /**
-     * @param {string} schema - the schema name
-     * @param {string} table - the table name
+     * @param schema - the schema name
+     * @param table - the table name
      */
-    innerJoin(schema, table) {
-        this.query +=
+    innerJoin(schema: string, table: string) {
+        this._query +=
             schema && table ? ` INNER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
     /**
-     * @param {string} schema - the schema name
-     * @param {string} table - the table name
+     * @param schema - the schema name
+     * @param table - the table name
      */
-    leftOuterJoin(schema, table) {
-        this.query +=
+    leftOuterJoin(schema: string, table: string) {
+        this._query +=
             schema && table ? ` LEFT OUTER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
     /**
-     * @param {string} schema - the schema name
-     * @param {string} table - the table name
+     * @param schema - the schema name
+     * @param table - the table name
      */
-    rightOuterJoin(schema, table) {
-        this.query +=
+    rightOuterJoin(schema: string, table: string) {
+        this._query +=
             schema && table ? ` RIGHT OUTER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
+    private get query() {
+        return this._query;
+    }
 }
 
-module.exports = SqlHandler;
+export interface InsertOpts<T> {
+    schema: string;
+    table: string;
+    records: T[];
+}
