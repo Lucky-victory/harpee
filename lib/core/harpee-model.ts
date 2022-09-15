@@ -1,11 +1,18 @@
+import { HarpeePath } from "./../interfaces/harpee/index";
 import Utils from "../helpers/utils";
+import {
+    HarpeeID,
+    HarpeeReqCallback,
+    IHarpeeSchemaConfig,
+} from "../interfaces/harpee";
+import { IHarpeeMethodOptions } from "../interfaces/harpee-model";
 import HarpeeHttp from "./harpee-http";
-const harpeeConnectConfig = require("./harpeeConnectConfig");
-const harpeeModelConfig = require("./harpeeModelConfig");
-const operations = require("../constants/operations");
+// const harpeeConnectConfig = require("./harpeeConnectConfig");
+// const harpeeModelConfig = require("./harpeeModelConfig");
+import operations from "../constants/operations";
 const validator = require("../helpers/validators");
-const SqlHandler = require("./sqlHandler");
-const HarpeeSchema = require("./harpeeSchema");
+import SqlHandler from "./sql-handler";
+// const HarpeeSchema = require("./harpeeSchema");
 
 /**
  * @callback responseCallback
@@ -13,52 +20,35 @@ const HarpeeSchema = require("./harpeeSchema");
  * @param {*} result - response data or null if an error occurs.
  */
 
-class HarpeeModel extends HarpeeHttp {
-    /**
-     *
-     * @param { string} modelName -
-     * @param {HarpeeSchema} schemaObject
-     */
-    constructor(modelName, schemaObject) {
-        super(harpeeConnectConfig.getConfig());
+export default class HarpeeModel extends HarpeeHttp {
+    private schemaName: string;
+    private modelName: string;
+    private primaryKey: string;
+    private silent: boolean;
+    private schemaFields: IHarpeeSchemaConfig["fields"];
+    constructor(modelName: string, schemaConfig: IHarpeeSchemaConfig) {
+        super();
 
-        if (!modelName || !util.isString(modelName)) {
+        if (!modelName || !Utils.isString(modelName)) {
             throw new Error("`modelName` is required and it must be a String");
         }
-        if (modelName && !schemaObject) {
-            throw new Error("`schemaObject` is required");
+        if (modelName && !schemaConfig) {
+            throw new Error("`schemaConfig` is required");
         }
-        harpeeModelConfig.setConfig({ modelName, schemaObject });
 
-        const schemaName = schemaObject.name;
-        /**
-       *@private
-       @readonly
-       */
-        this.schemaName = schemaName;
+        // harpeeModelConfig.setConfig({ modelName, schemaObject: schemaConfig });
 
-        /**
-       *@private
-       @readonly
-       */
+        const { primaryKey, silent, fields, name } = schemaConfig;
+
+        this.schemaName = name as string;
+
         this.modelName = modelName;
-        /**
-         * @private
-         * @readonly
-         */
-        this.schemaFields = schemaObject.fields;
 
-        const { primaryKey } = schemaObject;
-        /**
-         * @private
-         * @readonly
-         */
-        this.primaryKey = primaryKey;
-        /**
-         * @private
-         * @readonly
-         */
-        this.silent = schemaObject.silent;
+        this.schemaFields = fields;
+
+        this.primaryKey = primaryKey as string;
+
+        this.silent = silent as boolean;
     }
     /**
      * This creates the schema, table, and the attributes specified in Schema.`fields`, if they don't exist.
@@ -70,25 +60,25 @@ class HarpeeModel extends HarpeeHttp {
             const schema = this.schemaName;
             const table = this.modelName;
             const createSchema = async () =>
-                this.$callbackOrPromise({
+                await this.$callbackOrPromise({
                     operation: operations.CREATE_SCHEMA,
                     schema,
                 });
 
             const describeAll = async () =>
-                this.$callbackOrPromise({
+                await this.$callbackOrPromise({
                     operation: operations.DESCRIBE_ALL,
                 });
 
             const createTable = async () =>
-                this.$callbackOrPromise({
+                await this.$callbackOrPromise({
                     operation: operations.CREATE_TABLE,
                     schema,
                     table,
                     hash_attribute: this.primaryKey,
                 });
-            const createAttribute = async (attribute) =>
-                this.$callbackOrPromise({
+            const createAttribute = async (attribute: string) =>
+                await this.$callbackOrPromise({
                     operation: operations.CREATE_ATTRIBUTE,
                     schema,
                     table,
@@ -116,14 +106,14 @@ class HarpeeModel extends HarpeeHttp {
             const fields = this.schemaFields;
 
             // turn the fields object into an array of strings
-            const attributes = util.splitObject(fields).keys;
+            const attributes = Utils.splitObject(fields).keys;
 
             // get previous attributes from the table
             const previousAttributes = respC[schema][table]["attributes"];
 
             // turn the previous attributes object into an array of strings
             const previousAttributesValues =
-                util.ObjectArrayToStringArray(previousAttributes);
+                Utils.ObjectArrayToStringArray(previousAttributes);
 
             // loop through attributes from `fields`
             const attributeLoop = async () => {
@@ -141,22 +131,24 @@ class HarpeeModel extends HarpeeHttp {
     }
     /**
     * Execute custom SQL queries.
-    * @param {string} sqlQuery 
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
+
+    * 
 
     */
-    async query(sqlQuery, callback) {
+    async query<T extends object>(
+        sqlQuery: string,
+        callback: HarpeeReqCallback<T>
+    ): Promise<T | any | void> {
         try {
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.SQL,
                     sql: sqlQuery,
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (err) {
             return Promise.reject(err);
@@ -164,13 +156,11 @@ class HarpeeModel extends HarpeeHttp {
     }
     /**
     * Get details about your model, alias for `describe_table` 
-    * @param {responseCallback} [callback]
-     * @returns {(Promise<any> | void)}
 
     */
     async describeModel(callback) {
         try {
-            const res = await /** @private */ this.$callbackOrPromise(
+            const res = await this.$callbackOrPromise(
                 {
                     operation: operations.DESCRIBE_TABLE,
                     schema: this.schemaName,
@@ -178,7 +168,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (err) {
@@ -187,36 +177,38 @@ class HarpeeModel extends HarpeeHttp {
     }
     /** 
     * Returns all data from the table.
-    * @param {(string[]|{limit?:number,offset?:number,orderby?:string,order?:'DESC'|'ASC',where?:string,and?:(string|number),getAttributes?:string[]
-    })} options - an array of columns or an object with options.
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
+    * @param  options - an array of columns or an object with options.
+ 
 
     */
-    async find(options, callback) {
+    async find(
+        options: string[] | IHarpeeMethodOptions,
+        callback
+    ): Promise<any | void> {
         try {
             let getAttr, limit, offset, orderby, order, where, and;
-            if (!(util.isObject(options) || util.isArray(options))) {
+            if (!(Utils.isObject(options) || Utils.isArray(options))) {
                 throw new TypeError(
                     " find `options` must be an object or an array"
                 );
             }
             if (
-                (util.isArray(options) || util.isObject(options)) &&
-                util.isEmpty(options)
+                (Utils.isArray(options) || Utils.isObject(options)) &&
+                Utils.isEmpty(options)
             ) {
                 getAttr = ["*"];
-            } else if (util.isArray(options) && !util.isEmpty(options)) {
+            } else if (Utils.isArray(options) && !Utils.isEmpty(options)) {
                 getAttr = options;
             } else {
-                limit = options.limit;
-                offset = limit && options.offset ? options.offset : null;
-                orderby = options.orderby;
-                order = orderby && options.order ? options.order : null;
-                where = options.where;
-                and = where && options.and;
+                const _options = options as IHarpeeMethodOptions;
+                limit = _options.limit;
+                offset = limit && _options.offset ? _options.offset : null;
+                orderby = _options.orderby;
+                order = orderby && _options.order ? _options.order : null;
+                where = _options.where;
+                and = where && _options.and;
 
-                getAttr = options.getAttributes || ["*"];
+                getAttr = _options.getAttributes || ["*"];
             }
 
             const schema = this.schemaName;
@@ -240,7 +232,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -259,7 +251,7 @@ class HarpeeModel extends HarpeeHttp {
             let idValues,
                 getAttributes = ["*"],
                 idKey = this.primaryKey;
-            if (util.isArray(ids)) {
+            if (Utils.isArray(ids)) {
                 idValues = ids;
             } else {
                 idValues = ids.id;
@@ -284,7 +276,7 @@ class HarpeeModel extends HarpeeHttp {
                 callback
             );
 
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -304,15 +296,15 @@ class HarpeeModel extends HarpeeHttp {
     async findOne(attrObj, getAttributes, callback) {
         try {
             getAttributes = ["*"];
-            if (arguments.length >= 2 && util.isArray(arguments[1])) {
+            if (arguments.length >= 2 && Utils.isArray(arguments[1])) {
                 getAttributes = arguments[1];
             }
             let attrKey, attrValue;
-            if (!util.isObject(attrObj)) {
+            if (!Utils.isObject(attrObj)) {
                 throw new TypeError("`attrObj` param must be an object");
             } else {
-                attrKey = util.splitObject(attrObj).keys[0];
-                attrValue = util.splitObject(attrObj).values[0];
+                attrKey = Utils.splitObject(attrObj).keys[0];
+                attrValue = Utils.splitObject(attrObj).values[0];
             }
 
             const schema = this.schemaName;
@@ -333,7 +325,7 @@ class HarpeeModel extends HarpeeHttp {
                 callback,
                 true
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -350,7 +342,7 @@ class HarpeeModel extends HarpeeHttp {
     */
     async findByIdAndRemove(ids, callback) {
         try {
-            if (!util.isArray(ids)) {
+            if (!Utils.isArray(ids)) {
                 throw new Error("`ids` must be an array");
             }
             const hash_values = ids;
@@ -363,7 +355,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -378,16 +370,17 @@ class HarpeeModel extends HarpeeHttp {
     * @returns {(Promise<any> | void)}
 
     */
+
     async findAndRemove(attrObj, callback) {
         try {
             let attrKey, attrValues;
-            if (!util.isObject(attrObj)) {
+            if (!Utils.isObject(attrObj)) {
                 throw new TypeError("`attrObj` param must be an object");
             }
 
-            attrKey = util.splitObject(attrObj).keys[0];
-            attrValues = util.splitObject(attrObj).values[0];
-            if (!util.isArray(attrValues)) {
+            attrKey = Utils.splitObject(attrObj).keys[0];
+            attrValues = Utils.splitObject(attrObj).values[0];
+            if (!Utils.isArray(attrValues)) {
                 attrValues = [attrValues];
             }
 
@@ -408,7 +401,105 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
+                return Promise.resolve(res);
+            }
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+    /**
+     * find nested values
+     */
+
+    async findNested(
+        options: { id: HarpeeID; path: HarpeePath; value: any },
+        callback
+    ) {
+        if (!Utils.isObject(options)) {
+            throw new TypeError("updateNested `options` must be an object");
+        }
+        const { path, value, id } = options;
+        const schema = this.schemaName;
+        const table = this.modelName;
+        const primaryKey = this.primaryKey;
+        try {
+            const { query } = new SqlHandler()
+                .select(["*"])
+                .from(schema, table)
+                .where(primaryKey)
+                .equalTo(id);
+            const initResponse = await this.$callbackOrPromise(
+                {
+                    operation: operations.SQL,
+                    sql: query,
+                },
+                undefined,
+                true
+            );
+            if (initResponse) {
+                Utils.safeSet(initResponse, path, value);
+            }
+
+            const res = await this.$callbackOrPromise(
+                {
+                    operation: operations.UPDATE,
+                    schema: this.schemaName,
+                    table: this.modelName,
+                    records: [initResponse],
+                },
+                callback
+            );
+            if (!Utils.isUndefined(res)) {
+                return Promise.resolve(res);
+            }
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+    /**
+     * update nested values
+     */
+
+    async updateNested(
+        options: { id: HarpeeID; path: HarpeePath; value: any },
+        callback
+    ) {
+        if (!Utils.isObject(options)) {
+            throw new TypeError("updateNested `options` must be an object");
+        }
+        const { path, value, id } = options;
+        const schema = this.schemaName;
+        const table = this.modelName;
+        const primaryKey = this.primaryKey;
+        try {
+            const { query } = new SqlHandler()
+                .select(["*"])
+                .from(schema, table)
+                .where(primaryKey)
+                .equalTo(id);
+            const initResponse = await this.$callbackOrPromise(
+                {
+                    operation: operations.SQL,
+                    sql: query,
+                },
+                undefined,
+                true
+            );
+            if (initResponse) {
+                Utils.safeSet(initResponse, path, value);
+            }
+
+            const res = await this.$callbackOrPromise(
+                {
+                    operation: operations.UPDATE,
+                    schema: this.schemaName,
+                    table: this.modelName,
+                    records: [initResponse],
+                },
+                callback
+            );
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -417,18 +508,22 @@ class HarpeeModel extends HarpeeHttp {
     }
     /**
     * Updates the table with the specified records.
-    * @param {{[key:string]:any}[]} records - an array of one or more records to be updated, **Note: the records must include their ids**.
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
+    * @param records - an array of one or more records to be updated, **Note: the records must include their ids**.
+ 
+    * 
 
     */
-    async update(records, callback) {
+
+    async update(
+        records: { [key: string]: any }[],
+        callback
+    ): Promise<any | void> {
         try {
-            if (!util.isArray(records)) {
+            if (!Utils.isArray(records)) {
                 records = [records];
             }
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const res = await this.$callbackOrPromise(
                 {
                     operation: operations.UPDATE,
                     schema: this.schemaName,
@@ -437,7 +532,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -445,23 +540,27 @@ class HarpeeModel extends HarpeeHttp {
         }
     }
     /**
-    * Inserts new record to the table,
-    * 
-    * @param {{[key:string]:any}} newRecord - an object of the new record to be created.
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
-
-    */
-    async create(newRecord, callback) {
+     * Inserts new record to the table,
+     *
+     * @param newRecord - an object of the new record to be created.
+     * @param {responseCallback} [callback]
+     *
+     */
+    async create(
+        newRecord: { [key: string]: any },
+        callback
+    ): Promise<any | void> {
         try {
-            if (!util.isObject(newRecord)) {
+            if (!Utils.isObject(newRecord)) {
                 throw new TypeError(" `newRecord` must be an object");
             }
+
+            // validator show throw error for unmatched types
             if (!this.silent) {
                 validator(this.schemaFields, newRecord);
             }
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const res = await this.$callbackOrPromise(
                 {
                     operation: operations.INSERT,
                     schema: this.schemaName,
@@ -470,7 +569,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -481,19 +580,19 @@ class HarpeeModel extends HarpeeHttp {
     * Inserts multiple new records to the table,
     * **Note: this method does not validate the types in your schema.**
     * 
-    * @param {{[key:string]:any}[]} newRecords - an array of one or more records to be created.
+    * @param  newRecords - an array of one or more records to be created.
     * @param {responseCallback} [callback] 
     * @returns {(Promise<any> | void)}
 
     */
 
-    async createMany(newRecords, callback) {
+    async createMany(newRecords: { [key: string]: any }[], callback) {
         try {
-            if (!util.isArray(newRecords)) {
+            if (!Utils.isArray(newRecords)) {
                 newRecords = [newRecords];
             }
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const res = await this.$callbackOrPromise(
                 {
                     operation: operations.INSERT,
                     schema: this.schemaName,
@@ -502,7 +601,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -520,12 +619,12 @@ class HarpeeModel extends HarpeeHttp {
     */
     async importFromCsv(options, callback) {
         try {
-            if (!util.isObject(options)) {
+            if (!Utils.isObject(options)) {
                 throw new TypeError(" `options` must be an object");
             }
             const data = options.csv;
             const action = options.action || operations.INSERT;
-            if (!data || !util.isString(data)) {
+            if (!data || !Utils.isString(data)) {
                 throw new Error(
                     " `options.csv` is required and it should be a string"
                 );
@@ -541,7 +640,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -559,12 +658,12 @@ class HarpeeModel extends HarpeeHttp {
     */
     async importFromCsvFile(options, callback) {
         try {
-            if (!util.isObject(options)) {
+            if (!Utils.isObject(options)) {
                 throw new TypeError("`options` is required and must be object");
             }
             const action = options.action ? options.action : operations.INSERT;
             const file_path = options.filePath;
-            if (!file_path || !util.isString(file_path)) {
+            if (!file_path || !Utils.isString(file_path)) {
                 throw new Error(
                     "`options.filePath` is required and must be a string"
                 );
@@ -580,7 +679,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -600,13 +699,13 @@ class HarpeeModel extends HarpeeHttp {
     */
     async importFromCsvUrl(options, callback) {
         try {
-            if (!util.isObject(options)) {
+            if (!Utils.isObject(options)) {
                 throw new TypeError("`options` is required and must be object");
             }
 
             const action = options.action || operations.INSERT;
             const csv_url = options.fileUrl;
-            if (!csv_url || !util.isString(csv_url)) {
+            if (!csv_url || !Utils.isString(csv_url)) {
                 throw new Error("`options.fileUrl` is required ");
             }
 
@@ -620,7 +719,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -641,7 +740,7 @@ class HarpeeModel extends HarpeeHttp {
     */
     async importFromS3(options, callback) {
         try {
-            if (!util.isObject(options)) {
+            if (!Utils.isObject(options)) {
                 throw new TypeError("`options` must be an object");
             }
             const action = options.action || operations.INSERT;
@@ -658,8 +757,8 @@ class HarpeeModel extends HarpeeHttp {
             }
             if (
                 key &&
-                (util.getExtname(key) !== "csv" ||
-                    util.getExtname(key) !== "json")
+                (Utils.getExtname(key) !== "csv" ||
+                    Utils.getExtname(key) !== "json")
             ) {
                 throw new Error(
                     "the file extension is invalid , only a `.csv` or `.json` file is acceptable"
@@ -681,7 +780,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -709,7 +808,7 @@ class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -730,12 +829,12 @@ class HarpeeModel extends HarpeeHttp {
     */
     async findByConditions(options, callback) {
         try {
-            if (!util.isObject(options)) {
+            if (!Utils.isObject(options)) {
                 throw new TypeError(
                     "findByConditions `options` must be an object"
                 );
             }
-            if (!util.isArray(options.conditions)) {
+            if (!Utils.isArray(options.conditions)) {
                 throw new TypeError(" `options.condition` must be an array");
             }
             let res;
@@ -758,7 +857,7 @@ class HarpeeModel extends HarpeeHttp {
                 callback
             );
 
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -778,10 +877,10 @@ class HarpeeModel extends HarpeeHttp {
 
     async findByValue(options, callback) {
         try {
-            if (!util.isObject(options)) {
+            if (!Utils.isObject(options)) {
                 throw new TypeError("findByValue `options` must be an object");
             }
-            if (!util.isArray(options.getAttributes)) {
+            if (!Utils.isArray(options.getAttributes)) {
                 options.getAttributes = [options.getAttributes];
             }
 
@@ -805,7 +904,7 @@ class HarpeeModel extends HarpeeHttp {
                 callback
             );
 
-            if (!util.isUndefined(res)) {
+            if (!Utils.isUndefined(res)) {
                 return Promise.resolve(res);
             }
         } catch (error) {
@@ -813,5 +912,3 @@ class HarpeeModel extends HarpeeHttp {
         }
     }
 }
-
-module.exports = HarpeeModel;

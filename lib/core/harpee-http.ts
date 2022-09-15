@@ -1,14 +1,16 @@
 import axios from "axios";
+import Harpee from ".";
 import Utils from "../helpers/utils";
-import { IHarpeeConfig, IHarpeeHttpCallback } from "../interfaces/harpee";
+import { IHarpeeConfig, HarpeeReqCallback } from "../interfaces/harpee";
 
-export default class HarpeeHttp {
-    private config: IHarpeeConfig;
-    constructor(config: IHarpeeConfig) {
-        this.config = config;
+export default class HarpeeHttp extends Harpee {
+    // private config: IHarpeeConfig;
+    constructor() {
+        super();
+        // this.config = config;
     }
 
-    private $requestHandler<T>(reqBody: any, callback: IHarpeeHttpCallback<T>) {
+    private $requestHandler<T>(reqBody: any, callback: HarpeeReqCallback<T>) {
         let auth: string = "";
         const { username, password, user, pass, token, host } = this.config;
         const _username = username || user;
@@ -58,7 +60,7 @@ export default class HarpeeHttp {
 
     protected $callbackOrPromise<T extends object>(
         reqBody: any,
-        callback?: IHarpeeHttpCallback<T>,
+        callback?: HarpeeReqCallback<T>,
         single: boolean = false
     ): Promise<T | T[] | null> | undefined {
         if (Utils.isUndefined(callback)) {
@@ -75,20 +77,19 @@ export default class HarpeeHttp {
                 });
             });
         }
-        if(callback && Utils.isFunction(callback)){
-
+        if (callback && Utils.isFunction(callback)) {
             this.$requestHandler<T>(reqBody, (err, result) => {
                 if (err) {
-                return callback(err, null);
-            }
-            try {
-                return single
-                ? callback(null, (result as T[])[0])
-                : callback(null, result);
-            } catch {
-                return callback(err, null);
-            }
-        });
-    }
+                    return callback(err, null);
+                }
+                try {
+                    return single
+                        ? callback(null, (result as T[])[0])
+                        : callback(null, result);
+                } catch {
+                    return callback(err, null);
+                }
+            });
+        }
     }
 }

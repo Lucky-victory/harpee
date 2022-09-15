@@ -55,7 +55,7 @@ export default class Utils {
      * @param { * } val - the value to be checked
      * */
     static notNullOrUndefined(val: unknown) {
-        return !Utils.isNull(val) && !Utils.isUndefined(val)
+        return !Utils.isNull(val) && !Utils.isUndefined(val);
     }
     static isUndefined(val: unknown) {
         return typeOf(val) === "undefined";
@@ -220,12 +220,26 @@ export default class Utils {
     static typeOf(obj: unknown) {
         return typeOf(obj);
     }
+    static safeGet<T extends object>(
+        item: T | T[] | any[],
+        target: string | string[],
+        defaultValue?: {}
+    ) {
+        return safeGet(item, target, defaultValue);
+    }
+    static safeSet<T extends object>(
+        item: T | T[] | any[],
+        target: string | string[],
+        value: any
+    ) {
+        return safeSet(item, target, value);
+    }
 }
 
 export type CheckValue =
     | string
     | object
-    | date
+    | Date
     | undefined
     | null
     | number

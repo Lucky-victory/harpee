@@ -280,7 +280,7 @@ export default class SqlHandler {
             schema && table ? ` RIGHT OUTER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
-    private get query() {
+     get query() {
         return this._query;
     }
 }
