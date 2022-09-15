@@ -1,20 +1,25 @@
 import axios from "axios";
 import Harpee from ".";
 import Utils from "../helpers/utils";
-import { IHarpeeConfig, HarpeeReqCallback } from "../interfaces/harpee";
+import {
+    HarpeeResponseCallback,
+    IHarpeeHttpError,
+    IHarpeeResponse,
+} from "../interfaces/harpee";
 
 export default class HarpeeHttp extends Harpee {
-    // private config: IHarpeeConfig;
     constructor() {
         super();
-        // this.config = config;
     }
 
-    private $requestHandler<T>(reqBody: any, callback: HarpeeReqCallback<T>) {
+    private $requestHandler(
+        reqBody: any,
+        callback: (err: unknown | null, data: any | null) => void
+    ) {
         let auth: string = "";
-        const { username, password, user, pass, token, host } = this.config;
-        const _username = username || user;
-        const _password = password || pass;
+        const { username, password, token, host } = this.config;
+        const _username = username;
+        const _password = password;
         if (token) {
             auth = "Bearer " + token;
         } else if (username && password) {
@@ -24,13 +29,8 @@ export default class HarpeeHttp extends Harpee {
                     "base64"
                 );
         }
-        const errorObj: {
-            data?: any;
-            status?: number;
-            message?: string;
-            config?: any;
-            error?: any;
-        } = {};
+        let errorObj!: IHarpeeHttpError;
+
         axios({
             url: host,
             method: "post",
@@ -45,49 +45,87 @@ export default class HarpeeHttp extends Harpee {
             })
             .catch((error) => {
                 if (error.response) {
-                    errorObj["data"] = error.response.data;
-                    errorObj["status"] = error.response.status;
+                    errorObj.data = error.response?.data;
+                    errorObj.status = error.response?.status;
                 } else if (error.request) {
-                    errorObj["error"] = error.request;
-                } else {
-                    errorObj["error"] = error.message;
+                    errorObj.data = error?.request;
                 }
-                errorObj["config"] = error.config;
+                errorObj.message = error?.message;
 
                 callback(errorObj, null);
             });
     }
 
-    protected $callbackOrPromise<T extends object>(
+    protected $callbackOrPromise<T>(
         reqBody: any,
-        callback?: HarpeeReqCallback<T>,
+        callback?: HarpeeResponseCallback<T>,
         single: boolean = false
-    ): Promise<T | T[] | null> | undefined {
+    ): Promise<IHarpeeResponse<T>> | undefined {
         if (Utils.isUndefined(callback)) {
             return new Promise((resolve, reject) => {
-                this.$requestHandler<T>(reqBody, (err, result) => {
-                    if (err) return reject(err);
+                this.$requestHandler(reqBody, (err, result) => {
+                    if (err)
+                        return reject({
+                            success: false,
+                            data: null,
+                            error: err,
+                        });
                     try {
-                        if (single) return resolve((result as T[])[0]);
+                        if (single)
+                            return resolve({
+                                success: true,
+                                data: (result as T[])[0],
+                                error: null,
+                            });
 
-                        return resolve(result);
+                        return resolve({
+                            success: true,
+                            data: result as T[],
+                            error: null,
+                        });
                     } catch {
-                        return reject(err);
+                        return reject({
+                            success: false,
+                            data: null,
+                            error: err,
+                        });
                     }
                 });
             });
         }
         if (callback && Utils.isFunction(callback)) {
-            this.$requestHandler<T>(reqBody, (err, result) => {
+            this.$requestHandler(reqBody, (err, result) => {
                 if (err) {
-                    return callback(err, null);
+                    return callback(
+                        {
+                            success: false,
+                            data: null,
+                            error: err,
+                        },
+                        null
+                    );
                 }
                 try {
                     return single
-                        ? callback(null, (result as T[])[0])
-                        : callback(null, result);
+                        ? callback(null, {
+                              success: true,
+                              data: (result as T[])[0],
+                              error: null,
+                          })
+                        : callback(null, {
+                              success: true,
+                              data: result as T[],
+                              error: null,
+                          });
                 } catch {
-                    return callback(err, null);
+                    return callback(
+                        {
+                            success: false,
+                            data: null,
+                            error: err,
+                        },
+                        null
+                    );
                 }
             });
         }

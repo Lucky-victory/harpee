@@ -24,9 +24,7 @@ export default class HarpeeSchema extends Harpee {
         this.primaryKey = schemaConfig.primaryKey || "id";
         this.silent = schemaConfig.silent || true;
         this.fields = schemaConfig.fields;
-    }
-    get schema(): IHarpeeSchemaConfig {
-        return {
+        this.schemaConfig = {
             name: this.schemaName,
             fields: this.fields,
             primaryKey: this.primaryKey,

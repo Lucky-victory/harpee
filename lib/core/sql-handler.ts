@@ -1,5 +1,5 @@
 import Utils from "../helpers/utils";
-
+import { Order, StringOrNumber } from "../interfaces/harpee";
 
 export default class SqlHandler {
     private _query: string = "";
@@ -46,9 +46,7 @@ export default class SqlHandler {
      *
      * */
     limit(limit: number) {
-        this._query += Utils.notNullOrUndefined(limit)
-            ? ` LIMIT ${limit}`
-            : "";
+        this._query += Utils.notNullOrUndefined(limit) ? ` LIMIT ${limit}` : "";
         return this;
     }
 
@@ -56,7 +54,7 @@ export default class SqlHandler {
      *
      * @param offset - the number of rows to skip.
      */
-    offset(offset:number) {
+    offset(offset: number) {
         this._query += Utils.notNullOrUndefined(offset)
             ? ` OFFSET ${offset}`
             : "";
@@ -86,7 +84,7 @@ export default class SqlHandler {
         return this;
     }
 
-    order(order: "DESC" | "ASC") {
+    order(order: Order) {
         this._query += order ? ` ${order}` : "";
         return this;
     }
@@ -158,7 +156,7 @@ export default class SqlHandler {
         return this;
     }
 
-    equalTo(val: string | number) {
+    equalTo(val: StringOrNumber) {
         this._query += Utils.notNullOrUndefined(val) ? ` ='${val}'` : "";
         return this;
     }
@@ -168,7 +166,7 @@ export default class SqlHandler {
         return this;
     }
 
-    in(values: string[] | number[]) {
+    in(values: (StringOrNumber)[]) {
         this._query += Utils.isArray(values)
             ? ` IN ("${values.join('","')}")`
             : "";
@@ -199,8 +197,8 @@ export default class SqlHandler {
         return this;
     }
     /**
-     * same as greaterThan
-     */
+     * same as `greaterThan`
+     **/
     gt(value: number) {
         return this.greaterThan(value);
     }
@@ -210,77 +208,62 @@ export default class SqlHandler {
         return this;
     }
     /**
-     * same as lessThan
-     * @param value
+     * same as `lessThan`
+     *
      */
     lt(value: number) {
         return this.lessThan(value);
     }
 
-    between(val: string | number) {
+    between(val: StringOrNumber) {
         this._query += Utils.notNullOrUndefined(val) ? ` BETWEEN ${val}` : "";
         return this;
     }
 
-    and(condition: string | number) {
+    and(condition: StringOrNumber) {
         this._query += Utils.notNullOrUndefined(condition)
             ? ` AND ${condition}`
             : "";
         return this;
     }
 
-    or(condition: string | number) {
+    or(condition: StringOrNumber) {
         this._query += Utils.notNullOrUndefined(condition)
             ? ` OR  ${condition}`
             : "";
         return this;
     }
-    /**
-     * @param schema - the schema name
-     * @param table - the table name
-     */
+
     crossJoin(schema: string, table: string) {
         this._query +=
             schema && table ? ` CROSS JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
-    /**
-     * @param schema - the schema name
-     * @param table - the table name
-     */
+
     fullOuterJoin(schema: string, table: string) {
         this._query +=
             schema && table ? ` FULL OUTER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
-    /**
-     * @param schema - the schema name
-     * @param table - the table name
-     */
+
     innerJoin(schema: string, table: string) {
         this._query +=
             schema && table ? ` INNER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
-    /**
-     * @param schema - the schema name
-     * @param table - the table name
-     */
+
     leftOuterJoin(schema: string, table: string) {
         this._query +=
             schema && table ? ` LEFT OUTER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
-    /**
-     * @param schema - the schema name
-     * @param table - the table name
-     */
+
     rightOuterJoin(schema: string, table: string) {
         this._query +=
             schema && table ? ` RIGHT OUTER JOIN ${schema}.\`${table}\`` : "";
         return this;
     }
-     get query() {
+    get query() {
         return this._query;
     }
 }

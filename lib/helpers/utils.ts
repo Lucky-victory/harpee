@@ -90,39 +90,34 @@ export default class Utils {
         return STR.toLowerCase().trim() === str.toLowerCase().trim();
     }
     /**
-     * Chekcs if a value is empty.
+     * Checks if a value is empty.
      */
     static isEmpty(val: CheckValue) {
         return isEmpty(val);
     }
-    /** Checks if a string is empty.
-     * @param {string} arg - the value to be checked.
-     * */
-    isEmptyStr(arg) {
-        return arg === "";
-    }
-    /** Turns the String to lowercase
-     * @param {string} str - the string to be transformed
+
+    /** Transforms the String to lowercase
+     *
      */
-    toLower(str) {
+    toLower(str: string) {
         return String(str).toLowerCase();
     }
-    /** Turns the String to uppercase
-     * @param {string} str - the string to be transformed
+    /** Transforms the String to uppercase
+     *
      */
-    static toUpper(str) {
+    static toUpper(str: string) {
         return String(str).toUpperCase();
     }
     /** Splits an object to an object of `keys` array and `values` array.
-     * @param { object} obj - the object to be splitted.
+     * @param obj - the object to be splitted.
      * */
-    static splitObject(obj) {
-        const keys = [];
-        const values = [];
-        for (let key in obj) {
+    static splitObject<T extends object>(obj: T) {
+        const keys: string[] = [];
+        const values: string[] = [];
+        Object.keys(obj).forEach(function (key) {
             keys.push(key);
-            values.push(obj[key]);
-        }
+            values.push(obj[key as keyof T] as string);
+        });
         return { keys, values };
     }
     /** Splits an object to an object of `keys` sorted array and `values` sorted array .
@@ -135,7 +130,7 @@ export default class Utils {
             .sort()
             .forEach(function (key) {
                 keys.push(key);
-                values.push(obj[key]);
+                values.push(obj[key as keyof T] as string);
             });
         return { keys, values };
     }
@@ -148,13 +143,27 @@ export default class Utils {
     static ObjectArrayToStringArray<T extends object>(
         arrayOfObj: T[],
         keys = false
-    ) {
+    ): string[] {
+        let result: string[] = [];
         if (!Array.isArray(arrayOfObj)) {
-            return [];
+            return result;
         }
         for (const item of arrayOfObj) {
-            // reduce(item, (acc, key, value) => {}, []);
+            result = reduce(
+                item,
+                (acc, key, value) => {
+                    if (keys) {
+                        acc.push(key);
+                        return acc as string[];
+                    } else {
+                        acc.push(value);
+                    }
+                    return acc as string[];
+                },
+                [] as any[]
+            );
         }
+        return result;
     }
 
     /** Splits a string by a seperator and returns the last string
@@ -233,6 +242,16 @@ export default class Utils {
         value: any
     ) {
         return safeSet(item, target, value);
+    }
+
+    static pick<T extends object>(obj: T, select: (keyof T)[]) {
+        return pick(obj, select);
+    }
+    static omit<T extends object>(
+        obj: T,
+        remove: (keyof T)[]
+    ): Omit<T, keyof T> {
+        return omit(obj, remove);
     }
 }
 

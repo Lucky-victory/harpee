@@ -1,18 +1,26 @@
-import { HarpeePath } from "./../interfaces/harpee/index";
+import {
+    IHarpeeModelFindByIdOptions,
+    IHarpeeModelFindByValueOptions,
+    IHarpeeModelFindByConditionOptions,
+    IHarpeeModelImportS3Options,
+    IHarpeeModelImportCsvFileOptions,
+    IHarpeeModelImportCsvUrlOptions,
+    IHarpeeModelImportCsvOptions,
+} from "./../interfaces/harpee-model";
+import { HarpeePath, Order } from "./../interfaces/harpee/index";
 import Utils from "../helpers/utils";
 import {
-    HarpeeID,
-    HarpeeReqCallback,
+    StringOrNumber,
+    HarpeeResponseCallback,
     IHarpeeSchemaConfig,
 } from "../interfaces/harpee";
-import { IHarpeeMethodOptions } from "../interfaces/harpee-model";
+import { IHarpeeModelFindOptions } from "../interfaces/harpee-model";
 import HarpeeHttp from "./harpee-http";
-// const harpeeConnectConfig = require("./harpeeConnectConfig");
-// const harpeeModelConfig = require("./harpeeModelConfig");
+
 import operations from "../constants/operations";
 const validator = require("../helpers/validators");
 import SqlHandler from "./sql-handler";
-// const HarpeeSchema = require("./harpeeSchema");
+import HarpeeSchema from "./harpee-schema";
 
 /**
  * @callback responseCallback
@@ -26,19 +34,19 @@ export default class HarpeeModel extends HarpeeHttp {
     private primaryKey: string;
     private silent: boolean;
     private schemaFields: IHarpeeSchemaConfig["fields"];
-    constructor(modelName: string, schemaConfig: IHarpeeSchemaConfig) {
+    constructor(modelName: string, schemaConfig: HarpeeSchema) {
         super();
 
         if (!modelName || !Utils.isString(modelName)) {
             throw new Error("`modelName` is required and it must be a String");
         }
-        if (modelName && !schemaConfig) {
+        if (modelName && !this.schemaConfig) {
             throw new Error("`schemaConfig` is required");
         }
 
         // harpeeModelConfig.setConfig({ modelName, schemaObject: schemaConfig });
 
-        const { primaryKey, silent, fields, name } = schemaConfig;
+        const { primaryKey, silent, fields, name } = this.schemaConfig;
 
         this.schemaName = name as string;
 
@@ -47,15 +55,14 @@ export default class HarpeeModel extends HarpeeHttp {
         this.schemaFields = fields;
 
         this.primaryKey = primaryKey as string;
-
         this.silent = silent as boolean;
     }
     /**
      * This creates the schema, table, and the attributes specified in Schema.`fields`, if they don't exist.
      * **you should get rid of this after running your app atleast once.**
-     * @returns void;
+     *
      */
-    async init() {
+    async init(): Promise<unknown> {
         try {
             const schema = this.schemaName;
             const table = this.modelName;
@@ -86,21 +93,21 @@ export default class HarpeeModel extends HarpeeHttp {
                 });
 
             // get information about the database
-            const respA = await describeAll();
+            const respA: any = await describeAll();
             // check if the schema already exist, else create it
             if (!respA[schema]) {
                 await createSchema();
             }
 
             // get information about the database
-            const respB = await describeAll();
+            const respB: any = await describeAll();
             // check if the table already exist, else create it
             if (!(respB[schema] && respB[schema][table])) {
                 await createTable();
             }
 
             // get information about the database
-            const respC = await describeAll();
+            const respC: any = await describeAll();
 
             // get fields from Schema.`fields`
             const fields = this.schemaFields;
@@ -126,18 +133,16 @@ export default class HarpeeModel extends HarpeeHttp {
             };
             await attributeLoop();
         } catch (err) {
-            console.error(err);
+            return Promise.reject(err);
         }
     }
     /**
-    * Execute custom SQL queries.
-
-    * 
-
-    */
+     * Execute custom SQL queries.
+     *
+     */
     async query<T extends object>(
         sqlQuery: string,
-        callback: HarpeeReqCallback<T>
+        callback?: HarpeeResponseCallback<T>
     ): Promise<T | any | void> {
         try {
             const response = await this.$callbackOrPromise(
@@ -158,9 +163,11 @@ export default class HarpeeModel extends HarpeeHttp {
     * Get details about your model, alias for `describe_table` 
 
     */
-    async describeModel(callback) {
+    async describeModel<T extends object>(
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
-            const res = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.DESCRIBE_TABLE,
                     schema: this.schemaName,
@@ -168,8 +175,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (err) {
             return Promise.reject(err);
@@ -181,12 +188,18 @@ export default class HarpeeModel extends HarpeeHttp {
  
 
     */
-    async find(
-        options: string[] | IHarpeeMethodOptions,
-        callback
+    async find<T extends object>(
+        options: string[] | IHarpeeModelFindOptions,
+        callback?: HarpeeResponseCallback<T>
     ): Promise<any | void> {
         try {
-            let getAttr, limit, offset, orderby, order, where, and;
+            let getAttr: string[],
+                limit!: number,
+                offset!: number | null,
+                orderby!: string[],
+                order!: Order | null,
+                where!: string,
+                and!: string | number;
             if (!(Utils.isObject(options) || Utils.isArray(options))) {
                 throw new TypeError(
                     " find `options` must be an object or an array"
@@ -198,15 +211,15 @@ export default class HarpeeModel extends HarpeeHttp {
             ) {
                 getAttr = ["*"];
             } else if (Utils.isArray(options) && !Utils.isEmpty(options)) {
-                getAttr = options;
+                getAttr = options as string[];
             } else {
-                const _options = options as IHarpeeMethodOptions;
-                limit = _options.limit;
+                const _options = options as IHarpeeModelFindOptions;
+                limit = _options.limit as number;
                 offset = limit && _options.offset ? _options.offset : null;
-                orderby = _options.orderby;
+                orderby = _options.orderby as string[];
                 order = orderby && _options.order ? _options.order : null;
-                where = _options.where;
-                and = where && _options.and;
+                where = _options.where as string;
+                and = where && (_options.and as string | number);
 
                 getAttr = _options.getAttributes || ["*"];
             }
@@ -216,46 +229,48 @@ export default class HarpeeModel extends HarpeeHttp {
             const sqlHandler = new SqlHandler();
 
             const { query } = sqlHandler
-                .select(getAttr)
+                .select(getAttr as string[])
                 .from(schema, table)
                 .where(where)
                 .and(and)
                 .orderBy(orderby)
-                .order(order)
+                .order(order as Order)
                 .limit(limit)
-                .offset(offset);
+                .offset(offset as number);
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.SQL,
                     sql: query,
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
         }
     }
     /**
-    * Returns one or more data from the table matching the specified `primaryKey` values.
-    * @param {((string|number)[] | {id:(string|number)[],getAttributes?:string[]})} ids 
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
-
-    */
-    async findById(ids, callback) {
+     * Returns one or more data from the table matching the specified `primaryKey` values.
+     *
+     */
+    async findById<T extends object>(
+        ids: StringOrNumber[] | IHarpeeModelFindByIdOptions,
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<any | void> {
         try {
-            let idValues,
+            let idValues!: StringOrNumber[],
                 getAttributes = ["*"],
                 idKey = this.primaryKey;
             if (Utils.isArray(ids)) {
-                idValues = ids;
+                idValues = ids as StringOrNumber[];
             } else {
-                idValues = ids.id;
-                getAttributes = ids.getAttributes || ["*"];
+                const { getAttributes: getAttr, id } =
+                    ids as IHarpeeModelFindByIdOptions;
+                idValues = id;
+                getAttributes = getAttr || ["*"];
             }
 
             const schema = this.schemaName;
@@ -268,7 +283,7 @@ export default class HarpeeModel extends HarpeeHttp {
                 .where(idKey)
                 .in(idValues);
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.SQL,
                     sql: query,
@@ -276,8 +291,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 callback
             );
 
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
@@ -286,25 +301,24 @@ export default class HarpeeModel extends HarpeeHttp {
 
     /**
     * Returns a single data from the table matching the specified value.
-    * 
-    * @param {{[key:string]:any}} attrObj
-    * @param {string[]} [getAttributes]
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
 
     */
-    async findOne(attrObj, getAttributes, callback) {
+    async findOne<T extends object>(
+        obj: { [key: string]: StringOrNumber },
+        getAttributes?: string[],
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
             getAttributes = ["*"];
             if (arguments.length >= 2 && Utils.isArray(arguments[1])) {
                 getAttributes = arguments[1];
             }
-            let attrKey, attrValue;
-            if (!Utils.isObject(attrObj)) {
+            let attrKey!: string, attrValue!: string;
+            if (!Utils.isObject(obj)) {
                 throw new TypeError("`attrObj` param must be an object");
             } else {
-                attrKey = Utils.splitObject(attrObj).keys[0];
-                attrValue = Utils.splitObject(attrObj).values[0];
+                attrKey = Utils.splitObject(obj).keys[0];
+                attrValue = Utils.splitObject(obj).values[0];
             }
 
             const schema = this.schemaName;
@@ -312,12 +326,12 @@ export default class HarpeeModel extends HarpeeHttp {
             const sqlHandler = new SqlHandler();
 
             const { query } = sqlHandler
-                .select(getAttributes)
+                .select(getAttributes as string[])
                 .from(schema, table)
                 .where(attrKey)
                 .equalTo(attrValue);
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.SQL,
                     sql: query,
@@ -325,8 +339,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 callback,
                 true
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
@@ -335,18 +349,20 @@ export default class HarpeeModel extends HarpeeHttp {
     /** 
     * Deletes data from the table, matching the specified ids.
     *
-    * @param {(string[] | number[])} ids - an array of values of your `primaryKey`.
-    * @param {responseCallback} [callback]
-    * @returns {(Promise<any> | void)}
+    * @param  ids - an array of values of your `primaryKey`.
+
 
     */
-    async findByIdAndRemove(ids, callback) {
+    async findByIdAndRemove<T extends object>(
+        ids: StringOrNumber[],
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
             if (!Utils.isArray(ids)) {
                 throw new Error("`ids` must be an array");
             }
             const hash_values = ids;
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.DELETE,
                     schema: this.schemaName,
@@ -355,8 +371,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
@@ -364,24 +380,24 @@ export default class HarpeeModel extends HarpeeHttp {
     }
     /**
     * Deletes multiple data from the table based on the specified values.
-    *
-    * @param {{[key:string]:any}} attrObj
-    *@param {responseCallback} [callback]
-    * @returns {(Promise<any> | void)}
-
+  
     */
 
-    async findAndRemove(attrObj, callback) {
+    async findAndRemove<T extends object>(
+        obj: { [key: string]: StringOrNumber | StringOrNumber[] },
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
-            let attrKey, attrValues;
-            if (!Utils.isObject(attrObj)) {
+            let attrKey!: string,
+                attrValues!: StringOrNumber | StringOrNumber[];
+            if (!Utils.isObject(obj)) {
                 throw new TypeError("`attrObj` param must be an object");
             }
 
-            attrKey = Utils.splitObject(attrObj).keys[0];
-            attrValues = Utils.splitObject(attrObj).values[0];
+            attrKey = Utils.splitObject(obj).keys[0];
+            attrValues = obj[attrKey];
             if (!Utils.isArray(attrValues)) {
-                attrValues = [attrValues];
+                attrValues = [attrValues as StringOrNumber];
             }
 
             const schema = this.schemaName;
@@ -392,78 +408,30 @@ export default class HarpeeModel extends HarpeeHttp {
                 .delete()
                 .from(schema, table)
                 .where(attrKey)
-                .in(attrValues);
+                .in(attrValues as StringOrNumber[]);
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.SQL,
                     sql: query,
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
         }
     }
-    /**
-     * find nested values
-     */
 
-    async findNested(
-        options: { id: HarpeeID; path: HarpeePath; value: any },
-        callback
-    ) {
-        if (!Utils.isObject(options)) {
-            throw new TypeError("updateNested `options` must be an object");
-        }
-        const { path, value, id } = options;
-        const schema = this.schemaName;
-        const table = this.modelName;
-        const primaryKey = this.primaryKey;
-        try {
-            const { query } = new SqlHandler()
-                .select(["*"])
-                .from(schema, table)
-                .where(primaryKey)
-                .equalTo(id);
-            const initResponse = await this.$callbackOrPromise(
-                {
-                    operation: operations.SQL,
-                    sql: query,
-                },
-                undefined,
-                true
-            );
-            if (initResponse) {
-                Utils.safeSet(initResponse, path, value);
-            }
-
-            const res = await this.$callbackOrPromise(
-                {
-                    operation: operations.UPDATE,
-                    schema: this.schemaName,
-                    table: this.modelName,
-                    records: [initResponse],
-                },
-                callback
-            );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
-            }
-        } catch (error) {
-            return Promise.reject(error);
-        }
-    }
     /**
      * update nested values
      */
 
-    async updateNested(
-        options: { id: HarpeeID; path: HarpeePath; value: any },
-        callback
+    async updateNested<T extends object>(
+        options: { id: StringOrNumber; path: HarpeePath; value: any },
+        callback?: HarpeeResponseCallback<T>
     ) {
         if (!Utils.isObject(options)) {
             throw new TypeError("updateNested `options` must be an object");
@@ -478,6 +446,7 @@ export default class HarpeeModel extends HarpeeHttp {
                 .from(schema, table)
                 .where(primaryKey)
                 .equalTo(id);
+            // query the database to get the data
             const initResponse = await this.$callbackOrPromise(
                 {
                     operation: operations.SQL,
@@ -486,11 +455,12 @@ export default class HarpeeModel extends HarpeeHttp {
                 undefined,
                 true
             );
+            // update the data
             if (initResponse) {
                 Utils.safeSet(initResponse, path, value);
             }
 
-            const res = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.UPDATE,
                     schema: this.schemaName,
@@ -499,8 +469,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
@@ -514,16 +484,16 @@ export default class HarpeeModel extends HarpeeHttp {
 
     */
 
-    async update(
+    async update<T extends object>(
         records: { [key: string]: any }[],
-        callback
+        callback?: HarpeeResponseCallback<T>
     ): Promise<any | void> {
         try {
             if (!Utils.isArray(records)) {
                 records = [records];
             }
 
-            const res = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.UPDATE,
                     schema: this.schemaName,
@@ -532,8 +502,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
@@ -542,25 +512,24 @@ export default class HarpeeModel extends HarpeeHttp {
     /**
      * Inserts new record to the table,
      *
-     * @param newRecord - an object of the new record to be created.
-     * @param {responseCallback} [callback]
+     * @param newRecord - an object of new record to be created.
      *
      */
-    async create(
+    async create<T extends object>(
         newRecord: { [key: string]: any },
-        callback
+        callback?: HarpeeResponseCallback<T>
     ): Promise<any | void> {
         try {
             if (!Utils.isObject(newRecord)) {
                 throw new TypeError(" `newRecord` must be an object");
             }
 
-            // validator show throw error for unmatched types
+            // @todo validator should throw error for unmatched types
             if (!this.silent) {
                 validator(this.schemaFields, newRecord);
             }
 
-            const res = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.INSERT,
                     schema: this.schemaName,
@@ -569,30 +538,33 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
         }
     }
     /**
-    * Inserts multiple new records to the table,
-    * **Note: this method does not validate the types in your schema.**
-    * 
-    * @param  newRecords - an array of one or more records to be created.
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
+     * Inserts multiple new records to the table,
+     * **Note: this method does not validate the types in your schema.**
+     *
+     * @param  newRecords - an array of one or more records to be created.
+     */
 
-    */
-
-    async createMany(newRecords: { [key: string]: any }[], callback) {
+    async createMany<T extends object>(
+        newRecords: { [key: string]: any }[],
+        callback?: HarpeeResponseCallback<T>
+    ) {
+        /**
+         @todo add validator here
+         *  */
         try {
             if (!Utils.isArray(newRecords)) {
                 newRecords = [newRecords];
             }
 
-            const res = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.INSERT,
                     schema: this.schemaName,
@@ -601,23 +573,21 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
         }
     }
     /**
-    * Load data to a table from a CSV string.
-    * @param {Object} options
-    * @param {string} options.csv - a valid CSV string.
-    * @param {('insert'|'update'|'upsert')} [options.action='insert'] - what action to be performed on the data.
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
-
-    */
-    async importFromCsv(options, callback) {
+     * Load data to a table from a CSV string.
+   
+     */
+    async importFromCsv<T extends object>(
+        options: IHarpeeModelImportCsvOptions,
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
             if (!Utils.isObject(options)) {
                 throw new TypeError(" `options` must be an object");
@@ -630,7 +600,7 @@ export default class HarpeeModel extends HarpeeHttp {
                 );
             }
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.CSV_DATA_LOAD,
                     action,
@@ -640,23 +610,20 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
         }
     }
     /**
-    * Load data to a table from a local CSV file.
-    * @param {Object} options
-    * @param {string} options.filePath - an absolute path to the local file. **Note: this operation only works for local instances not for cloud instances**.
-    * @param {('insert'|'update'|'upsert')} [options.action='insert'] - what action to be performed on the data.
-    * @param {responseCallback} [callback]
-    * @returns {(Promise<any> | void)}
-
-    */
-    async importFromCsvFile(options, callback) {
+     * Load data to a table from a local CSV file.
+     */
+    async importFromCsvFile<T extends object>(
+        options: IHarpeeModelImportCsvFileOptions,
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
             if (!Utils.isObject(options)) {
                 throw new TypeError("`options` is required and must be object");
@@ -669,7 +636,7 @@ export default class HarpeeModel extends HarpeeHttp {
                 );
             }
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.CSV_FILE_LOAD,
                     action,
@@ -679,8 +646,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
@@ -689,15 +656,13 @@ export default class HarpeeModel extends HarpeeHttp {
 
     /**
     * Load data to a table from an external  CSV file.
-    * @param {Object} options
-    * @param {string} options.fileUrl - an absolute path to the external file.
-     * @param {('insert'|'update'|'upsert')} [options.action='insert'] - what action to be performed on the data.
 
-    * @param {responseCallback} [callback] - optional `callback` function, if not provided `Promise` is returned.
-     * @returns {(Promise<any> | void)}
 
     */
-    async importFromCsvUrl(options, callback) {
+    async importFromCsvUrl<T extends object>(
+        options: IHarpeeModelImportCsvUrlOptions,
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
             if (!Utils.isObject(options)) {
                 throw new TypeError("`options` is required and must be object");
@@ -706,10 +671,12 @@ export default class HarpeeModel extends HarpeeHttp {
             const action = options.action || operations.INSERT;
             const csv_url = options.fileUrl;
             if (!csv_url || !Utils.isString(csv_url)) {
-                throw new Error("`options.fileUrl` is required ");
+                throw new Error(
+                    "`options.fileUrl` is required and must be a string"
+                );
             }
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.CSV_URL_LOAD,
                     action,
@@ -719,8 +686,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
@@ -728,17 +695,12 @@ export default class HarpeeModel extends HarpeeHttp {
     }
     /**
     * Load data to a table from amazon S3.
-    * @param {Object} options
-    * @param {string} options.bucket - the name of the bucket where your file lives.
-    * @param {string} options.awsAccessKeyId - your aws access key id.
-    * @param {string} options.awsSecretAccessKey - your aws secret access key.
-    * @param {string} options.key - the name of the file to import - *the file must include a valid file extension ('.csv' or '.json')*.
-    * @param {('insert'|'update'|'upsert')} [options.action='insert'] - what action to be performed on the data.
-    * @param {responseCallback} [callback] 
-     * @returns {(Promise<any> | void)}
 
     */
-    async importFromS3(options, callback) {
+    async importFromS3<T extends object>(
+        options: IHarpeeModelImportS3Options,
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
             if (!Utils.isObject(options)) {
                 throw new TypeError("`options` must be an object");
@@ -765,7 +727,7 @@ export default class HarpeeModel extends HarpeeHttp {
                 );
             }
 
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.IMPORT_FROM_S3,
                     action,
@@ -780,54 +742,45 @@ export default class HarpeeModel extends HarpeeHttp {
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
         }
     }
     /**
-    * Deletes every data from the table, **use this with caution**;
-    *
-    * @param {responseCallback} [callback] - an optional callback function.
-    * @returns {(Promise<any> | void)}
-
-    */
-    async clearAll(callback) {
+     * Deletes every data from the table, **use this with caution**;
+     */
+    async clearAll<T extends object>(callback?: HarpeeResponseCallback<T>) {
         try {
             const schema = this.schemaName;
             const table = this.modelName;
             const sqlHandler = new SqlHandler();
 
             const { query } = sqlHandler.delete().from(schema, table);
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.SQL,
                     sql: query,
                 },
                 callback
             );
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
         }
     }
-    /**
-    * Return data from table using matching conditions.
-    * @param {Object} options
-    * @param {(number | null)} [options.limit=null] - a limit of data to be returned, default is `null`.
-    * @param {number} [options.offset=0] - number of data to be skipped, default is `0`.
-    * @param {('and'|'or')} [options.operator='and'] - the operator used between each condition.
-    * @param {string[]} [options.getAttributes] - an array of one or more attributes to be returned, default is `["*"]` which returns all attributes.
-    * @param {object[]} options.conditions - an array of one or more object with search operations.
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
 
-    */
-    async findByConditions(options, callback) {
+    /**
+     * Return data from table using matching conditions.
+     */
+    async findByConditions<T extends object>(
+        options: IHarpeeModelFindByConditionOptions,
+        callback: HarpeeResponseCallback<T>
+    ) {
         try {
             if (!Utils.isObject(options)) {
                 throw new TypeError(
@@ -837,13 +790,13 @@ export default class HarpeeModel extends HarpeeHttp {
             if (!Utils.isArray(options.conditions)) {
                 throw new TypeError(" `options.condition` must be an array");
             }
-            let res;
-            const limit = +options.limit || null;
+
+            const limit = +(options.limit as number) || null;
             const operator = options.operator || "and";
-            const offset = +options.offset || 0;
+            const offset = +(options.offset as number) || 0;
             const get_attributes = options.getAttributes || ["*"];
             const conditions = options.conditions;
-            res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.SEARCH_BY_CONDITIONS,
                     schema: this.schemaName,
@@ -857,42 +810,42 @@ export default class HarpeeModel extends HarpeeHttp {
                 callback
             );
 
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);
         }
     }
+
     /**
-    *  Returns data from a table with matching values.
-    * @param {Object} options
-    * @param {string[]} [options.getAttributes] - an array of one or more attributes to be returned, default is `["*"]` which returns all attributes.
-    * @param {object[]} options.searchAttribute -  attribute you wish to search, can be any attribute.
-    * @param {string} options.searchValue - value you wish to search - wild cards are allowed..
-    * @param {responseCallback} [callback] 
-    * @returns {(Promise<any> | void)}
+     *  Returns data from a table with matching values.
+     */
 
-    */
-
-    async findByValue(options, callback) {
+    async findByValue<T extends object>(
+        options: IHarpeeModelFindByValueOptions,
+        callback: HarpeeResponseCallback<T>
+    ) {
         try {
             if (!Utils.isObject(options)) {
                 throw new TypeError("findByValue `options` must be an object");
             }
             if (!Utils.isArray(options.getAttributes)) {
-                options.getAttributes = [options.getAttributes];
+                options.getAttributes = [options.getAttributes as string];
             }
 
             const search_attribute = options.searchAttribute;
             const search_value = options.searchValue;
             const get_attributes = options.getAttributes || ["*"];
-            if (!(search_attribute || search_value)) {
+            if (
+                Utils.isUndefined(search_attribute) ||
+                Utils.isUndefined(search_value)
+            ) {
                 throw new Error(
                     "`searchAttribute` and `searchValue` are required"
                 );
             }
-            const res = await /** @private */ this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise(
                 {
                     operation: operations.SEARCH_BY_VALUE,
                     schema: this.schemaName,
@@ -904,8 +857,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 callback
             );
 
-            if (!Utils.isUndefined(res)) {
-                return Promise.resolve(res);
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
             }
         } catch (error) {
             return Promise.reject(error);

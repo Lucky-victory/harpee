@@ -6,16 +6,29 @@ export interface IHarpeeConfig {
     host: string;
     token?: string;
 }
-export type HarpeeID = string | number;
+export type Order = "DESC" | "ASC";
+export type StringOrNumber = string | number;
 export type HarpeePath = string;
-export type HarpeeReqCallback<T> = (
+
+export type HarpeeResponseCallback<T> = (
     err: unknown,
-    result: T | T[] | null
+    data: IHarpeeResponse<T> | null
 ) => void;
+export interface IHarpeeResponse<T> {
+    success: boolean;
+    data: T | T[] | null;
+    error: IHarpeeHttpError | null;
+}
+export interface IHarpeeHttpError {
+    message: string;
+    status?: number;
+    data: any;
+}
 export type HarpeeConnectInfoCallback = (
     info?: IHarpeeConfig,
     err?: null | unknown
 ) => void;
+
 export interface IHarpeeSchemaConfig {
     name?: string;
     primaryKey?: string;
