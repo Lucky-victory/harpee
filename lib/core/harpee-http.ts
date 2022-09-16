@@ -5,7 +5,7 @@ import {
     HarpeeResponseCallback,
     IHarpeeHttpError,
     IHarpeeResponse,
-} from "../interfaces/harpee";
+} from "../interfaces/harpee.interface";
 
 export default class HarpeeHttp extends Harpee {
     constructor() {
@@ -80,7 +80,7 @@ export default class HarpeeHttp extends Harpee {
 
                         return resolve({
                             success: true,
-                            data: result as T[],
+                            data: result as T,
                             error: null,
                         });
                     } catch {
@@ -114,7 +114,7 @@ export default class HarpeeHttp extends Harpee {
                           })
                         : callback(null, {
                               success: true,
-                              data: result as T[],
+                              data: result as T,
                               error: null,
                           });
                 } catch {

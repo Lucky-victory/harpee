@@ -10,13 +10,13 @@ export type Order = "DESC" | "ASC";
 export type StringOrNumber = string | number;
 export type HarpeePath = string;
 
-export type HarpeeResponseCallback<T> = (
+export type HarpeeResponseCallback<T = unknown> = (
     err: unknown,
     data: IHarpeeResponse<T> | null
 ) => void;
-export interface IHarpeeResponse<T> {
+export interface IHarpeeResponse<T=unknown> {
     success: boolean;
-    data: T | T[] | null;
+    data: null | T;
     error: IHarpeeHttpError | null;
 }
 export interface IHarpeeHttpError {
@@ -37,17 +37,15 @@ export interface IHarpeeSchemaConfig {
 }
 
 export interface IHarpeeField {
-    [key: string]: IHarpeeFieldExt;
-}
-
-export interface IHarpeeFieldExt {
     type: HarpeeFieldType;
-    required?: boolean;
+    required?: boolean | [boolean, string];
 }
 export type HarpeeFieldType =
     | "string"
     | "array"
     | "object"
     | "number"
-    | "boolean"
-    | "date";
+    | "boolean";
+export interface AnyKeyValueObject {
+    [key: string]: any;
+}

@@ -1,5 +1,5 @@
 import Utils from "../helpers/utils";
-import { Order, StringOrNumber } from "../interfaces/harpee";
+import { Order, StringOrNumber } from "../interfaces/harpee.interface";
 
 export default class SqlHandler {
     private _query: string = "";
@@ -166,7 +166,7 @@ export default class SqlHandler {
         return this;
     }
 
-    in(values: (StringOrNumber)[]) {
+    in(values: StringOrNumber[]) {
         this._query += Utils.isArray(values)
             ? ` IN ("${values.join('","')}")`
             : "";

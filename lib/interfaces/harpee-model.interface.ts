@@ -1,4 +1,8 @@
-import { HarpeeResponseCallback, Order, StringOrNumber } from "./harpee";
+import {
+    HarpeeResponseCallback,
+    Order,
+    StringOrNumber,
+} from "./harpee.interface";
 
 export interface IHarpeeModelFindOptions {
     /**
@@ -16,7 +20,7 @@ export interface IHarpeeModelFindByIdOptions {
     id: StringOrNumber[];
     getAttributes?: string[];
 }
-export interface IHarpeeModelImportS3Options {
+export interface IHarperDBS3Options {
     /**
      *  what action to be performed on the data. default 'insert'
      */
@@ -38,6 +42,7 @@ export interface IHarpeeModelImportS3Options {
      */
     awsSecretAccessKey: string;
 }
+
 export interface IHarpeeModelImportOptions {
     /**
      *  what action to be performed on the data. default 'insert'

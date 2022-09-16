@@ -1,4 +1,5 @@
 export interface IOperations {
+    DROP_CUSTOM_FUNCTION_PROJECT: string;
     SQL: string;
     SYSTEM_INFORMATION: string;
     CLUSTER_STATUS: string;
@@ -49,4 +50,5 @@ export interface IOperations {
     RESTART: string;
     RESTART_SERVICE: string;
     GET_CONFIGUATION: string;
+    CONFIGURE_CLUSTER: string;
 }

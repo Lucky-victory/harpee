@@ -1,6 +1,6 @@
 import Harpee from ".";
 import Utils from "../helpers/utils";
-import { IHarpeeSchemaConfig } from "../interfaces/harpee";
+import { IHarpeeSchemaConfig } from "../interfaces/harpee.interface";
 
 export default class HarpeeSchema extends Harpee {
     /**

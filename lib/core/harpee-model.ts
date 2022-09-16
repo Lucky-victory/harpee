@@ -2,19 +2,19 @@ import {
     IHarpeeModelFindByIdOptions,
     IHarpeeModelFindByValueOptions,
     IHarpeeModelFindByConditionOptions,
-    IHarpeeModelImportS3Options,
+    IHarperDBS3Options,
     IHarpeeModelImportCsvFileOptions,
     IHarpeeModelImportCsvUrlOptions,
     IHarpeeModelImportCsvOptions,
-} from "./../interfaces/harpee-model";
-import { HarpeePath, Order } from "./../interfaces/harpee/index";
+} from "../interfaces/harpee-model.interface";
+import { HarpeePath, Order } from "../interfaces/harpee.interface/index";
 import Utils from "../helpers/utils";
 import {
     StringOrNumber,
     HarpeeResponseCallback,
     IHarpeeSchemaConfig,
-} from "../interfaces/harpee";
-import { IHarpeeModelFindOptions } from "../interfaces/harpee-model";
+} from "../interfaces/harpee.interface";
+import { IHarpeeModelFindOptions } from "../interfaces/harpee-model.interface";
 import HarpeeHttp from "./harpee-http";
 
 import operations from "../constants/operations";
@@ -698,7 +698,7 @@ export default class HarpeeModel extends HarpeeHttp {
 
     */
     async importFromS3<T extends object>(
-        options: IHarpeeModelImportS3Options,
+        options: IHarperDBS3Options,
         callback?: HarpeeResponseCallback<T>
     ) {
         try {

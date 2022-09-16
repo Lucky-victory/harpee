@@ -99,7 +99,7 @@ export default class Utils {
     /** Transforms the String to lowercase
      *
      */
-    toLower(str: string) {
+   static toLower(str: string) {
         return String(str).toLowerCase();
     }
     /** Transforms the String to uppercase

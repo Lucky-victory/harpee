@@ -1,4 +1,4 @@
-import { IOperations } from "../interfaces/operations";
+import { IOperations } from "../interfaces/operations.interface";
 
 const operations: IOperations = {
     SQL: "sql",
@@ -47,10 +47,12 @@ const operations: IOperations = {
     DROP_CUSTOM_FUNCTION: "drop_custom_function",
     DEPLOY_CUSTOM_FUNCTION_PROJECT: "deploy_custom_function_project",
     ADD_CUSTOM_FUNCTION_PROJECT: "add_custom_function_project",
+    DROP_CUSTOM_FUNCTION_PROJECT: "add_custom_function_project",
     PACKAGE_CUSTOM_FUNCTION_PROJECT: "package_custom_function_project",
     RESTART: "restart",
     RESTART_SERVICE: "restart_service",
     GET_CONFIGUATION: "get_configuation",
+    CONFIGURE_CLUSTER: "configure_cluster",
 };
 
 export default operations;

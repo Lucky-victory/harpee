@@ -3,7 +3,7 @@ import {
     HarpeeConnectInfoCallback,
     IHarpeeConfig,
     IHarpeeSchemaConfig,
-} from "../interfaces/harpee";
+} from "../interfaces/harpee.interface";
 import HarpeeModel from "./harpee-model";
 import HarpeeSchema from "./harpee-schema";
 
@@ -67,4 +67,3 @@ export default class Harpee {
     static Model = HarpeeModel;
     static Schema = HarpeeSchema;
 }
-
