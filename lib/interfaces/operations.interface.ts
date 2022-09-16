@@ -1,4 +1,5 @@
 export interface IOperations {
+    DELETE_TRANSACTION_LOGS_BEFORE: string;
     DROP_CUSTOM_FUNCTION_PROJECT: string;
     SQL: string;
     SYSTEM_INFORMATION: string;
@@ -34,7 +35,6 @@ export interface IOperations {
     ALTER_ROLE: string;
     ADD_ROLE: string;
     READ_TRANSACTION_LOG: string;
-    DELETE_TRANSACTION_LOGS: string;
     DELETE_RECORDS_BEFORE: string;
     READ_LOG: string;
     GET_JOB: string;

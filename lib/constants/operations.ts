@@ -1,6 +1,7 @@
 import { IOperations } from "../interfaces/operations.interface";
 
 const operations: IOperations = {
+    DELETE_TRANSACTION_LOGS_BEFORE: "delete_transaction_logs_before",
     SQL: "sql",
     SYSTEM_INFORMATION: "system_information",
     CLUSTER_STATUS: "cluster_status",
@@ -35,7 +36,6 @@ const operations: IOperations = {
     ALTER_ROLE: "list_role",
     ADD_ROLE: "add_role",
     READ_TRANSACTION_LOG: "read_transaction_log",
-    DELETE_TRANSACTION_LOGS: "delete_transaction_logs_before",
     DELETE_RECORDS_BEFORE: "delete_records_before",
     READ_LOG: "read_log",
     GET_JOB: "get_job",
