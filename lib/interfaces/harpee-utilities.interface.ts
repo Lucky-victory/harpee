@@ -31,8 +31,17 @@ export interface IHarperDBClusterConfiguration {
     REFRESH_TOKEN_TIMEOUT?: string;
 }
 export interface IHarperDBCustomFunctionOptions {
+    /**
+     *  the name of the subfolder containing the file - must be either routes or helpers
+     */
     type: "routes" | "helpers";
+    /**
+     * the name of the project containing the file.
+     */
     project: string;
+    /**
+     * the name of the file - should not include the file extension (which is always .js)
+     */
     file: string;
 }
 export interface IHarperDBCustomFunctionPackage {
@@ -92,10 +101,80 @@ export interface IHarperDBExportS3Options extends IHarperDBExportOptions {
 }
 export interface IHarperDBSetCustomFunctionOptions
     extends IHarperDBCustomFunctionOptions {
+    /**
+     * the content you wish to save into the specified file
+     */
     function_content: string;
+}
+
+export interface IHarpeeUtilNodeOptions {
+    /**
+     * The NODE_NAME of the remote node. Must match exactly.
+     */
+    name: string;
+    subscriptions: string[];
+    /**
+     * The CLUSTERING_PORT for the remote node. Not to be confused with HTTP/S PORTS.
+     */
+    port: number;
+    /**
+     * The URI for the remote node.
+     */
+    host: string;
+}
+
+export interface IHarperDBAuth {
+    /**
+     username of user to generate tokens for.
+    * 
+    */
+    username: string;
+    /**
+     * password of user to generate tokens for
+     */
+    password: string;
+}
+export interface IHarpeeUtilOptions {
+    schema: string;
+    table: string;
+}
+export interface IHarpeeNewTableOptions extends IHarpeeUtilOptions {
+    hashAttribute?: string;
+}
+export interface IHarperDBAuthUser {
+    username: string;
+    password?: string;
+    role?: string;
+    active?: boolean;
+}
+export interface IHarperDBRole {
+    permission: { super_user?: boolean };
+    id: string;
+}
+export interface IHarperDBRoleOptions extends IHarperDBRole {
+    role?: string;
+}
+export interface IHarperDBNewRoleOptions extends IHarperDBRole {
+    role: string;
+}
+export interface IHarperDBNewUser extends IHarperDBAuth {
+    role: string;
+    active: boolean;
+}
+export interface IHarperDBTokenResponse {
+    operation_token: string;
+    refresh_token: string;
+}
+export interface IHarperDBMessageResponse {
+    message: string;
 }
 export interface IHarperDBCustomFunctionInfo {
     routes: string[];
     helpers: string[];
     static: number;
+}
+export interface IHarperDBCustomFuntionStatus {
+    is_enabled: boolean;
+    port: number;
+    directory: string;
 }

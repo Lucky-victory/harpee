@@ -44,6 +44,8 @@ const operations: IOperations = {
     SEARCH_JOBS_BY_START_DATE: "search_jobs_by_start_date",
     GET_CUSTOM_FUNCTIONS: "get_custom_functions",
     GET_CUSTOM_FUNCTION: "get_custom_function",
+    SET_CUSTOM_FUNCTION: "set_custom_function",
+    CUSTOM_FUNCTION_STATUS: "custom_function_status",
     DROP_CUSTOM_FUNCTION: "drop_custom_function",
     DEPLOY_CUSTOM_FUNCTION_PROJECT: "deploy_custom_function_project",
     ADD_CUSTOM_FUNCTION_PROJECT: "add_custom_function_project",

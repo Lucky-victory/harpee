@@ -188,7 +188,7 @@ export default class HarpeeModel extends HarpeeHttp {
  
 
     */
-    async find<T extends object>(
+    async find<T extends object[]>(
         options: string[] | IHarpeeModelFindOptions,
         callback?: HarpeeResponseCallback<T>
     ): Promise<any | void> {
@@ -256,7 +256,7 @@ export default class HarpeeModel extends HarpeeHttp {
      * Returns one or more data from the table matching the specified `primaryKey` values.
      *
      */
-    async findById<T extends object>(
+    async findById<T extends object[]>(
         ids: StringOrNumber[] | IHarpeeModelFindByIdOptions,
         callback?: HarpeeResponseCallback<T>
     ): Promise<any | void> {

@@ -43,6 +43,8 @@ export interface IOperations {
     SEARCH_JOBS_BY_START_DATE: string;
     GET_CUSTOM_FUNCTIONS: string;
     GET_CUSTOM_FUNCTION: string;
+    SET_CUSTOM_FUNCTION: string;
+    CUSTOM_FUNCTION_STATUS: string;
     DROP_CUSTOM_FUNCTION: string;
     DEPLOY_CUSTOM_FUNCTION_PROJECT: string;
     ADD_CUSTOM_FUNCTION_PROJECT: string;

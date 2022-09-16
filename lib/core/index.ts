@@ -13,6 +13,7 @@ export default class Harpee {
     protected get config() {
         return Harpee._config;
     }
+
     protected get schemaConfig() {
         return Harpee._schemaConfig;
     }
@@ -57,7 +58,7 @@ export default class Harpee {
         }
     }
     /**
-     * An alias for  `createConnection`.
+     * Alias for  `createConnection`.
      *
      *
      **/
