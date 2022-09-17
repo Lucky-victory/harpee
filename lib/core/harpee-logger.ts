@@ -85,8 +85,12 @@ export default class HarpeeLogger extends HarpeeHttp {
 
       */
 
-    async getJob(
-        options: { /**the id of the job you wish to view */ id: string },
+    async getJob<T = object[]>(
+        options: {
+            /**
+             * the id of the job you wish to view */
+            id: string;
+        },
         callback?: HarpeeResponseCallback<T>
     ) {
         try {

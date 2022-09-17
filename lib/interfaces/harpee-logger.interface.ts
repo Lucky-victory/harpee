@@ -48,5 +48,14 @@ export interface IHarperDBReadTransLogByTimestampOptions
 - If no items are supplied then all transactions are returned.
 - If only one entry is supplied then all transactions after the supplied timestamp will be returned.
      */
-    searchValues: [number,number?];
+    searchValues: [number, number?];
+}
+
+export interface IHarpeeReadLogOptions {
+    limit?: number;
+    start?: number;
+    level?: "error" | "info" | null;
+    from?: string;
+    until?: string;
+    order?: "desc" | "asc";
 }
