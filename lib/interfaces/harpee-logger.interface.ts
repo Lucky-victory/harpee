@@ -52,10 +52,28 @@ export interface IHarperDBReadTransLogByTimestampOptions
 }
 
 export interface IHarpeeReadLogOptions {
+    /**
+     * number of results returned. Default behavior is 100.
+     */
     limit?: number;
+    /**
+     * result to start with
+     */
     start?: number;
+    /**
+     * error level to filter on. Default behavior is all levels.
+     */
     level?: "error" | "info" | null;
+    /**
+     * date to begin showing log results. Must be "YYYY-MM-DD" or "YYYY-MM-DD hh:mm:ss
+     */
     from?: string;
+    /**
+     * date to end showing log results. Must be "YYYY-MM-DD" or "YYYY-MM-DD hh:mm:ss
+     */
     until?: string;
+    /**
+     * order to display logs desc or asc by timestamp
+     */
     order?: "desc" | "asc";
 }

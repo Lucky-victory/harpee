@@ -29,9 +29,18 @@ export type HarpeeConnectInfoCallback = (
 ) => void;
 
 export interface IHarpeeSchemaConfig {
+    /**
+     * The name of the schema, default is `defaultSchema`
+     */
     name?: string;
+    /**
+     *the table primary key, alias hash_attribute, default is `id`
+     */
     primaryKey?: string;
     fields: { [key: string]: IHarpeeField };
+    /**
+     * when true, turns of error for schema fields
+     */
     silent?: boolean;
 }
 

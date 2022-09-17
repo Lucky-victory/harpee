@@ -3,6 +3,7 @@ import operations from "../constants/operations";
 import Utils from "../helpers/utils";
 import { HarpeeResponseCallback } from "../interfaces/harpee.interface";
 import {
+    IHarpeeReadLogOptions,
     IHarperDBDeleteRecordsOptions,
     IHarperDBDeleteTransLogOptions,
     IHarperDBReadTransLogByHashOptions,
@@ -22,32 +23,23 @@ import {
  */
 
 export default class HarpeeLogger extends HarpeeHttp {
-    private modelSchemaConfig;
     constructor() {
         super();
-
-        this.modelSchemaConfig = this.schemaConfig;
     }
     /**
-     * Read Logs
-     * @param {Object} options
-     * @param {number} [options.start=0] - an offset of records to be returned.
-     * @param {number} [options.limit=100] - limit of records to be returned.
-     * @param {('desc'|'asc')} [options.order='desc'] - an order to return the records by timestamp.
-     * @param {('error'|'info'|null)} [options.level='error'] - the level of logs to be read.
-     * @param {Date} [options.from] - a valid ISO Date String indicating when to start reading the logs, default is 3 years ago.
-     * @param {Date} [options.until] - a valid ISO Date String indicating when to stop reading the logs, default is today.
-     * @param {responseCallback} [callback]
-     * @returns {(Promise<any> | void)}
+     * Returns log outputs from the primary HarperDB log based on the provided search criteria. Read more about HarperDB logging here: https://harperdb.io/docs/reference/logging/.
 
      */
-    async readLog(options, callback?: HarpeeResponseCallback<T>) {
+    async readLog<T = object>(
+        options: IHarpeeReadLogOptions,
+        callback?: HarpeeResponseCallback<T>
+    ) {
         try {
             if (!Utils.isObject(options)) {
                 throw new Error("`options` must be an object");
             }
             const past2Years = new Date().getFullYear() - 2;
-            const past2YearsInMilliseconds = Date.parse(past2Years);
+            const past2YearsInMilliseconds = new Date(past2Years).getTime();
             const past2YearsInISOString = new Date(
                 past2YearsInMilliseconds
             ).toISOString();

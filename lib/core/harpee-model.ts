@@ -11,7 +11,7 @@ import {
     IHarperDBInsertResponse,
     IHarpeeModelUpdateNestedOptions,
 } from "../interfaces/harpee-model.interface";
-import { IHarpeeResponse, Order } from "../interfaces/harpee.interface/index";
+import { IHarpeeResponse, Order } from "../interfaces/harpee.interface";
 import Utils from "../helpers/utils";
 import {
     StringOrNumber,

@@ -32,19 +32,9 @@ import {
 } from "../interfaces/harpee-utilities.interface";
 import { IHarperDBInsertResponse } from "../interfaces/harpee-model.interface";
 
-/**
- * @callback responseCallback
- * @param {*} err - an error or null if no error
- * @param {*} result - response data or null if an error occurs
- *
- */
-
 export default class HarpeeUtilities extends HarpeeHttp {
-    private modelSchemaConfig;
     constructor() {
         super();
-
-        this.modelSchemaConfig = this.schemaConfig;
     }
     /**
      * Returns the definitions of all schemas and tables within the database.
@@ -72,7 +62,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
     */
 
     async createSchema<T = IHarperDBMessageResponse>(
-        options: Pick<IHarpeeUtilOptions,'schema'>,
+        options: Pick<IHarpeeUtilOptions, "schema">,
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
@@ -129,7 +119,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async describeSchema<T =object>(
+    async describeSchema<T = object>(
         options: Pick<IHarpeeUtilOptions, "schema">,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -159,7 +149,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async createTable<T =IHarperDBMessageResponse>(
+    async createTable<T = IHarperDBMessageResponse>(
         options: IHarpeeNewTableOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -191,18 +181,18 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async createAttribute<T =IHarperDBInsertResponse>(
+    async createAttribute<T = IHarperDBInsertResponse>(
         options: IHarpeeAttributeOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-          const { schema, table, attribute } = options;
+            const { schema, table, attribute } = options;
 
-          if (!(table || schema || attribute)) {
-              throw new Error(
-                  " `table`, `schema` and `attribute` are required"
-              );
-          }
+            if (!(table || schema || attribute)) {
+                throw new Error(
+                    " `table`, `schema` and `attribute` are required"
+                );
+            }
 
             const response = await this.$callbackOrPromise(
                 {
@@ -225,7 +215,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async dropAttribute<T =IHarperDBMessageResponse>(
+    async dropAttribute<T = IHarperDBMessageResponse>(
         options: IHarpeeAttributeOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -259,7 +249,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async describeTable<T= object>(
+    async describeTable<T = object>(
         options: IHarpeeUtilOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -320,7 +310,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
      */
 
-    async addRole<T =object>(
+    async addRole<T = object>(
         options: IHarperDBNewRoleOptions,
         callback?: HarpeeResponseCallback<T>
     ): Promise<IHarpeeResponse<T> | undefined> {
@@ -430,7 +420,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async addUser<T= IHarperDBMessageResponse>(
+    async addUser<T = IHarperDBMessageResponse>(
         options: IHarperDBNewUser,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -501,7 +491,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async dropUser<T =IHarperDBMessageResponse>(
+    async dropUser<T = IHarperDBMessageResponse>(
         options: Pick<IHarperDBAuth, "username">,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -750,7 +740,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
   
     */
 
-    async addCustomFunctionProject<T= IHarperDBMessageResponse>(
+    async addCustomFunctionProject<T = IHarperDBMessageResponse>(
         options: Pick<IHarperDBCustomFunctionOptions, "project">,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -806,9 +796,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
      * Creates a .tar file of the specified project folder, then reads it into a base64-encoded string and returns that string the the user.
      */
 
-    async packageCustomFunctionProject<
-        T = IHarperDBCustomFunctionPackage
-    >(
+    async packageCustomFunctionProject<T = IHarperDBCustomFunctionPackage>(
         options: Pick<IHarperDBCustomFunctionPackage, "project">,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -1003,9 +991,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async clusterStatus<T =object>(
-        callback?: HarpeeResponseCallback<T>
-    ) {
+    async clusterStatus<T = object>(callback?: HarpeeResponseCallback<T>) {
         try {
             const response = await this.$callbackOrPromise(
                 {
@@ -1045,7 +1031,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
      * Modifies the HarperDB configuration file parameters. Read more about HarperDB configuration here: https://harperdb.io/docs/reference/configuration-file/.
      */
 
-    async configureCluster<T =IHarperDBMessageResponse>(
+    async configureCluster<T = IHarperDBMessageResponse>(
         options: IHarperDBClusterConfiguration = {},
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -1118,7 +1104,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async addNode<T =IHarperDBMessageResponse>(
+    async addNode<T = IHarperDBMessageResponse>(
         options: IHarpeeUtilNodeOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -1153,7 +1139,7 @@ export default class HarpeeUtilities extends HarpeeHttp {
      * Modifies an existing HarperDB instance registration and associated subscriptions. Learn more about HarperDB clustering here: https://harperdb.io/docs/clustering/.
 
     */
-    async updateNode<T= IHarperDBMessageResponse>(
+    async updateNode<T = IHarperDBMessageResponse>(
         options: IHarpeeUtilNodeOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
