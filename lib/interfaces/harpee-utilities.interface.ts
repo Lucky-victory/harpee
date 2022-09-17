@@ -104,7 +104,7 @@ export interface IHarperDBSetCustomFunctionOptions
     /**
      * the content you wish to save into the specified file
      */
-    function_content: string;
+    functionContent: string;
 }
 
 export interface IHarpeeUtilNodeOptions {
@@ -140,6 +140,9 @@ export interface IHarpeeUtilOptions {
 }
 export interface IHarpeeNewTableOptions extends IHarpeeUtilOptions {
     hashAttribute?: string;
+}
+export interface IHarpeeAttributeOptions extends IHarpeeUtilOptions {
+    attribute: string;
 }
 export interface IHarperDBAuthUser {
     username: string;

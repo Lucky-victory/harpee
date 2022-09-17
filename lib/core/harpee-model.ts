@@ -6,8 +6,12 @@ import {
     IHarpeeModelImportCsvFileOptions,
     IHarpeeModelImportCsvUrlOptions,
     IHarpeeModelImportCsvOptions,
+    IHarperDBDeleteResponse,
+    IHarperDBUpdateResponse,
+    IHarperDBInsertResponse,
+    IHarpeeModelUpdateNestedOptions,
 } from "../interfaces/harpee-model.interface";
-import { HarpeePath, Order } from "../interfaces/harpee.interface/index";
+import { IHarpeeResponse, Order } from "../interfaces/harpee.interface/index";
 import Utils from "../helpers/utils";
 import {
     StringOrNumber,
@@ -18,15 +22,11 @@ import { IHarpeeModelFindOptions } from "../interfaces/harpee-model.interface";
 import HarpeeHttp from "./harpee-http";
 
 import operations from "../constants/operations";
-const validator = require("../helpers/validators");
+import SchemaValidator from "../helpers/validators";
 import SqlHandler from "./sql-handler";
 import HarpeeSchema from "./harpee-schema";
-
-/**
- * @callback responseCallback
- * @param {*} err - an error or null if no error.
- * @param {*} result - response data or null if an error occurs.
- */
+import { IHarperDBMessageResponse } from "../interfaces/harpee-utilities.interface";
+import HarpeeUtilities from "./harpee-utilities";
 
 export default class HarpeeModel extends HarpeeHttp {
     private schemaName: string;
@@ -62,52 +62,49 @@ export default class HarpeeModel extends HarpeeHttp {
      * **you should get rid of this after running your app atleast once.**
      *
      */
-    async init(): Promise<unknown> {
+    async init(): Promise<unknown | void> {
+        const harpeeUtils = new HarpeeUtilities();
         try {
             const schema = this.schemaName;
             const table = this.modelName;
+            const primaryKey = this.primaryKey;
             const createSchema = async () =>
-                await this.$callbackOrPromise({
-                    operation: operations.CREATE_SCHEMA,
+                await harpeeUtils.createSchema({
                     schema,
                 });
-
-            const describeAll = async () =>
-                await this.$callbackOrPromise({
-                    operation: operations.DESCRIBE_ALL,
-                });
+            const describeAll = async () => await harpeeUtils.describeAll();
 
             const createTable = async () =>
-                await this.$callbackOrPromise({
-                    operation: operations.CREATE_TABLE,
+                await harpeeUtils.createTable({
                     schema,
                     table,
-                    hash_attribute: this.primaryKey,
+                    hashAttribute: primaryKey,
                 });
             const createAttribute = async (attribute: string) =>
-                await this.$callbackOrPromise({
-                    operation: operations.CREATE_ATTRIBUTE,
+                await harpeeUtils.createAttribute({
                     schema,
                     table,
                     attribute,
                 });
 
             // get information about the database
-            const respA: any = await describeAll();
+            const respA = await describeAll();
             // check if the schema already exist, else create it
-            if (!respA[schema]) {
+            if (!(respA?.data as any)[schema]) {
                 await createSchema();
             }
 
             // get information about the database
-            const respB: any = await describeAll();
+            const respB = await describeAll();
             // check if the table already exist, else create it
-            if (!(respB[schema] && respB[schema][table])) {
+            if (
+                !((respB?.data as any) && (respB?.data as any)[schema][table])
+            ) {
                 await createTable();
             }
 
             // get information about the database
-            const respC: any = await describeAll();
+            const responseC = await describeAll();
 
             // get fields from Schema.`fields`
             const fields = this.schemaFields;
@@ -116,22 +113,24 @@ export default class HarpeeModel extends HarpeeHttp {
             const attributes = Utils.splitObject(fields).keys;
 
             // get previous attributes from the table
-            const previousAttributes = respC[schema][table]["attributes"];
+            const previousAttributes = (responseC?.data as any)[schema][table][
+                "attributes"
+            ];
 
             // turn the previous attributes object into an array of strings
             const previousAttributesValues =
                 Utils.ObjectArrayToStringArray(previousAttributes);
 
             // loop through attributes from `fields`
-            const attributeLoop = async () => {
-                for (let attribute of attributes) {
-                    // create the attribute if it's not in the previous attribute
+            const createAttributes = async () => {
+                for (const attribute of attributes) {
+                    // create the attribute if it's not in the previous attributes
                     if (!previousAttributesValues.includes(attribute)) {
                         await createAttribute(attribute);
                     }
                 }
             };
-            await attributeLoop();
+            await createAttributes();
         } catch (err) {
             return Promise.reject(err);
         }
@@ -140,10 +139,10 @@ export default class HarpeeModel extends HarpeeHttp {
      * Execute custom SQL queries.
      *
      */
-    async query<T extends object>(
+    async query<T = object[]>(
         sqlQuery: string,
         callback?: HarpeeResponseCallback<T>
-    ): Promise<T | any | void> {
+    ) {
         try {
             const response = await this.$callbackOrPromise(
                 {
@@ -163,9 +162,7 @@ export default class HarpeeModel extends HarpeeHttp {
     * Get details about your model, alias for `describe_table` 
 
     */
-    async describeModel<T extends object>(
-        callback?: HarpeeResponseCallback<T>
-    ) {
+    async describeModel<T = object>(callback?: HarpeeResponseCallback<T>) {
         try {
             const response = await this.$callbackOrPromise(
                 {
@@ -188,10 +185,10 @@ export default class HarpeeModel extends HarpeeHttp {
  
 
     */
-    async find<T extends object[]>(
+    async find<T = object[]>(
         options: string[] | IHarpeeModelFindOptions,
         callback?: HarpeeResponseCallback<T>
-    ): Promise<any | void> {
+    ): Promise<IHarpeeResponse<T> | undefined> {
         try {
             let getAttr: string[],
                 limit!: number,
@@ -256,10 +253,10 @@ export default class HarpeeModel extends HarpeeHttp {
      * Returns one or more data from the table matching the specified `primaryKey` values.
      *
      */
-    async findById<T extends object[]>(
+    async findById<T = object[]>(
         ids: StringOrNumber[] | IHarpeeModelFindByIdOptions,
         callback?: HarpeeResponseCallback<T>
-    ): Promise<any | void> {
+    ): Promise<IHarpeeResponse<T> | undefined> {
         try {
             let idValues!: StringOrNumber[],
                 getAttributes = ["*"],
@@ -303,7 +300,7 @@ export default class HarpeeModel extends HarpeeHttp {
     * Returns a single data from the table matching the specified value.
 
     */
-    async findOne<T extends object>(
+    async findOne<T = object>(
         obj: { [key: string]: StringOrNumber },
         getAttributes?: string[],
         callback?: HarpeeResponseCallback<T>
@@ -353,7 +350,7 @@ export default class HarpeeModel extends HarpeeHttp {
 
 
     */
-    async findByIdAndRemove<T extends object>(
+    async findByIdAndRemove<T = IHarperDBDeleteResponse>(
         ids: StringOrNumber[],
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -383,7 +380,7 @@ export default class HarpeeModel extends HarpeeHttp {
   
     */
 
-    async findAndRemove<T extends object>(
+    async findAndRemove<T = object>(
         obj: { [key: string]: StringOrNumber | StringOrNumber[] },
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -426,11 +423,35 @@ export default class HarpeeModel extends HarpeeHttp {
     }
 
     /**
-     * update nested values
+     * Update nested values
+     * @example
+     * ```
+     * // let's say you have the following data
+     * {id:1,username:'luckyv', friends:[{age:20,name:'mike'},{age:24,name:'jane'}]
+     * }
+     * // example 1
+     * // this will update the name of first item in the array from 'mike' to 'debbie'
+     * myUsersModel.updateNested({
+     * id:1,path:'friends.0.name',value:'debbie'})
+     *
+     * // example 2
+     *  myUsersModel.updateNested({
+     * id:1,path:['friends,'0','age'],value:(data)=> {
+     * // update the value
+     * data.friends[1].age += 10;
+     * // the return it
+     * return data.friends
+     * })
+     * // example 3
+     *  myUsersModel.updateNested({
+     * id:1,path:'username',value:'luckyvictory'
+     * })
+     *
+     * ```
      */
 
-    async updateNested<T extends object>(
-        options: { id: StringOrNumber; path: HarpeePath; value: any },
+    async updateNested<T = IHarperDBUpdateResponse, V = object>(
+        options: IHarpeeModelUpdateNestedOptions<V>,
         callback?: HarpeeResponseCallback<T>
     ) {
         if (!Utils.isObject(options)) {
@@ -447,7 +468,7 @@ export default class HarpeeModel extends HarpeeHttp {
                 .where(primaryKey)
                 .equalTo(id);
             // query the database to get the data
-            const initResponse = await this.$callbackOrPromise(
+            const initResponse = await this.$callbackOrPromise<V>(
                 {
                     operation: operations.SQL,
                     sql: query,
@@ -456,8 +477,8 @@ export default class HarpeeModel extends HarpeeHttp {
                 true
             );
             // update the data
-            if (initResponse) {
-                Utils.safeSet(initResponse, path, value);
+            if (initResponse?.data) {
+                Utils.safeSet(initResponse.data, path, value);
             }
 
             const response = await this.$callbackOrPromise(
@@ -484,10 +505,10 @@ export default class HarpeeModel extends HarpeeHttp {
 
     */
 
-    async update<T extends object>(
+    async update<T = IHarperDBUpdateResponse>(
         records: { [key: string]: any }[],
         callback?: HarpeeResponseCallback<T>
-    ): Promise<any | void> {
+    ) {
         try {
             if (!Utils.isArray(records)) {
                 records = [records];
@@ -515,10 +536,10 @@ export default class HarpeeModel extends HarpeeHttp {
      * @param newRecord - an object of new record to be created.
      *
      */
-    async create<T extends object>(
+    async create<T = IHarperDBInsertResponse>(
         newRecord: { [key: string]: any },
         callback?: HarpeeResponseCallback<T>
-    ): Promise<any | void> {
+    ) {
         try {
             if (!Utils.isObject(newRecord)) {
                 throw new TypeError(" `newRecord` must be an object");
@@ -526,7 +547,7 @@ export default class HarpeeModel extends HarpeeHttp {
 
             // @todo validator should throw error for unmatched types
             if (!this.silent) {
-                validator(this.schemaFields, newRecord);
+                SchemaValidator.validate(this.schemaFields, newRecord);
             }
 
             const response = await this.$callbackOrPromise(
@@ -552,7 +573,7 @@ export default class HarpeeModel extends HarpeeHttp {
      * @param  newRecords - an array of one or more records to be created.
      */
 
-    async createMany<T extends object>(
+    async createMany<T = IHarperDBInsertResponse>(
         newRecords: { [key: string]: any }[],
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -584,7 +605,7 @@ export default class HarpeeModel extends HarpeeHttp {
      * Load data to a table from a CSV string.
    
      */
-    async importFromCsv<T extends object>(
+    async importFromCsv<T = IHarperDBMessageResponse>(
         options: IHarpeeModelImportCsvOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -594,6 +615,7 @@ export default class HarpeeModel extends HarpeeHttp {
             }
             const data = options.csv;
             const action = options.action || operations.INSERT;
+            const transact_to_cluster = options.transactToCluster;
             if (!data || !Utils.isString(data)) {
                 throw new Error(
                     " `options.csv` is required and it should be a string"
@@ -607,6 +629,7 @@ export default class HarpeeModel extends HarpeeHttp {
                     schema: this.schemaName,
                     table: this.modelName,
                     data,
+                    transact_to_cluster,
                 },
                 callback
             );
@@ -620,7 +643,7 @@ export default class HarpeeModel extends HarpeeHttp {
     /**
      * Load data to a table from a local CSV file.
      */
-    async importFromCsvFile<T extends object>(
+    async importFromCsvFile<T = IHarperDBMessageResponse>(
         options: IHarpeeModelImportCsvFileOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -630,6 +653,7 @@ export default class HarpeeModel extends HarpeeHttp {
             }
             const action = options.action ? options.action : operations.INSERT;
             const file_path = options.filePath;
+            const transact_to_cluster = options.transactToCluster;
             if (!file_path || !Utils.isString(file_path)) {
                 throw new Error(
                     "`options.filePath` is required and must be a string"
@@ -643,6 +667,7 @@ export default class HarpeeModel extends HarpeeHttp {
                     schema: this.schemaName,
                     table: this.modelName,
                     file_path,
+                    transact_to_cluster,
                 },
                 callback
             );
@@ -659,7 +684,7 @@ export default class HarpeeModel extends HarpeeHttp {
 
 
     */
-    async importFromCsvUrl<T extends object>(
+    async importFromCsvUrl<T = IHarperDBMessageResponse>(
         options: IHarpeeModelImportCsvUrlOptions,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -669,7 +694,8 @@ export default class HarpeeModel extends HarpeeHttp {
             }
 
             const action = options.action || operations.INSERT;
-            const csv_url = options.fileUrl;
+            const csv_url = options.csvUrl;
+            const transact_to_cluster = options.transactToCluster;
             if (!csv_url || !Utils.isString(csv_url)) {
                 throw new Error(
                     "`options.fileUrl` is required and must be a string"
@@ -683,6 +709,7 @@ export default class HarpeeModel extends HarpeeHttp {
                     schema: this.schemaName,
                     table: this.modelName,
                     csv_url,
+                    transact_to_cluster,
                 },
                 callback
             );
@@ -697,7 +724,7 @@ export default class HarpeeModel extends HarpeeHttp {
     * Load data to a table from amazon S3.
 
     */
-    async importFromS3<T extends object>(
+    async importFromS3<T = IHarperDBMessageResponse>(
         options: IHarperDBS3Options,
         callback?: HarpeeResponseCallback<T>
     ) {
@@ -752,7 +779,7 @@ export default class HarpeeModel extends HarpeeHttp {
     /**
      * Deletes every data from the table, **use this with caution**;
      */
-    async clearAll<T extends object>(callback?: HarpeeResponseCallback<T>) {
+    async clearAll<T = object>(callback?: HarpeeResponseCallback<T>) {
         try {
             const schema = this.schemaName;
             const table = this.modelName;
@@ -777,7 +804,7 @@ export default class HarpeeModel extends HarpeeHttp {
     /**
      * Return data from table using matching conditions.
      */
-    async findByConditions<T extends object>(
+    async findByConditions<T = object[]>(
         options: IHarpeeModelFindByConditionOptions,
         callback: HarpeeResponseCallback<T>
     ) {
@@ -822,7 +849,7 @@ export default class HarpeeModel extends HarpeeHttp {
      *  Returns data from a table with matching values.
      */
 
-    async findByValue<T extends object>(
+    async findByValue<T = object[]>(
         options: IHarpeeModelFindByValueOptions,
         callback: HarpeeResponseCallback<T>
     ) {

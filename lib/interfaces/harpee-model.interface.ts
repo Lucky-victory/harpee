@@ -16,6 +16,25 @@ export interface IHarpeeModelFindOptions {
     and?: string | number;
     getAttributes?: string[];
 }
+export interface IHarperDBCRUDResponse {
+    message: string;
+    update_hashes: StringOrNumber[];
+    skipped_hashes: StringOrNumber[];
+    inserted_hashes: StringOrNumber[];
+    deleted_hashes: StringOrNumber[];
+}
+export type IHarperDBDeleteResponse = Pick<
+    IHarperDBCRUDResponse,
+    "deleted_hashes" | "skipped_hashes" | "message"
+>;
+export type IHarperDBUpdateResponse = Pick<
+    IHarperDBCRUDResponse,
+    "update_hashes" | "skipped_hashes" | "message"
+>;
+export type IHarperDBInsertResponse = Pick<
+    IHarperDBCRUDResponse,
+    "inserted_hashes" | "skipped_hashes" | "message"
+>;
 export interface IHarpeeModelFindByIdOptions {
     id: StringOrNumber[];
     getAttributes?: string[];
@@ -60,19 +79,37 @@ export interface IHarpeeModelImportOptions {
     /**
      * an absolute path to the external file.
      */
-    fileUrl: string;
+    csvUrl: string;
+    /**
+     * selects whether or not the data load will transact to any clustered instance. The default is `false`.
+     */
+    transactToCluster?: boolean;
 }
+export interface IHarpeeModelUpdateNestedOptions<V = any> {
+    id: StringOrNumber;
+    /**
+     * a string or array of string indicating the path to a value
+     *
+     */
+    path: HarpeePath;
+    value: any | ((val: V) => any);
+}
+/**
+ * a string or array of string indicating the path to a value
+ *
+ */
+export type HarpeePath = string | string[];
 export type IHarpeeModelImportCsvOptions = Pick<
     IHarpeeModelImportOptions,
-    "action" | "csv"
+    "action" | "csv" | "transactToCluster"
 >;
 export type IHarpeeModelImportCsvFileOptions = Pick<
     IHarpeeModelImportOptions,
-    "action" | "filePath"
+    "action" | "filePath" | "transactToCluster"
 >;
 export type IHarpeeModelImportCsvUrlOptions = Pick<
     IHarpeeModelImportOptions,
-    "action" | "fileUrl"
+    "action" | "csvUrl" | "transactToCluster"
 >;
 
 export type Actions = "insert" | "update" | "upsert";

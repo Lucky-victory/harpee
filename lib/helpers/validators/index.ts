@@ -61,7 +61,7 @@ function validator(fields, newRecord) {
     });
 }
 
-export class SchemaValidator {
+export default class SchemaValidator {
     private static _schemaFields: IHarpeeSchemaConfig["fields"];
     private static _newRecords: AnyKeyValueObject | AnyKeyValueObject[];
     validateKeys() {}

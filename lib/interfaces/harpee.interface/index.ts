@@ -8,13 +8,12 @@ export interface IHarpeeConfig {
 }
 export type Order = "DESC" | "ASC";
 export type StringOrNumber = string | number;
-export type HarpeePath = string;
 
 export type HarpeeResponseCallback<T = unknown> = (
     err: unknown,
     data: IHarpeeResponse<T> | null
 ) => void;
-export interface IHarpeeResponse<T=unknown> {
+export interface IHarpeeResponse<T = unknown> {
     success: boolean;
     data: null | T;
     error: IHarpeeHttpError | null;

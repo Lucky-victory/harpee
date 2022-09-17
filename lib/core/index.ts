@@ -1,3 +1,4 @@
+import HarpeeLogger from "./harpee-logger";
 import Utils from "../helpers/utils";
 import {
     HarpeeConnectInfoCallback,
@@ -6,6 +7,7 @@ import {
 } from "../interfaces/harpee.interface";
 import HarpeeModel from "./harpee-model";
 import HarpeeSchema from "./harpee-schema";
+import HarpeeUtilities from "./harpee-utilities";
 
 export default class Harpee {
     private static _config: IHarpeeConfig;
@@ -67,4 +69,6 @@ export default class Harpee {
     }
     static Model = HarpeeModel;
     static Schema = HarpeeSchema;
+    static Logger = HarpeeLogger;
+    static Utilities = HarpeeUtilities;
 }

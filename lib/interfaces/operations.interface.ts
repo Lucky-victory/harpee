@@ -53,4 +53,5 @@ export interface IOperations {
     RESTART_SERVICE: string;
     GET_CONFIGUATION: string;
     CONFIGURE_CLUSTER: string;
+    DROP_ATTRIBUTE: string;
 }

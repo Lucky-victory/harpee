@@ -10,6 +10,7 @@ const operations: IOperations = {
     REMOVE_NODE: "remove_node",
     DESCRIBE_ALL: "describe_all",
     CREATE_ATTRIBUTE: "create_attribute",
+    DROP_ATTRIBUTE: "drop_attribute",
     CREATE_SCHEMA: "create_schema",
     DESCRIBE_SCHEMA: "describe_schema",
     DROP_SCHEMA: "drop_schema",

@@ -99,7 +99,7 @@ export default class Utils {
     /** Transforms the String to lowercase
      *
      */
-   static toLower(str: string) {
+    static toLower(str: string) {
         return String(str).toLowerCase();
     }
     /** Transforms the String to uppercase
@@ -114,7 +114,7 @@ export default class Utils {
     static splitObject<T extends object>(obj: T) {
         const keys: string[] = [];
         const values: string[] = [];
-        Object.keys(obj).forEach(function (key) {
+        Object.keys(obj).forEach((key)=> {
             keys.push(key);
             values.push(obj[key as keyof T] as string);
         });
@@ -128,7 +128,7 @@ export default class Utils {
         const values: string[] = [];
         Object.keys(obj)
             .sort()
-            .forEach(function (key) {
+            .forEach((key)=> {
                 keys.push(key);
                 values.push(obj[key as keyof T] as string);
             });
@@ -236,12 +236,8 @@ export default class Utils {
     ) {
         return safeGet(item, target, defaultValue);
     }
-    static safeSet<T extends object>(
-        item: T | T[] | any[],
-        target: string | string[],
-        value: any
-    ) {
-        return safeSet(item, target, value);
+    static safeSet<T = object>(item: T, target: string | string[], value: any) {
+        return safeSet(item as object, target, value);
     }
 
     static pick<T extends object>(obj: T, select: (keyof T)[]) {
