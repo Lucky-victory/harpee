@@ -9,7 +9,7 @@ import HarpeeModel from "./harpee-model";
 import HarpeeSchema from "./harpee-schema";
 import HarpeeUtilities from "./harpee-utilities";
 
-export default class Harpee {
+export class Harpee {
     private static _config: IHarpeeConfig;
     private static _schemaConfig: IHarpeeSchemaConfig;
     protected get config() {
@@ -64,8 +64,11 @@ export default class Harpee {
      *
      *
      **/
-    static connect(config: IHarpeeConfig) {
-        return Harpee.createConnection(config);
+    static connect(
+        config: IHarpeeConfig,
+        connectionInfo?: HarpeeConnectInfoCallback
+    ) {
+        return Harpee.createConnection(config, connectionInfo);
     }
     static Model = HarpeeModel;
     static Schema = HarpeeSchema;

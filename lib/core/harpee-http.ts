@@ -1,5 +1,5 @@
 import axios from "axios";
-import Harpee from ".";
+import { Harpee } from ".";
 import Utils from "../helpers/utils";
 import {
     HarpeeResponseCallback,

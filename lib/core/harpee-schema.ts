@@ -1,4 +1,4 @@
-import Harpee from ".";
+import { Harpee } from ".";
 import Utils from "../helpers/utils";
 import { IHarpeeSchemaConfig } from "../interfaces/harpee.interface";
 

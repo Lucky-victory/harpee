@@ -1,3 +1,3 @@
-import Harpee from "./core";
+import { Harpee } from "./core";
 
 export const harpee = Harpee;
