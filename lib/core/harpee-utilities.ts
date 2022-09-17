@@ -18,7 +18,7 @@ import {
     IHarpeeAttributeOptions,
 } from "./../interfaces/harpee-utilities.interface";
 
-import HarpeeHttp from "./harpee-http";
+import {HarpeeHttp} from "./harpee-http";
 import operations from "../constants/operations";
 import Utils from "../helpers/utils";
 import {
@@ -32,7 +32,7 @@ import {
 } from "../interfaces/harpee-utilities.interface";
 import { IHarperDBInsertResponse } from "../interfaces/harpee-model.interface";
 
-export default class HarpeeUtilities extends HarpeeHttp {
+export class HarpeeUtilities extends HarpeeHttp {
     constructor() {
         super();
     }

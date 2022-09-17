@@ -1,8 +1,9 @@
 import { Harpee } from ".";
 import Utils from "../helpers/utils";
 import { IHarpeeSchemaConfig } from "../interfaces/harpee.interface";
+import { HarpeeConfig } from "./harpee-config";
 
-export default class HarpeeSchema extends Harpee {
+export class HarpeeSchema {
     /**
      * Let's you specify the schema name, also configure your table's column names.
      */
@@ -11,7 +12,6 @@ export default class HarpeeSchema extends Harpee {
     private silent: boolean;
     private fields: IHarpeeSchemaConfig["fields"];
     constructor(schemaConfig: IHarpeeSchemaConfig) {
-        super();
         if (!Utils.isObject(schemaConfig)) {
             throw new TypeError("`schemaConfig` must be an object");
         }
@@ -24,7 +24,7 @@ export default class HarpeeSchema extends Harpee {
         this.primaryKey = schemaConfig.primaryKey || "id";
         this.silent = schemaConfig.silent || true;
         this.fields = schemaConfig.fields;
-        this.schemaConfig = {
+        HarpeeConfig.schemaConfig = {
             name: this.schemaName,
             fields: this.fields,
             primaryKey: this.primaryKey,

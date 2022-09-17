@@ -114,9 +114,9 @@ export default class Utils {
     static splitObject<T extends object>(obj: T) {
         const keys: string[] = [];
         const values: string[] = [];
-        Object.keys(obj).forEach((key)=> {
+        Object.keys(obj).forEach((key) => {
             keys.push(key);
-            values.push(obj[key as keyof T] as string);
+            values.push(obj[key as keyof T] as unknown as string);
         });
         return { keys, values };
     }
@@ -128,42 +128,32 @@ export default class Utils {
         const values: string[] = [];
         Object.keys(obj)
             .sort()
-            .forEach((key)=> {
+            .forEach((key) => {
                 keys.push(key);
-                values.push(obj[key as keyof T] as string);
+                values.push(obj[key as keyof T] as unknown as string);
             });
         return { keys, values };
     }
     /**
      *
-     * @param {{[key:string]:any}[]} arrayOfObj - an array of objects
-     * @param {boolean} [keys] - when true, returns object keys otherwise object values
-     * @returns {string[]}
+     *
+     * @param  keys - when true, returns object keys otherwise object values
      */
     static ObjectArrayToStringArray<T extends object>(
         arrayOfObj: T[],
         keys = false
     ): string[] {
-        let result: string[] = [];
         if (!Array.isArray(arrayOfObj)) {
-            return result;
+            return arrayOfObj;
         }
-        for (const item of arrayOfObj) {
-            result = reduce(
-                item,
-                (acc, key, value) => {
-                    if (keys) {
-                        acc.push(key);
-                        return acc as string[];
-                    } else {
-                        acc.push(value);
-                    }
-                    return acc as string[];
-                },
-                [] as any[]
-            );
-        }
-        return result;
+        return arrayOfObj.reduce((accum, item) => {
+            for (let key in item) {
+                keys
+                    ? accum.push(key)
+                    : accum.push(item[key] as unknown as string);
+            }
+            return accum;
+        }, [] as string[]);
     }
 
     /** Splits a string by a seperator and returns the last string
@@ -237,7 +227,7 @@ export default class Utils {
         return safeGet(item, target, defaultValue);
     }
     static safeSet<T = object>(item: T, target: string | string[], value: any) {
-        return safeSet(item as object, target, value);
+        return safeSet(item as unknown as object, target, value);
     }
 
     static pick<T extends object>(obj: T, select: (keyof T)[]) {

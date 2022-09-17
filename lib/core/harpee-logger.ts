@@ -1,4 +1,4 @@
-import HarpeeHttp from "./harpee-http";
+import { HarpeeHttp } from "./harpee-http";
 import operations from "../constants/operations";
 import Utils from "../helpers/utils";
 import { HarpeeResponseCallback } from "../interfaces/harpee.interface";
@@ -22,7 +22,7 @@ import {
  *
  */
 
-export default class HarpeeLogger extends HarpeeHttp {
+export class HarpeeLogger extends HarpeeHttp {
     constructor() {
         super();
     }

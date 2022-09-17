@@ -19,16 +19,16 @@ import {
     IHarpeeSchemaConfig,
 } from "../interfaces/harpee.interface";
 import { IHarpeeModelFindOptions } from "../interfaces/harpee-model.interface";
-import HarpeeHttp from "./harpee-http";
+import { HarpeeHttp } from "./harpee-http";
 
 import operations from "../constants/operations";
-import SchemaValidator from "../helpers/validators";
-import SqlHandler from "./sql-handler";
-import HarpeeSchema from "./harpee-schema";
+// import SchemaValidator from "../helpers/validators";
+import { SqlHandler } from "./sql-handler";
+import { HarpeeSchema } from "./harpee-schema";
 import { IHarperDBMessageResponse } from "../interfaces/harpee-utilities.interface";
-import HarpeeUtilities from "./harpee-utilities";
+import { HarpeeUtilities } from "./harpee-utilities";
 
-export default class HarpeeModel extends HarpeeHttp {
+export class HarpeeModel extends HarpeeHttp {
     private schemaName: string;
     private modelName: string;
     private primaryKey: string;
@@ -440,11 +440,15 @@ export default class HarpeeModel extends HarpeeHttp {
      * // update the value
      * data.friends[1].age += 10;
      * // the return it
-     * return data.friends
+     * return data.friends[1].age
      * })
      * // example 3
      *  myUsersModel.updateNested({
-     * id:1,path:'username',value:'luckyvictory'
+     * id:1,path:'friends',value:(data)=> {
+     * // add a new item
+     * data.friends.push({name:'bobby',age:32})
+     * return data.friends
+     * }
      * })
      *
      * ```
@@ -476,9 +480,18 @@ export default class HarpeeModel extends HarpeeHttp {
                 undefined,
                 true
             );
+
             // update the data
             if (initResponse?.data) {
-                Utils.safeSet(initResponse.data, path, value);
+                if (Utils.isFunction(value)) {
+                    Utils.safeSet(
+                        initResponse.data,
+                        path,
+                        value(initResponse.data)
+                    );
+                } else {
+                    Utils.safeSet(initResponse.data, path, value);
+                }
             }
 
             const response = await this.$callbackOrPromise(
@@ -486,7 +499,7 @@ export default class HarpeeModel extends HarpeeHttp {
                     operation: operations.UPDATE,
                     schema: this.schemaName,
                     table: this.modelName,
-                    records: [initResponse],
+                    records: [initResponse?.data],
                 },
                 callback
             );
@@ -547,7 +560,7 @@ export default class HarpeeModel extends HarpeeHttp {
 
             // @todo validator should throw error for unmatched types
             if (!this.silent) {
-                SchemaValidator.validate(this.schemaFields, newRecord);
+                // SchemaValidator.validate(this.schemaFields, newRecord);
             }
 
             const response = await this.$callbackOrPromise(

@@ -1,15 +1,20 @@
 import axios from "axios";
-import { Harpee } from ".";
 import Utils from "../helpers/utils";
 import {
     HarpeeResponseCallback,
+    IHarpeeConfig,
     IHarpeeHttpError,
     IHarpeeResponse,
+    IHarpeeSchemaConfig,
 } from "../interfaces/harpee.interface";
+import { HarpeeConfig } from "./harpee-config";
 
-export default class HarpeeHttp extends Harpee {
+export class HarpeeHttp {
+    protected config: IHarpeeConfig;
+    protected schemaConfig: IHarpeeSchemaConfig;
     constructor() {
-        super();
+        this.config = HarpeeConfig.authConfig;
+        this.schemaConfig = HarpeeConfig.schemaConfig;
     }
 
     private $requestHandler(
@@ -29,7 +34,10 @@ export default class HarpeeHttp extends Harpee {
                     "base64"
                 );
         }
-        let errorObj!: IHarpeeHttpError;
+        let errorObj: IHarpeeHttpError = {
+            message: "an error occurred",
+            data: undefined,
+        };
 
         axios({
             url: host,
@@ -44,10 +52,10 @@ export default class HarpeeHttp extends Harpee {
                 callback(null, res.data);
             })
             .catch((error) => {
-                if (error.response) {
-                    errorObj.data = error.response?.data;
-                    errorObj.status = error.response?.status;
-                } else if (error.request) {
+                if (error?.response) {
+                    errorObj.data = error?.response?.data;
+                    errorObj.status = error?.response?.status;
+                } else if (error?.request) {
                     errorObj.data = error?.request;
                 }
                 errorObj.message = error?.message;

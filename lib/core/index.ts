@@ -1,26 +1,20 @@
-import HarpeeLogger from "./harpee-logger";
+import { HarpeeLogger } from "./harpee-logger";
 import Utils from "../helpers/utils";
 import {
     HarpeeConnectInfoCallback,
     IHarpeeConfig,
     IHarpeeSchemaConfig,
 } from "../interfaces/harpee.interface";
-import HarpeeModel from "./harpee-model";
-import HarpeeSchema from "./harpee-schema";
-import HarpeeUtilities from "./harpee-utilities";
+import { HarpeeModel } from "./harpee-model";
+import { HarpeeSchema } from "./harpee-schema";
+import { HarpeeUtilities } from "./harpee-utilities";
+import { SqlHandler } from "./sql-handler";
+import { HarpeeConfig } from "./harpee-config";
 
 export class Harpee {
     private static _config: IHarpeeConfig;
-    private static _schemaConfig: IHarpeeSchemaConfig;
     protected get config() {
         return Harpee._config;
-    }
-
-    protected get schemaConfig() {
-        return Harpee._schemaConfig;
-    }
-    protected set schemaConfig(schemaConfig: IHarpeeSchemaConfig) {
-        Harpee._schemaConfig = schemaConfig;
     }
     static createConnection(
         config: IHarpeeConfig,
@@ -48,7 +42,7 @@ export class Harpee {
                 );
             }
             const connectionConfig = { host, username, password, token };
-            this._config = connectionConfig;
+            HarpeeConfig.authConfig = connectionConfig;
 
             if (connectionInfo && Utils.isFunction(connectionInfo)) {
                 connectionInfo(config, null);
@@ -74,4 +68,5 @@ export class Harpee {
     static Schema = HarpeeSchema;
     static Logger = HarpeeLogger;
     static Utilities = HarpeeUtilities;
+    static Sqler = SqlHandler;
 }

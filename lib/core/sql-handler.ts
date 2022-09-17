@@ -1,7 +1,11 @@
 import Utils from "../helpers/utils";
-import { Order, StringOrNumber } from "../interfaces/harpee.interface";
+import {
+    InsertOpts,
+    Order,
+    StringOrNumber,
+} from "../interfaces/harpee.interface";
 
-export default class SqlHandler {
+export class SqlHandler {
     private _query: string = "";
     constructor() {
         this._query = ``;
@@ -99,7 +103,7 @@ export default class SqlHandler {
         return this;
     }
 
-    insertInto<T extends object>(options: InsertOpts<T>) {
+    insertInto<T = object>(options: InsertOpts<T>) {
         const { schema, table, records } = options;
         if (Utils.isArray(records)) {
             const { keys, values } = records.reduce(
@@ -128,7 +132,7 @@ export default class SqlHandler {
         return this;
     }
 
-    set<T extends object>(records: T[]) {
+    set<T = object>(records: T[]) {
         if (Array.isArray(records)) {
             const keysAndValues = records.reduce((accum, item) => {
                 if (Utils.isObject(item)) {
@@ -266,10 +270,4 @@ export default class SqlHandler {
     get query() {
         return this._query;
     }
-}
-
-export interface InsertOpts<T> {
-    schema: string;
-    table: string;
-    records: T[];
 }

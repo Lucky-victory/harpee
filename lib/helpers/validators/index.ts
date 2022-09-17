@@ -10,7 +10,7 @@ const validateTypes = require("./validateTypes");
 const validateKeys = require("./validateKeys");
 const validateRequired = require("./validateRequired");
 
-function validator(fields, newRecord) {
+function validator(fields: AnyKeyValueObject, newRecord: AnyKeyValueObject) {
     const fieldTypes = [];
     const newRecordValuesType = [];
     const requiredKeys = [];
