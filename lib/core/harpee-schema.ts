@@ -3,10 +3,10 @@ import Utils from "../helpers/utils";
 import { IHarpeeSchemaConfig } from "../interfaces/harpee.interface";
 import { HarpeeConfig } from "./harpee-config";
 
+/**
+ * Let's you specify the schema name, also configure your table's column names.
+ */
 export class HarpeeSchema {
-    /**
-     * Let's you specify the schema name, also configure your table's column names.
-     */
     private schemaName: string;
     private primaryKey: string;
     private silent: boolean;

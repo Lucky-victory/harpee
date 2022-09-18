@@ -22,7 +22,7 @@ export class HarpeeHttp {
         callback: (err: unknown | null, data: any | null) => void
     ) {
         let auth: string = "";
-        const { username, password, token, host } = this.config;
+        const { username, password, token, host } = this.config || {};
         const _username = username;
         const _password = password;
         if (token) {
@@ -59,7 +59,6 @@ export class HarpeeHttp {
                     errorObj.data = error?.request;
                 }
                 errorObj.message = error?.message;
-
                 callback(errorObj, null);
             });
     }
@@ -125,7 +124,7 @@ export class HarpeeHttp {
                               data: result as T,
                               error: null,
                           });
-                } catch {
+                } catch (err) {
                     return callback(
                         {
                             success: false,

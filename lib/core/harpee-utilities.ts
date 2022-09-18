@@ -18,7 +18,7 @@ import {
     IHarpeeAttributeOptions,
 } from "./../interfaces/harpee-utilities.interface";
 
-import {HarpeeHttp} from "./harpee-http";
+import { HarpeeHttp } from "./harpee-http";
 import operations from "../constants/operations";
 import Utils from "../helpers/utils";
 import {
@@ -553,17 +553,17 @@ export class HarpeeUtilities extends HarpeeHttp {
             return Promise.reject(err);
         }
     }
-    /**
-    * Creates the tokens needed for authentication: operation & refresh token. **Note, this operation does not require authorization to be set**.
 
-    **/
+    /**
+     * Creates the tokens needed for authentication: operation & refresh token. **Note, this operation does not require authorization to be set**.
+     **/
     async createAuthenticationTokens<T = IHarperDBTokenResponse>(
         options: IHarperDBAuth,
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            const username = options.username || this.config.username;
-            const password = options.password || this.config.password;
+            const username = options.username || this.config?.username;
+            const password = options.password || this.config?.password;
             if (!(username || password)) {
                 throw new Error("`username` and `password` are required");
             }

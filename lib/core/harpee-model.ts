@@ -425,7 +425,7 @@ export class HarpeeModel extends HarpeeHttp {
     /**
      * Update nested values
      * @example
-     * ```
+     * ```js
      * // let's say you have the following data
      * {id:1,username:'luckyv', friends:[{age:20,name:'mike'},{age:24,name:'jane'}]
      * }
@@ -454,17 +454,18 @@ export class HarpeeModel extends HarpeeHttp {
      * ```
      */
 
-    async updateNested<T = IHarperDBUpdateResponse, V = object>(
+    async updateNested<T = IHarperDBUpdateResponse | object, V = object>(
         options: IHarpeeModelUpdateNestedOptions<V>,
         callback?: HarpeeResponseCallback<T>
     ) {
         if (!Utils.isObject(options)) {
             throw new TypeError("updateNested `options` must be an object");
         }
-        const { path, value, id } = options;
+        const { path, value, id, returnData = true } = options;
         const schema = this.schemaName;
         const table = this.modelName;
         const primaryKey = this.primaryKey;
+        let isDataCallback: boolean = false;
         try {
             const { query } = new SqlHandler()
                 .select(["*"])
@@ -493,7 +494,9 @@ export class HarpeeModel extends HarpeeHttp {
                     Utils.safeSet(initResponse.data, path, value);
                 }
             }
-
+            if (returnData && Utils.isFunction(callback)) {
+                isDataCallback = true;
+            }
             const response = await this.$callbackOrPromise(
                 {
                     operation: operations.UPDATE,
@@ -501,9 +504,24 @@ export class HarpeeModel extends HarpeeHttp {
                     table: this.modelName,
                     records: [initResponse?.data],
                 },
-                callback
+
+                isDataCallback ? undefined : callback
             );
-            if (!Utils.isUndefined(response)) {
+            if (isDataCallback) {
+                (callback as HarpeeResponseCallback<T>)(null, {
+                    data: initResponse?.data as unknown as T,
+                    success: true,
+                    error: null,
+                });
+            }
+            if (!Utils.isUndefined(response) && !isDataCallback) {
+                if (returnData) {
+                    return Promise.resolve({
+                        data: initResponse?.data,
+                        success: true,
+                        error: null,
+                    });
+                }
                 return Promise.resolve(response);
             }
         } catch (error) {
@@ -511,12 +529,10 @@ export class HarpeeModel extends HarpeeHttp {
         }
     }
     /**
-    * Updates the table with the specified records.
-    * @param records - an array of one or more records to be updated, **Note: the records must include their ids**.
- 
-    * 
-
-    */
+     * Updates the table with the specified records.
+     * @param records - an array of one or more records to be updated, **Note: the records must include their primary key (e.g id)**.
+     *
+     */
 
     async update<T = IHarperDBUpdateResponse>(
         records: { [key: string]: any }[],

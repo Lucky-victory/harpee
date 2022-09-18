@@ -1,16 +1,23 @@
-import {
-    HarpeeResponseCallback,
-    Order,
-    StringOrNumber,
-} from "./harpee.interface";
+import { Order, StringOrNumber } from "./harpee.interface";
 
 export interface IHarpeeModelFindOptions {
     /**
-     * max number of data to return
+     *
+     * the number of records that the query result will include,default is `null`, resulting in no limit
      */
+
     limit?: number;
+    /**
+     * the number of records that the query will skip
+     */
     offset?: number;
+    /**
+     * columns to order the result
+     */
     orderby?: string[];
+    /**
+     * the order of the result, 'desc' or 'asc'
+     */
     order?: Order;
     where?: string;
     and?: string | number;
@@ -86,6 +93,9 @@ export interface IHarpeeModelImportOptions {
     transactToCluster?: boolean;
 }
 export interface IHarpeeModelUpdateNestedOptions<V = any> {
+    /**
+     *
+     */
     id: StringOrNumber;
     /**
      * a string or array of string indicating the path to a value
@@ -93,6 +103,10 @@ export interface IHarpeeModelUpdateNestedOptions<V = any> {
      */
     path: HarpeePath;
     value: any | ((val: V) => any);
+    /**
+     * when true, returns the updated data, default is true
+     */
+    returnData?: boolean;
 }
 /**
  * a string or array of string indicating the path to a value

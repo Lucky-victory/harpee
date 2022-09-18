@@ -1,23 +1,44 @@
 export interface IHarpeeConfig {
+    /**
+     * your HarperDB username, alias `user`
+     */
     username?: string;
+    /**
+     *  your HarperDB password, alias `pass`
+     */
     password?: string;
+    /**
+     * your HarperDB username, alias `username`
+     */
     user?: string;
+    /**
+     *  your HarperDB password, alias `password`
+     */
     pass?: string;
+    /**
+     * your harperDB instance url
+     */
     host: string;
+    /**
+     * A JWT token, **you should only include it in place of `username` and `password`.**
+     */
     token?: string;
 }
-export type Order = "DESC" | "ASC";
+
+export type Order = "desc" | "asc";
 export type StringOrNumber = string | number;
 
 export type HarpeeResponseCallback<T = unknown> = (
     err: unknown,
-    data: IHarpeeResponse<T> | null
+    result: IHarpeeResponse<T> | null
 ) => void;
+
 export interface IHarpeeResponse<T = unknown> {
     success: boolean;
     data: null | T;
     error: IHarpeeHttpError | null;
 }
+
 export interface IHarpeeHttpError {
     message: string;
     status?: number;
@@ -57,7 +78,7 @@ export type HarpeeFieldType =
 export interface AnyKeyValueObject {
     [key: string]: any;
 }
-export interface InsertOpts<T> {
+export interface InsertOpts<T = object> {
     schema: string;
     table: string;
     records: T[];

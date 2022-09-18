@@ -89,7 +89,7 @@ export class SqlHandler {
     }
 
     order(order: Order) {
-        this._query += order ? ` ${order}` : "";
+        this._query += order ? ` ${Utils.toUpper(order)}` : "";
         return this;
     }
 
