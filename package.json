@@ -1,13 +1,14 @@
 {
     "name": "harpee",
-    "version": "3.1.0",
-    "description": "Harpee is a modeling tool for HarperDB, harpee supports both callbacks and Promises.",
+    "version": "4.0.0",
+    "description": "Harpee is a modeling tool for HarperDB, supports both callbacks and Promises.",
     "main": "./dist/index.js",
     "types": "./types/index.d.ts",
     "scripts": {
-        "compile": "babel -d dist/ lib/ --no-comments",
-        "build:types": "npx -p typescript tsc",
-        "prepublishOnly": "npm run build:types && npm run compile"
+        "dev": "tsc",
+        "watch": "tsc --watch",
+        "build": "npx -p typescript tsc",
+        "prepublishOnly": "npm run build"
     },
     "keywords": [
         "model",
@@ -21,16 +22,25 @@
         "dist",
         "types"
     ],
-    "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
+    "author": "Lucky Victory <luckyvictory54@gmail.com> (https://me.lucky-victory.dev)",
     "license": "MIT",
     "typings": "./types/index.d.ts",
     "dependencies": {
-        "axios": "^0.27.1"
+        "axios": "^0.27.1",
+        "joi": "^17.6.0",
+        "just-is-empty": "^3.2.1",
+        "just-omit": "^2.1.2",
+        "just-pick": "^4.1.1",
+        "just-safe-get": "^4.1.1",
+        "just-safe-set": "^4.1.1",
+        "just-typeof": "^3.1.1"
     },
     "devDependencies": {
         "@babel/cli": "7.16.8",
         "@babel/core": "7.16.7",
         "@babel/preset-env": "7.16.8",
+        "@types/node": "^18.7.18",
+        "typedoc": "^0.23.14",
         "typescript": "^4.3.5"
     },
     "repository": {
@@ -40,5 +50,5 @@
     "bugs": {
         "url": "https://github.com/lucky-victory/harpee/issues"
     },
-    "homepage": "https://harpee-docs.netlify.app"
+    "homepage": "https://harpee-docs-v4.netlify.app"
 }

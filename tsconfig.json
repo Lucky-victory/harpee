@@ -1,19 +1,42 @@
 {
-    // Change this to match your project
-    "include": ["lib/**/*"],
     "compilerOptions": {
-        // Tells TypeScript to read JS files, as
-        // normally they are ignored as source files
-        "allowJs": true,
-        // Generate d.ts files
+        /* Language and Environment */
+        "target": "ES2017" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+
+        /* Modules */
+        "module": "CommonJS" /* Specify what module code is generated. */,
+        "rootDir": "lib/" /* Specify the root folder within your source files. */,
+        "moduleResolution": "node",
         "declaration": true,
-        // This compiler run should
-        // only output d.ts files
-        "emitDeclarationOnly": true,
-        // Types should go into this directory.
-        // Removing this would place the .d.ts files
-        // next to the .js files
-        "outDir": "types",
-       
+        "outDir": "dist/" /* Specify an output folder for all emitted files. */,
+        "removeComments": false /* Disable emitting comments. */,
+
+        "declarationDir": "types/" /* Specify the output directory for generated declaration files. */,
+        "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
+        // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
+        "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+
+        /* Type Checking */
+        "strict": true /* Enable all strict type-checking options. */,
+
+        "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    },
+    "typedocOptions": {
+        "entryPoints": [
+            "lib/core/index",
+            "lib/core/harpee-model.ts",
+            "lib/core/harpee-utilities.ts",
+            "lib/core/sql-handler.ts",
+            "lib/core/harpee-logger.ts",
+            "lib/core/harpee-schema.ts"
+        ],
+
+        "out": "docs",
+        "excludePrivate": true,
+        "excludeProtected": true,
+        //"includeDeclarations": true,
+        "name": "Harpee",
+
+        "plugin": "none"
     }
 }
