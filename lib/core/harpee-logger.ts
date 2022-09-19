@@ -67,8 +67,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
     /**
@@ -101,8 +105,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
     /**
@@ -128,8 +136,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
     /**
@@ -163,8 +175,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
     /**
@@ -197,8 +213,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
     /**
@@ -233,8 +253,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
     /**
@@ -263,8 +287,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
     /**
@@ -294,8 +322,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
 
@@ -328,8 +360,12 @@ export class HarpeeLogger extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
 }

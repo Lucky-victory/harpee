@@ -11,7 +11,11 @@ import {
     IHarperDBInsertResponse,
     IHarpeeModelUpdateNestedOptions,
 } from "../interfaces/harpee-model.interface";
-import { IHarpeeResponse, Order } from "../interfaces/harpee.interface";
+import {
+    AnyKeyValueObject,
+    IHarpeeResponse,
+    Order,
+} from "../interfaces/harpee.interface";
 import Utils from "../helpers/utils";
 import {
     StringOrNumber,
@@ -20,7 +24,7 @@ import {
 } from "../interfaces/harpee.interface";
 import { IHarpeeModelFindOptions } from "../interfaces/harpee-model.interface";
 import { HarpeeHttp } from "./harpee-http";
-
+import { ValidationError } from "joi";
 import operations from "../constants/operations";
 
 import { SqlHandler } from "./sql-handler";
@@ -155,11 +159,12 @@ export class HarpeeModel extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
-                (callback as HarpeeResponseCallback)(err, null);
+                (callback as HarpeeResponseCallback)(error, null);
             }
-            return Promise.reject(err);
+            return Promise.reject(error);
         }
     }
     /**
@@ -179,8 +184,12 @@ export class HarpeeModel extends HarpeeHttp {
             if (!Utils.isUndefined(response)) {
                 return Promise.resolve(response);
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
         }
     }
     /** 
@@ -192,7 +201,7 @@ export class HarpeeModel extends HarpeeHttp {
     async find<T = object[]>(
         options: string[] | IHarpeeModelFindOptions,
         callback?: HarpeeResponseCallback<T>
-    ): Promise<IHarpeeResponse<T> | undefined> {
+    ) {
         try {
             let getAttr: string[],
                 limit!: number,
@@ -250,6 +259,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -260,7 +273,7 @@ export class HarpeeModel extends HarpeeHttp {
     async findById<T = object[]>(
         ids: StringOrNumber[] | IHarpeeModelFindByIdOptions,
         callback?: HarpeeResponseCallback<T>
-    ): Promise<IHarpeeResponse<T> | undefined> {
+    ) {
         try {
             let idValues!: StringOrNumber[],
                 getAttributes = ["*"],
@@ -296,6 +309,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -344,6 +361,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -376,6 +397,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -392,7 +417,7 @@ export class HarpeeModel extends HarpeeHttp {
             let attrKey!: string,
                 attrValues!: StringOrNumber | StringOrNumber[];
             if (!Utils.isObject(obj)) {
-                throw new TypeError("`attrObj` param must be an object");
+                throw new TypeError("`obj` param must be an object");
             }
 
             attrKey = Utils.splitObject(obj).keys[0];
@@ -422,6 +447,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -529,6 +558,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -539,7 +572,7 @@ export class HarpeeModel extends HarpeeHttp {
      */
 
     async update<T = IHarperDBUpdateResponse>(
-        records: { [key: string]: any }[],
+        records: AnyKeyValueObject[],
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
@@ -560,6 +593,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -570,7 +607,7 @@ export class HarpeeModel extends HarpeeHttp {
      *
      */
     async create<T = IHarperDBInsertResponse>(
-        newRecord: { [key: string]: any },
+        newRecord: AnyKeyValueObject,
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
@@ -578,14 +615,14 @@ export class HarpeeModel extends HarpeeHttp {
                 throw new TypeError(" `newRecord` must be an object");
             }
 
-            // @todo validator should throw error for unmatched types
             if (!this.silent) {
-                console.log("here in silent");
-
-                const { error, value } = SchemaValidator.validate(
+                const { error } = SchemaValidator.validate(
                     this.schemaConfig,
                     newRecord
-                );
+                ) as {
+                    error: ValidationError | undefined;
+                    value: any;
+                };
 
                 if (error) throw error;
             }
@@ -612,21 +649,35 @@ export class HarpeeModel extends HarpeeHttp {
     }
     /**
      * Inserts multiple new records to the table,
-     * **Note: this method does not validate the types in your schema.**
      *
-     * @param  newRecords - an array of one or more records to be created.
+     *
+     * @param {AnyKeyValueObject[]} newRecords - an array of one or more records to be created.
      */
 
     async createMany<T = IHarperDBInsertResponse>(
-        newRecords: { [key: string]: any }[],
+        newRecords: AnyKeyValueObject[],
         callback?: HarpeeResponseCallback<T>
     ) {
-        /**
-         @todo add validator here
-         *  */
         try {
             if (!Utils.isArray(newRecords)) {
                 newRecords = [newRecords];
+            }
+            // only throw an error when `silent` is false
+            if (!this.silent) {
+                const validationResults = SchemaValidator.validate(
+                    this.schemaConfig,
+                    newRecords
+                ) as {
+                    error: ValidationError | undefined;
+                    value: any;
+                }[];
+
+                if (validationResults?.length) {
+                    const validationErrors = validationResults.map(
+                        (validation) => validation?.error
+                    );
+                    if (validationErrors?.length) throw validationErrors;
+                }
             }
 
             const response = await this.$callbackOrPromise(
@@ -642,6 +693,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -681,6 +736,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -719,6 +778,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -761,6 +824,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -817,6 +884,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -841,6 +912,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -885,6 +960,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
@@ -932,6 +1011,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }
