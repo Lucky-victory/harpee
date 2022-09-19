@@ -5,8 +5,10 @@
     "main": "./dist/index.js",
     "types": "./types/index.d.ts",
     "scripts": {
+        "dev": "tsc",
+        "watch": "tsc --watch",
         "build": "npx -p typescript tsc",
-        "prepublishOnly": "npm run build && npm run compile"
+        "prepublishOnly": "npm run build"
     },
     "keywords": [
         "model",
@@ -25,6 +27,7 @@
     "typings": "./types/index.d.ts",
     "dependencies": {
         "axios": "^0.27.1",
+        "joi": "^17.6.0",
         "just-has": "^2.2.1",
         "just-is-empty": "^3.2.1",
         "just-omit": "^2.1.2",

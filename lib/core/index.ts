@@ -3,7 +3,6 @@ import Utils from "../helpers/utils";
 import {
     HarpeeConnectInfoCallback,
     IHarpeeConfig,
-    IHarpeeSchemaConfig,
 } from "../interfaces/harpee.interface";
 import { HarpeeModel } from "./harpee-model";
 import { HarpeeSchema } from "./harpee-schema";

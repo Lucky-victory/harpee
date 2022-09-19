@@ -22,11 +22,12 @@ import { IHarpeeModelFindOptions } from "../interfaces/harpee-model.interface";
 import { HarpeeHttp } from "./harpee-http";
 
 import operations from "../constants/operations";
-// import SchemaValidator from "../helpers/validators";
+
 import { SqlHandler } from "./sql-handler";
 import { HarpeeSchema } from "./harpee-schema";
 import { IHarperDBMessageResponse } from "../interfaces/harpee-utilities.interface";
 import { HarpeeUtilities } from "./harpee-utilities";
+import { SchemaValidator } from "../helpers/validators/schema";
 
 export class HarpeeModel extends HarpeeHttp {
     private schemaName: string;
@@ -155,6 +156,9 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (err) {
+            if (Utils.isFunction(callback)) {
+                (callback as HarpeeResponseCallback)(err, null);
+            }
             return Promise.reject(err);
         }
     }
@@ -576,7 +580,14 @@ export class HarpeeModel extends HarpeeHttp {
 
             // @todo validator should throw error for unmatched types
             if (!this.silent) {
-                // SchemaValidator.validate(this.schemaFields, newRecord);
+                console.log("here in silent");
+
+                const { error, value } = SchemaValidator.validate(
+                    this.schemaConfig,
+                    newRecord
+                );
+
+                if (error) throw error;
             }
 
             const response = await this.$callbackOrPromise(
@@ -592,6 +603,10 @@ export class HarpeeModel extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
+            error = JSON.stringify(error, undefined, 2);
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
             return Promise.reject(error);
         }
     }

@@ -11,7 +11,7 @@
         "outDir": "dist/" /* Specify an output folder for all emitted files. */,
         "removeComments": false /* Disable emitting comments. */,
 
-        // "declarationDir": "types/" /* Specify the output directory for generated declaration files. */,
+        "declarationDir": "types/" /* Specify the output directory for generated declaration files. */,
         "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
         // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
         "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
@@ -23,12 +23,12 @@
     },
     "typedocOptions": {
         "entryPoints": [
-            "core",
-            "core/harpee-model.ts",
-            "core/harpee-utilities.ts",
-            "core/sql-handler.ts",
-            "ccore/harpee-logger.ts",
-            "core/harpee-schema.ts"
+            "lib/core",
+            "lib/core/harpee-model.ts",
+            "lib/core/harpee-utilities.ts",
+            "lib/core/sql-handler.ts",
+            "lib/core/harpee-logger.ts",
+            "lib/core/harpee-schema.ts"
         ],
 
         "out": "docs",
@@ -36,7 +36,7 @@
         "excludeProtected": true,
         //"includeDeclarations": true,
         "name": "Harpee",
-        "basePath": "./lib",
+        "basePath": "./",
         "plugin": "none"
     }
 }

@@ -58,26 +58,16 @@ export interface IHarpeeSchemaConfig {
      *the table primary key, alias hash_attribute, default is `id`
      */
     primaryKey?: string;
-    fields: { [key: string]: IHarpeeField };
+    fields: { [key: string]: any };
     /**
      * when true, turns of error for schema fields
      */
     silent?: boolean;
 }
 
-export interface IHarpeeField {
-    type: HarpeeFieldType;
-    required?: boolean | [boolean, string];
-}
-export type HarpeeFieldType =
-    | "string"
-    | "array"
-    | "object"
-    | "number"
-    | "boolean";
-export interface AnyKeyValueObject {
+export type AnyKeyValueObject = {
     [key: string]: any;
-}
+};
 export interface InsertOpts<T = object> {
     schema: string;
     table: string;

@@ -37,6 +37,29 @@ export class HarpeeUtilities extends HarpeeHttp {
         super();
     }
     /**
+     * Execute custom SQL queries.
+     *
+     */
+    async query<T = object[]>(
+        sqlQuery: string,
+        callback?: HarpeeResponseCallback<T>
+    ) {
+        try {
+            const response = await this.$callbackOrPromise(
+                {
+                    operation: operations.SQL,
+                    sql: sqlQuery,
+                },
+                callback
+            );
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
+            }
+        } catch (err) {
+            return Promise.reject(err);
+        }
+    }
+    /**
      * Returns the definitions of all schemas and tables within the database.
 
     */

@@ -22,7 +22,7 @@ export class HarpeeSchema {
         }
         this.schemaName = schemaConfig.name || "defaultSchema";
         this.primaryKey = schemaConfig.primaryKey || "id";
-        this.silent = schemaConfig.silent || true;
+        this.silent = schemaConfig.silent || false;
         this.fields = schemaConfig.fields;
         HarpeeConfig.schemaConfig = {
             name: this.schemaName,
