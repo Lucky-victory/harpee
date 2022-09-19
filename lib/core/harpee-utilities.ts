@@ -16,7 +16,7 @@ import {
     IHarpeeUtilNodeOptions,
     IHarperDBCustomFuntionStatus,
     IHarpeeAttributeOptions,
-} from "./../interfaces/harpee-utilities.interface";
+} from "../interfaces/harpee-utilities.interface";
 
 import { HarpeeHttp } from "./harpee-http";
 import operations from "../constants/operations";

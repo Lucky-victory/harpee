@@ -16,6 +16,11 @@ export class Harpee {
     protected get config() {
         return Harpee._config;
     }
+    /**
+     *creates a connection to your harperDB instance
+     * @param config
+     * @param connectionInfo
+     */
     static createConnection(
         config: IHarpeeConfig,
         connectionInfo?: HarpeeConnectInfoCallback

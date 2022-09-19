@@ -520,7 +520,7 @@ export class HarpeeModel extends HarpeeHttp {
                         data: initResponse?.data,
                         success: true,
                         error: null,
-                    });
+                    }) as Promise<IHarpeeResponse<T>>;
                 }
                 return Promise.resolve(response);
             }

@@ -10,7 +10,6 @@ export class SqlHandler {
     constructor() {
         this._query = ``;
     }
-
     /**
      * @param columns - an array of column names.
      * @param distinct - whether to include 'DISTINCT' keyword, default is `false`.
