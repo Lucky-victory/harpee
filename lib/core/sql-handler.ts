@@ -6,7 +6,7 @@ import {
 } from "../interfaces/harpee.interface";
 
 export class SqlHandler {
-    private _query: string = "";
+    private  _query: string = "";
     constructor() {
         this._query = ``;
     }

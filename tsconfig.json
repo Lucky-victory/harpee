@@ -23,7 +23,7 @@
     },
     "typedocOptions": {
         "entryPoints": [
-            "lib/core",
+            "lib/core/index",
             "lib/core/harpee-model.ts",
             "lib/core/harpee-utilities.ts",
             "lib/core/sql-handler.ts",
@@ -36,7 +36,7 @@
         "excludeProtected": true,
         //"includeDeclarations": true,
         "name": "Harpee",
-        "basePath": "./",
+
         "plugin": "none"
     }
 }

@@ -1,12 +1,10 @@
 import isEmpty from "just-is-empty";
-import has from "just-has";
+
 import omit from "just-omit";
 import pick from "just-pick";
 import safeGet from "just-safe-get";
 import safeSet from "just-safe-set";
 import typeOf from "just-typeof";
-import { reduce } from "just-reduce-object";
-import sortBy from "just-sort-by";
 
 export default class Utils {
     /** Checks if the value is an Object.
