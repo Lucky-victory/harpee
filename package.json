@@ -3,7 +3,7 @@
     "version": "4.0.0",
     "description": "Harpee is a modeling tool for HarperDB, supports both callbacks and Promises.",
     "main": "./dist/index.js",
-    "types": "./types/index.d.ts",
+    "types": "./types",
     "scripts": {
         "dev": "tsc",
         "watch": "tsc --watch",
@@ -24,7 +24,7 @@
     ],
     "author": "Lucky Victory <luckyvictory54@gmail.com> (https://me.lucky-victory.dev)",
     "license": "MIT",
-    "typings": "./types/index.d.ts",
+    "typings": "./types",
     "dependencies": {
         "axios": "^0.27.1",
         "joi": "^17.6.0",

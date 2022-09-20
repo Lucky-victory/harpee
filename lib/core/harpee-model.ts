@@ -149,7 +149,7 @@ export class HarpeeModel extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SQL,
                     sql: sqlQuery,
@@ -173,7 +173,7 @@ export class HarpeeModel extends HarpeeHttp {
     */
     async describeModel<T = object>(callback?: HarpeeResponseCallback<T>) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DESCRIBE_TABLE,
                     schema: this.schemaName,
@@ -248,7 +248,7 @@ export class HarpeeModel extends HarpeeHttp {
                 .limit(limit)
                 .offset(offset as number);
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SQL,
                     sql: query,
@@ -297,7 +297,7 @@ export class HarpeeModel extends HarpeeHttp {
                 .where(idKey)
                 .in(idValues);
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SQL,
                     sql: query,
@@ -349,7 +349,7 @@ export class HarpeeModel extends HarpeeHttp {
                 .where(attrKey)
                 .equalTo(attrValue);
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SQL,
                     sql: query,
@@ -384,7 +384,7 @@ export class HarpeeModel extends HarpeeHttp {
                 throw new Error("`ids` must be an array");
             }
             const hash_values = ids;
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DELETE,
                     schema: this.schemaName,
@@ -436,7 +436,7 @@ export class HarpeeModel extends HarpeeHttp {
                 .where(attrKey)
                 .in(attrValues as StringOrNumber[]);
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SQL,
                     sql: query,
@@ -530,7 +530,7 @@ export class HarpeeModel extends HarpeeHttp {
             if (returnData && Utils.isFunction(callback)) {
                 isDataCallback = true;
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.UPDATE,
                     schema: this.schemaName,
@@ -580,7 +580,7 @@ export class HarpeeModel extends HarpeeHttp {
                 records = [records];
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.UPDATE,
                     schema: this.schemaName,
@@ -627,7 +627,7 @@ export class HarpeeModel extends HarpeeHttp {
                 if (error) throw error;
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.INSERT,
                     schema: this.schemaName,
@@ -680,7 +680,7 @@ export class HarpeeModel extends HarpeeHttp {
                 }
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.INSERT,
                     schema: this.schemaName,
@@ -721,7 +721,7 @@ export class HarpeeModel extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CSV_DATA_LOAD,
                     action,
@@ -763,7 +763,7 @@ export class HarpeeModel extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CSV_FILE_LOAD,
                     action,
@@ -809,7 +809,7 @@ export class HarpeeModel extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CSV_URL_LOAD,
                     action,
@@ -865,7 +865,7 @@ export class HarpeeModel extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.IMPORT_FROM_S3,
                     action,
@@ -901,7 +901,7 @@ export class HarpeeModel extends HarpeeHttp {
             const sqlHandler = new SqlHandler();
 
             const { query } = sqlHandler.delete().from(schema, table);
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SQL,
                     sql: query,
@@ -942,7 +942,7 @@ export class HarpeeModel extends HarpeeHttp {
             const offset = +(options.offset as number) || 0;
             const get_attributes = options.getAttributes || ["*"];
             const conditions = options.conditions;
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SEARCH_BY_CONDITIONS,
                     schema: this.schemaName,
@@ -995,7 +995,7 @@ export class HarpeeModel extends HarpeeHttp {
                     "`searchAttribute` and `searchValue` are required"
                 );
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SEARCH_BY_VALUE,
                     schema: this.schemaName,

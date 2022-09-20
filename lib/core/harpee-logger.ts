@@ -52,7 +52,7 @@ export class HarpeeLogger extends HarpeeHttp {
             const level = options.level || "error";
             const order = options.order || "asc";
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.READ_LOG,
                     start,
@@ -95,7 +95,7 @@ export class HarpeeLogger extends HarpeeHttp {
                 throw new Error(" job `id` is required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.GET_JOB,
                     id,
@@ -125,7 +125,7 @@ export class HarpeeLogger extends HarpeeHttp {
         try {
             const { schema, table } = options;
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.READ_TRANSACTION_LOG,
                     schema,
@@ -162,7 +162,7 @@ export class HarpeeLogger extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.READ_TRANSACTION_LOG,
                     search_type: "timestamp",
@@ -200,7 +200,7 @@ export class HarpeeLogger extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.READ_TRANSACTION_LOG,
                     search_type: "username",
@@ -240,7 +240,7 @@ export class HarpeeLogger extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.READ_TRANSACTION_LOG,
                     schema,
@@ -275,7 +275,7 @@ export class HarpeeLogger extends HarpeeHttp {
                 throw new Error("`date` is required ");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DELETE_RECORDS_BEFORE,
                     schema,
@@ -310,7 +310,7 @@ export class HarpeeLogger extends HarpeeHttp {
                 throw new Error("`timestamp` is required and must be a number");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DELETE_TRANSACTION_LOGS_BEFORE,
                     schema,
@@ -349,7 +349,7 @@ export class HarpeeLogger extends HarpeeHttp {
                 throw new Error("`fromDate` and `toDate` are required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SEARCH_JOBS_BY_START_DATE,
                     from_date,
