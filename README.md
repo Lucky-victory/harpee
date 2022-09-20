@@ -1,4 +1,4 @@
-> This [documentation](https://harpee-docs-v4.netlify.app/classes/harpee_model.HarpeeModel.html) is for v4.x, you can find the documentation for previous versions [here](https://harpee-docs.netlify.app), Before upgrading please read the docs , this version includes breaking changes.
+> This [documentation](https://harpee-docs-v4.netlify.app) is for v4.x, you can find the documentation for previous versions [here](https://harpee-docs.netlify.app), Before upgrading please read the docs , this version includes breaking changes.
 
 # Introduction.
 
