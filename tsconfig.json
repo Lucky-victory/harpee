@@ -23,20 +23,20 @@
     },
     "typedocOptions": {
         "entryPoints": [
-            "lib/core/index",
+            "lib/core",
             "lib/core/harpee-model.ts",
             "lib/core/harpee-utilities.ts",
             "lib/core/sql-handler.ts",
             "lib/core/harpee-logger.ts",
-            "lib/core/harpee-schema.ts"
+            "lib/core/harpee-schema.ts",
+            "lib/interfaces"
         ],
 
         "out": "docs",
         "excludePrivate": true,
         "excludeProtected": true,
-        //"includeDeclarations": true,
-        "name": "Harpee",
 
-        "plugin": "none"
+        "name": "Harpee",
+        "hideGenerator": true
     }
 }

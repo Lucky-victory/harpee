@@ -32,6 +32,9 @@ import {
 } from "../interfaces/harpee-utilities.interface";
 import { IHarperDBInsertResponse } from "../interfaces/harpee-model.interface";
 
+/**
+ * A class for handling, configurations, creating/refreshing Authentication Tokens, etc 
+ */
 export class HarpeeUtilities extends HarpeeHttp {
     constructor() {
         super();
@@ -45,7 +48,7 @@ export class HarpeeUtilities extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SQL,
                     sql: sqlQuery,
@@ -70,7 +73,7 @@ export class HarpeeUtilities extends HarpeeHttp {
 
     async describeAll<T = object>(callback?: HarpeeResponseCallback<T>) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DESCRIBE_ALL,
                 },
@@ -102,7 +105,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("please provide a name for your schema");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CREATE_SCHEMA,
                     schema,
@@ -135,7 +138,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("please provide the `schema` name");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DROP_SCHEMA,
                     schema,
@@ -169,7 +172,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`schema` is required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DESCRIBE_SCHEMA,
                     schema,
@@ -203,7 +206,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error(" `table` and the `schema` are required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CREATE_TABLE,
                     schema,
@@ -241,7 +244,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CREATE_ATTRIBUTE,
                     schema,
@@ -279,7 +282,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DROP_ATTRIBUTE,
                     schema,
@@ -315,7 +318,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("please provide the `table` and `schema` name");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DESCRIBE_TABLE,
                     schema,
@@ -349,7 +352,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error(" `table` and `schema` are required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DROP_TABLE,
                     schema,
@@ -390,7 +393,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`permission` must be an object");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.ADD_ROLE,
                     role,
@@ -431,7 +434,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`permission` must be an object");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.ALTER_ROLE,
                     role,
@@ -470,7 +473,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error(" `id` is required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.ALTER_ROLE,
 
@@ -512,7 +515,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.ADD_USER,
                     username,
@@ -548,7 +551,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`username` is required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.ALTER_USER,
                     username,
@@ -585,7 +588,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`username` is required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DROP_USER,
                     username,
@@ -609,7 +612,7 @@ export class HarpeeUtilities extends HarpeeHttp {
 
     async listUsers<T = object[]>(callback?: HarpeeResponseCallback<T>) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.LIST_USERS,
                 },
@@ -631,7 +634,7 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
     async listRoles<T = object[]>(callback?: HarpeeResponseCallback<T>) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.LIST_ROLES,
                 },
@@ -663,7 +666,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`username` and `password` are required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CREATE_AUTHENTICATION_TOKENS,
                     username,
@@ -695,7 +698,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`refreshToken` is required");
             }
             this.config.token = refreshToken;
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.REFRESH_OPERATION_TOKEN,
                 },
@@ -737,7 +740,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`searchOperation` must be an object");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.EXPORT_LOCAL,
                     format,
@@ -791,7 +794,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 );
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.EXPORT_TO_S3,
                     format,
@@ -830,7 +833,7 @@ export class HarpeeUtilities extends HarpeeHttp {
             if (!(project || file || payload)) {
                 throw new Error("`project`, `file` and `payload` are required");
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DEPLOY_CUSTOM_FUNCTION_PROJECT,
                     project,
@@ -865,7 +868,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`project` is required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.ADD_CUSTOM_FUNCTION_PROJECT,
                     project,
@@ -897,7 +900,7 @@ export class HarpeeUtilities extends HarpeeHttp {
                 throw new Error("`project` is required");
             }
 
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DROP_CUSTOM_FUNCTION_PROJECT,
                     project,
@@ -928,7 +931,7 @@ export class HarpeeUtilities extends HarpeeHttp {
             if (!project) {
                 throw new Error("`project` is required");
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.PACKAGE_CUSTOM_FUNCTION_PROJECT,
                     project,
@@ -958,7 +961,7 @@ export class HarpeeUtilities extends HarpeeHttp {
             if (!(project || file || type)) {
                 throw new Error("`project`, `file` and `type` are required");
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.GET_CUSTOM_FUNCTION,
                     project,
@@ -991,7 +994,7 @@ export class HarpeeUtilities extends HarpeeHttp {
             if (!(project || file || type)) {
                 throw new Error("`project`, `file` and `type` are required");
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.DROP_CUSTOM_FUNCTION,
 
@@ -1029,7 +1032,7 @@ export class HarpeeUtilities extends HarpeeHttp {
             if (!(project || file || type || function_content)) {
                 throw new Error("`project`, `file` and `type` are required");
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SET_CUSTOM_FUNCTION,
 
@@ -1060,7 +1063,7 @@ export class HarpeeUtilities extends HarpeeHttp {
         T = { [key: string]: IHarperDBCustomFunctionInfo }
     >(callback?: HarpeeResponseCallback<T>) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.GET_CUSTOM_FUNCTIONS,
                 },
@@ -1085,7 +1088,7 @@ export class HarpeeUtilities extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CUSTOM_FUNCTION_STATUS,
                 },
@@ -1119,7 +1122,7 @@ export class HarpeeUtilities extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.SYSTEM_INFORMATION,
                     attributes,
@@ -1144,7 +1147,7 @@ export class HarpeeUtilities extends HarpeeHttp {
 
     async clusterStatus<T = object>(callback?: HarpeeResponseCallback<T>) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CLUSTER_STATUS,
                 },
@@ -1169,7 +1172,7 @@ export class HarpeeUtilities extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.GET_CONFIGUATION,
                 },
@@ -1195,7 +1198,7 @@ export class HarpeeUtilities extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.CONFIGURE_CLUSTER,
                     ...options,
@@ -1221,7 +1224,7 @@ export class HarpeeUtilities extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.RESTART,
                 },
@@ -1252,7 +1255,7 @@ export class HarpeeUtilities extends HarpeeHttp {
     ) {
         try {
             const { service } = options;
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.RESTART_SERVICE,
                     service,
@@ -1289,7 +1292,7 @@ export class HarpeeUtilities extends HarpeeHttp {
             if (!Utils.isArray(subscriptions)) {
                 throw new Error("`subscriptions` must be an array");
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.ADD_NODE,
                     name,
@@ -1328,7 +1331,7 @@ export class HarpeeUtilities extends HarpeeHttp {
             if (!Utils.isArray(subscriptions)) {
                 throw new Error("`subscriptions` must be an array");
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.UPDATE_NODE,
                     name,
@@ -1362,7 +1365,7 @@ export class HarpeeUtilities extends HarpeeHttp {
             if (!name) {
                 throw new Error("`name` is required");
             }
-            const response = await this.$callbackOrPromise(
+            const response = await this.$callbackOrPromise<T>(
                 {
                     operation: operations.REMOVE_NODE,
                     name,

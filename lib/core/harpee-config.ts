@@ -1,16 +1,16 @@
 import {
-    IHarpeeConfig,
+    IHarpeeAuthConfig,
     IHarpeeSchemaConfig,
 } from "../interfaces/harpee.interface";
 
 export class HarpeeConfig {
-    private static _authConfig: IHarpeeConfig;
+    private static _authConfig: IHarpeeAuthConfig;
     private static _schemaConfig: IHarpeeSchemaConfig;
 
     static get authConfig() {
         return this._authConfig;
     }
-    static set authConfig(config: IHarpeeConfig) {
+    static set authConfig(config: IHarpeeAuthConfig) {
         this._authConfig = config;
     }
     static get schemaConfig() {

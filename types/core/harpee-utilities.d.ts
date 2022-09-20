@@ -3,6 +3,9 @@ import { HarpeeHttp } from "./harpee-http";
 import { HarpeeResponseCallback, IHarpeeResponse } from "../interfaces/harpee.interface";
 import { IHarperDBCustomFunctionOptions, IHarperDBClusterConfiguration } from "../interfaces/harpee-utilities.interface";
 import { IHarperDBInsertResponse } from "../interfaces/harpee-model.interface";
+/**
+ * A class for handling, configurations, creating/refreshing Authentication Tokens, etc
+ */
 export declare class HarpeeUtilities extends HarpeeHttp {
     constructor();
     /**
