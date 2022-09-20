@@ -105,7 +105,7 @@ UsersModel.find(
     {
         limit: 5,
         offset: 10,
-        orderby: "user_id",
+        orderby: ["user_id"],
         order: "desc",
         where: 'username="lucky"',
         getAttributes: ["username"],
@@ -120,7 +120,7 @@ UsersModel.find(
 ```js
 // this will return only data based on the specified `ids`,
 UsersModel.findById(
-    { id: [1, 2], getAttributes: ["username", "email"] },
+    { ids: [1, 2], getAttributes: ["username", "email"] },
     (err, result) => {
         if (err) console.log(err);
         console.log(result.data);
@@ -135,13 +135,13 @@ UsersModel.findById(
 **Harpee** consist of the following function and classes,
 
 -   **`createConnection`**: _function_
--   **[Schema](https://harpee-docs-v4.netlify.app/classes/harpee_schema.HarpeeSchema.html)**: _class_
--   **[Model](https://harpee-docs-v4.netlify.app/classes/harpee_model.HarpeeModel.html)**: _class_
--   **[Logger](https://harpee-docs-v4.netlify.app/classes/harpee_logger.HarpeeLogger.html)**: _class_
--   **[Utilities](https://harpee-docs-v4.netlify.app/classes/harpee_utilities.HarpeeUtilities.html)**: _class_
--   **[Sqler](https://harpee-docs-v4.netlify.app/classes/sql_handler.SqlHandler.html)**: _class_
+-   **[Schema](https://harpee-docs-v4.netlify.app/classes/core_harpee_schema.HarpeeSchema.html)**: _class_
+-   **[Model](https://harpee-docs-v4.netlify.app/classes/core_harpee_model.HarpeeModel.html)**: _class_
+-   **[Logger](https://harpee-docs-v4.netlify.app/classes/core_harpee_logger.HarpeeLogger.html)**: _class_
+-   **[Utilities](https://harpee-docs-v4.netlify.app/classes/core_harpee_utilities.HarpeeUtilities.html)**: _class_
+-   **[Sqler](https://harpee-docs-v4.netlify.app/classes/core_sql_handler.SqlHandler.html)**: _class_
 
-### createConnection(config)
+## createConnection(config)
 
 `createConnection` function creates a connection with your harperDB instance. it takes in an object with the following props.
 
@@ -152,7 +152,7 @@ UsersModel.findById(
 -   `pass` _Type - String_ : same as password.
 -   `token` _Type - String_ : A generated JWT token, token is _optional_,you should only include it in place of `username` and `password`.
 
-### Schema(options)
+## Schema(options)
 
 `Schema` class creates a schema, it takes in an object with the following props,
 
@@ -173,7 +173,7 @@ fields:{
 })
 ```
 
-### Model(modelName,SchemaObject)
+## Model(modelName,SchemaObject)
 
 The Model class takes the following options.
 
@@ -185,11 +185,11 @@ The Model class takes the following options.
 const Articles = new harpee.Model("Articles", ArticleSchema);
 ```
 
-#### Methods.
+### Methods.
 
 **Model** has the following methods. all methods supports both callbacks and promises, the callback function takes two parameters `err` and `result`.
 
-##### create(object,callback)
+#### create(object,callback)
 
 inserts new data into the table, takes in an object of the data to be inserted.
 
@@ -226,7 +226,7 @@ Articles.updateNested(
 );
 ```
 
-##### find([options],callback)
+#### find([options],callback)
 
 The **find** method returns all data from the table. to do this, pass an empty array `[]` or wildcard `["*"]` as the first argument, you can also choose to return specific data,
 for instance, in order to return only _Article titles_,
@@ -249,7 +249,7 @@ the **find** method also takes an object with options, useful for advanced filte
     -   `where` : **Type - String** _optional_
     -   `and` : **Type - String|Number** _optional_
 
-You can find more methods on the [documentation](https://harpee-docs-v4.netlify.app/classes/harpee_model.HarpeeModel.html) page.
+You can find more methods on the [documentation](https://harpee-docs-v4.netlify.app/classes/core_harpee_model.HarpeeModel.html) page.
 
 ### Bugs or Feature Request.
 

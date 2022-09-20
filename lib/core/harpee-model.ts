@@ -33,12 +33,20 @@ import { IHarperDBMessageResponse } from "../interfaces/harpee-utilities.interfa
 import { HarpeeUtilities } from "./harpee-utilities";
 import { SchemaValidator } from "../helpers/validators/schema";
 
+/**
+ * A model represents a table, each model is connected with a table specified as `modelName`
+ */
 export class HarpeeModel extends HarpeeHttp {
     private schemaName: string;
     private modelName: string;
     private primaryKey: string;
     private silent: boolean;
     private schemaFields: IHarpeeSchemaConfig["fields"];
+    /**
+     *
+     * @param modelName - the name of the model, alias table
+     * @param schemaConfig
+     */
     constructor(modelName: string, schemaConfig: HarpeeSchema) {
         super();
 
@@ -270,6 +278,7 @@ export class HarpeeModel extends HarpeeHttp {
      * Returns one or more data from the table matching the specified `primaryKey` values.
      *
      */
+
     async findById<T = object[]>(
         ids: StringOrNumber[] | IHarpeeModelFindByIdOptions,
         callback?: HarpeeResponseCallback<T>
@@ -327,13 +336,13 @@ export class HarpeeModel extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            getAttributes = ["*"];
+            getAttributes = getAttributes || ["*"];
             if (arguments.length >= 2 && Utils.isArray(arguments[1])) {
                 getAttributes = arguments[1];
             }
             let attrKey!: string, attrValue!: string;
             if (!Utils.isObject(obj)) {
-                throw new TypeError("`attrObj` param must be an object");
+                throw new TypeError("`obj` param must be an object");
             } else {
                 attrKey = Utils.splitObject(obj).keys[0];
                 attrValue = Utils.splitObject(obj).values[0];
@@ -456,8 +465,10 @@ export class HarpeeModel extends HarpeeHttp {
     }
 
     /**
-     * Update nested values
-     * @example
+     * Update nested values by specifying a path.
+     *
+     * #### Example
+     *
      * ```js
      * // let's say you have the following data
      * {id:1,username:'luckyv', friends:[{age:20,name:'mike'},{age:24,name:'jane'}]

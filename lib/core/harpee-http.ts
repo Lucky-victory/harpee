@@ -2,7 +2,7 @@ import axios from "axios";
 import Utils from "../helpers/utils";
 import {
     HarpeeResponseCallback,
-    IHarpeeConfig,
+    IHarpeeAuthConfig,
     IHarpeeHttpError,
     IHarpeeResponse,
     IHarpeeSchemaConfig,
@@ -10,7 +10,7 @@ import {
 import { HarpeeConfig } from "./harpee-config";
 
 export class HarpeeHttp {
-    protected config: IHarpeeConfig;
+    protected config: IHarpeeAuthConfig;
     protected schemaConfig: IHarpeeSchemaConfig;
     constructor() {
         this.config = HarpeeConfig.authConfig;

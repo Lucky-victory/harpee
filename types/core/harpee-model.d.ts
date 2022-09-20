@@ -5,12 +5,20 @@ import { IHarpeeModelFindOptions } from "../interfaces/harpee-model.interface";
 import { HarpeeHttp } from "./harpee-http";
 import { HarpeeSchema } from "./harpee-schema";
 import { IHarperDBMessageResponse } from "../interfaces/harpee-utilities.interface";
+/**
+ * A model represents a table, each model is connected with a table specified as `modelName`
+ */
 export declare class HarpeeModel extends HarpeeHttp {
     private schemaName;
     private modelName;
     private primaryKey;
     private silent;
     private schemaFields;
+    /**
+     *
+     * @param modelName - the name of the model, alias table
+     * @param schemaConfig
+     */
     constructor(modelName: string, schemaConfig: HarpeeSchema);
     /**
      * This creates the schema, table, and the attributes specified in Schema.`fields`, if they don't exist.
@@ -63,8 +71,10 @@ export declare class HarpeeModel extends HarpeeHttp {
         [key: string]: StringOrNumber | StringOrNumber[];
     }, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
     /**
-     * Update nested values
-     * @example
+     * Update nested values by specifying a path.
+     *
+     * #### Example
+     *
      * ```js
      * // let's say you have the following data
      * {id:1,username:'luckyv', friends:[{age:20,name:'mike'},{age:24,name:'jane'}]

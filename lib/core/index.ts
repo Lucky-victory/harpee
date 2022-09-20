@@ -2,7 +2,7 @@ import { HarpeeLogger } from "./harpee-logger";
 import Utils from "../helpers/utils";
 import {
     HarpeeConnectInfoCallback,
-    IHarpeeConfig,
+    IHarpeeAuthConfig,
 } from "../interfaces/harpee.interface";
 import { HarpeeModel } from "./harpee-model";
 import { HarpeeSchema } from "./harpee-schema";
@@ -11,7 +11,7 @@ import { SqlHandler } from "./sql-handler";
 import { HarpeeConfig } from "./harpee-config";
 
 export class Harpee {
-    private static _config: IHarpeeConfig;
+    private static _config: IHarpeeAuthConfig;
     protected get config() {
         return Harpee._config;
     }
@@ -21,7 +21,7 @@ export class Harpee {
      * @param connectionInfo
      */
     static createConnection(
-        config: IHarpeeConfig,
+        config: IHarpeeAuthConfig,
         connectionInfo?: HarpeeConnectInfoCallback
     ) {
         try {
@@ -63,7 +63,7 @@ export class Harpee {
      *
      **/
     static connect(
-        config: IHarpeeConfig,
+        config: IHarpeeAuthConfig,
         connectionInfo?: HarpeeConnectInfoCallback
     ) {
         return Harpee.createConnection(config, connectionInfo);

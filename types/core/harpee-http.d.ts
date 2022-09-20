@@ -1,6 +1,6 @@
-import { HarpeeResponseCallback, IHarpeeConfig, IHarpeeResponse, IHarpeeSchemaConfig } from "../interfaces/harpee.interface";
+import { HarpeeResponseCallback, IHarpeeAuthConfig, IHarpeeResponse, IHarpeeSchemaConfig } from "../interfaces/harpee.interface";
 export declare class HarpeeHttp {
-    protected config: IHarpeeConfig;
+    protected config: IHarpeeAuthConfig;
     protected schemaConfig: IHarpeeSchemaConfig;
     constructor();
     private $requestHandler;

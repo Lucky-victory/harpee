@@ -1,4 +1,4 @@
-export interface IHarpeeConfig {
+export interface IHarpeeAuthConfig {
     /**
      * your HarperDB username, alias `user`
      */
@@ -37,7 +37,7 @@ export interface IHarpeeHttpError {
     status?: number;
     data: any;
 }
-export declare type HarpeeConnectInfoCallback = (info?: IHarpeeConfig, err?: null | unknown) => void;
+export declare type HarpeeConnectInfoCallback = (info?: IHarpeeAuthConfig, err?: null | unknown) => void;
 export interface IHarpeeSchemaConfig {
     /**
      * The name of the schema, default is `defaultSchema`

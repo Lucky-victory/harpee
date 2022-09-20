@@ -1,4 +1,4 @@
-export interface IHarpeeConfig {
+export interface IHarpeeAuthConfig {
     /**
      * your HarperDB username, alias `user`
      */
@@ -45,7 +45,7 @@ export interface IHarpeeHttpError {
     data: any;
 }
 export type HarpeeConnectInfoCallback = (
-    info?: IHarpeeConfig,
+    info?: IHarpeeAuthConfig,
     err?: null | unknown
 ) => void;
 
