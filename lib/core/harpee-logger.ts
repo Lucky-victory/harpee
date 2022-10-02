@@ -68,7 +68,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }
@@ -106,7 +105,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }
@@ -137,7 +135,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }
@@ -176,7 +173,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }
@@ -214,7 +210,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }
@@ -254,7 +249,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }
@@ -288,7 +282,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }
@@ -323,7 +316,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }
@@ -361,7 +353,6 @@ export class HarpeeLogger extends HarpeeHttp {
                 return Promise.resolve(response);
             }
         } catch (error) {
-            error = JSON.stringify(error, undefined, 2);
             if (Utils.isFunction(callback)) {
                 return (callback as HarpeeResponseCallback)(error, null);
             }

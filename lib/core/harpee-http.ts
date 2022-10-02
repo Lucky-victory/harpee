@@ -34,7 +34,7 @@ export class HarpeeHttp {
                     "base64"
                 );
         }
-        let errorObj: IHarpeeHttpError = {
+        const errorObj: IHarpeeHttpError = {
             message: "an error occurred",
             data: undefined,
         };

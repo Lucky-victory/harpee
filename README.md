@@ -161,7 +161,7 @@ UsersModel.findById(
 -   `silent` _Type - boolean_ : _optional_ when true, turns off errors when `Schema.fields` types doesn't match `Model.create()` values, default is `false`.
 -   `fields` _Type - Object_ : this option let's specify table columns and their types ,
 
-> Note: the properties and data-types declared in **fields** must be same with properties and data-types that will be specified at `Model.create(object)`, otherwise an error will be thrown, you can turn this off by setting `silent` option in `Schema` class to `true` .
+> Note: the properties and data-types declared in **fields** must be same with properties and data-types that will be specified at `Model.create(object)` or `Model.createMany(object[])`, otherwise an error will be thrown, you can turn this off by setting `silent` option in `Schema` class to `true` .
 
 ```js
 const ArticleSchema = new harpee.Schema({ name:"MyArticlesSchema"},
@@ -173,12 +173,12 @@ fields:{
 })
 ```
 
-## Model(modelName,SchemaObject)
+## Model(modelName,SchemaConfig)
 
 The Model class takes the following options.
 
 -   `modelName` _Type - String_ : this modelName represents a table that will be created.
--   `schemaObject` Type - Schema(Object) : this option takes in an Object returned from the `Schema` class.
+-   `schemaConfig` Type - Schema(Object) : this option takes in an instance of `Schema` .
 -
 
 ```js
