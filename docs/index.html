@@ -87,18 +87,18 @@
 <li><code>fields</code> <em>Type - Object</em> : this option let&#39;s specify table columns and their types ,</li>
 </ul>
 <blockquote>
-<p>Note: the properties and data-types declared in <strong>fields</strong> must be same with properties and data-types that will be specified at <code>Model.create(object)</code>, otherwise an error will be thrown, you can turn this off by setting <code>silent</code> option in <code>Schema</code> class to <code>true</code> .</p>
+<p>Note: the properties and data-types declared in <strong>fields</strong> must be same with properties and data-types that will be specified at <code>Model.create(object)</code> or <code>Model.createMany(object[])</code>, otherwise an error will be thrown, you can turn this off by setting <code>silent</code> option in <code>Schema</code> class to <code>true</code> .</p>
 </blockquote>
 <pre><code class="language-js"><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">ArticleSchema</span><span class="hl-2"> = </span><span class="hl-1">new</span><span class="hl-2"> </span><span class="hl-7">harpee</span><span class="hl-2">.</span><span class="hl-4">Schema</span><span class="hl-2">({ </span><span class="hl-7">name:</span><span class="hl-5">&quot;MyArticlesSchema&quot;</span><span class="hl-2">},</span><br/><span class="hl-7">fields</span><span class="hl-2">:{</span><br/><span class="hl-2">  </span><span class="hl-7">title:</span><span class="hl-2"> </span><span class="hl-7">HType</span><span class="hl-2">.</span><span class="hl-4">string</span><span class="hl-2">().</span><span class="hl-4">required</span><span class="hl-2">(),</span><br/><span class="hl-2">  </span><span class="hl-7">author:</span><span class="hl-2"> </span><span class="hl-7">HType</span><span class="hl-2">.</span><span class="hl-4">object</span><span class="hl-2">({</span><span class="hl-7">name:</span><span class="hl-2"> </span><span class="hl-7">HType</span><span class="hl-2">.</span><span class="hl-4">string</span><span class="hl-2">()}).</span><span class="hl-4">required</span><span class="hl-2">(),</span><br/><span class="hl-2">  </span><span class="hl-7">body:</span><span class="hl-2"> </span><span class="hl-7">HType</span><span class="hl-2">.</span><span class="hl-4">string</span><span class="hl-2">().</span><span class="hl-4">required</span><span class="hl-2">(),</span><br/><span class="hl-2">  </span><span class="hl-7">publishDate:</span><span class="hl-2"> </span><span class="hl-7">HType</span><span class="hl-2">.</span><span class="hl-4">date</span><span class="hl-2">()</span><br/><span class="hl-2">})</span>
 </code></pre>
 
-<a href="#modelmodelnameschemaobject" id="modelmodelnameschemaobject" style="color: inherit; text-decoration: none;">
-  <h2>Model(modelName,SchemaObject)</h2>
+<a href="#modelmodelnameschemaconfig" id="modelmodelnameschemaconfig" style="color: inherit; text-decoration: none;">
+  <h2>Model(modelName,SchemaConfig)</h2>
 </a>
 <p>The Model class takes the following options.</p>
 <ul>
 <li><code>modelName</code> <em>Type - String</em> : this modelName represents a table that will be created.</li>
-<li><code>schemaObject</code> Type - Schema(Object) : this option takes in an Object returned from the <code>Schema</code> class.</li>
+<li><code>schemaConfig</code> Type - Schema(Object) : this option takes in an instance of <code>Schema</code> .</li>
 <li></li>
 </ul>
 <pre><code class="language-js"><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">Articles</span><span class="hl-2"> = </span><span class="hl-1">new</span><span class="hl-2"> </span><span class="hl-7">harpee</span><span class="hl-2">.</span><span class="hl-4">Model</span><span class="hl-2">(</span><span class="hl-5">&quot;Articles&quot;</span><span class="hl-2">, </span><span class="hl-7">ArticleSchema</span><span class="hl-2">);</span>

@@ -48,7 +48,8 @@ harpee.createConnection({host:
     username: HType.string().required(),
     email: HType.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required() ,
-    phone: HType.number()
+    phone: HType.number(),
+    verified:HType.bool().default(false)
   }
    primaryKey:'id' // optional, alias for hash_attribute, default 'id'
    silent:false // optional, when true turns off error throwing when `Schema.fields` doesn't match `Model.create` values, default is false
@@ -94,11 +95,9 @@ UsersModel.find({}, (err, result) => {
 UsersModel.find([]).then((result) => console.log(result.data));
 
 // you can specify the columns to be returned.
-async getUsername(){
 
-  const result=await UsersModel.find(['username']);
+const result = await UsersModel.find(["username"]);
 //  console.log(result.data)
-}
 
 // you can specify an object with options
 UsersModel.find(
