@@ -1,6 +1,6 @@
 import { IHarperDBCustomFunctionInfo, IHarperDBCustomFunctionPackage, IHarperDBExportS3Options, IHarperDBExportLocalOptions, IHarperDBAuth, IHarperDBTokenResponse, IHarperDBMessageResponse, IHarperDBAuthUser, IHarperDBNewUser, IHarperDBRoleOptions, IHarperDBNewRoleOptions, IHarpeeUtilOptions, IHarpeeNewTableOptions, IHarperDBSetCustomFunctionOptions, IHarpeeUtilNodeOptions, IHarperDBCustomFuntionStatus, IHarpeeAttributeOptions } from "../interfaces/harpee-utilities.interface";
 import { HarpeeHttp } from "./harpee-http";
-import { HarpeeResponseCallback, IHarpeeResponse } from "../interfaces/harpee.interface";
+import { HarpeeResponseCallback } from "../interfaces/harpee.interface";
 import { IHarperDBCustomFunctionOptions, IHarperDBClusterConfiguration } from "../interfaces/harpee-utilities.interface";
 import { IHarperDBInsertResponse } from "../interfaces/harpee-model.interface";
 /**
@@ -12,148 +12,148 @@ export declare class HarpeeUtilities extends HarpeeHttp {
      * Execute custom SQL queries.
      *
      */
-    query<T = object[]>(sqlQuery: string, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    query<T = object[]>(sqlQuery: string, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Returns the definitions of all schemas and tables within the database.
 
     */
-    describeAll<T = object>(callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    describeAll<T = object>(callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
     * Create a new database schema.
 
     */
-    createSchema<T = IHarperDBMessageResponse>(options: Pick<IHarpeeUtilOptions, "schema">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    createSchema<T = IHarperDBMessageResponse>(options: Pick<IHarpeeUtilOptions, "schema">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Drop an existing database schema. **NOTE: Dropping a schema will delete all tables and all of their records in that schema.**
      */
-    dropSchema<T = IHarperDBMessageResponse>(options: Pick<IHarpeeUtilOptions, "schema">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    dropSchema<T = IHarperDBMessageResponse>(options: Pick<IHarpeeUtilOptions, "schema">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Returns the definitions of all tables within the specified schema
 
     */
-    describeSchema<T = object>(options: Pick<IHarpeeUtilOptions, "schema">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    describeSchema<T = object>(options: Pick<IHarpeeUtilOptions, "schema">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
     * Create a new database table within the specified schema
 
     */
-    createTable<T = IHarperDBMessageResponse>(options: IHarpeeNewTableOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    createTable<T = IHarperDBMessageResponse>(options: IHarpeeNewTableOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
     * Create a new attribute  within the specified table
 
     */
-    createAttribute<T = IHarperDBInsertResponse>(options: IHarpeeAttributeOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    createAttribute<T = IHarperDBInsertResponse>(options: IHarpeeAttributeOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
     * Drop an attribute from the specified table, **NOTE: Dropping an attribute will delete all associated attribute values in that table**
 
     */
-    dropAttribute<T = IHarperDBMessageResponse>(options: IHarpeeAttributeOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    dropAttribute<T = IHarperDBMessageResponse>(options: IHarpeeAttributeOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
     * Returns the definition of the specified table
 
     */
-    describeTable<T = object>(options: IHarpeeUtilOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    describeTable<T = object>(options: IHarpeeUtilOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Drop an existing database table
      */
-    dropTable<T = IHarperDBMessageResponse>(options: IHarpeeUtilOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    dropTable<T = IHarperDBMessageResponse>(options: IHarpeeUtilOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      *  Creates a new role with specified permissions
 
      */
-    addRole<T = object>(options: IHarperDBNewRoleOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    addRole<T = object>(options: IHarperDBNewRoleOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
     *Modifies an existing role with specified permissions.
 
     */
-    alterRole<T = object>(options: IHarperDBRoleOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    alterRole<T = object>(options: IHarperDBRoleOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
     *  Deletes an existing from the database.
 
     */
-    dropRole<T = IHarperDBMessageResponse>(options: Pick<IHarperDBRoleOptions, "id">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    dropRole<T = IHarperDBMessageResponse>(options: Pick<IHarperDBRoleOptions, "id">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Creates a new user with the specified roles and credentials
 
     */
-    addUser<T = IHarperDBMessageResponse>(options: IHarperDBNewUser, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    addUser<T = IHarperDBMessageResponse>(options: IHarperDBNewUser, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Modifies an existing user role and/or credentials
      */
-    alterUser<T = object>(options: IHarperDBAuthUser, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    alterUser<T = object>(options: IHarperDBAuthUser, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Deletes an existing user by username
 
     */
-    dropUser<T = IHarperDBMessageResponse>(options: Pick<IHarperDBAuth, "username">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    dropUser<T = IHarperDBMessageResponse>(options: Pick<IHarperDBAuth, "username">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Returns a list of all users
      */
-    listUsers<T = object[]>(callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    listUsers<T = object[]>(callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      Returns a list of all roles
     */
-    listRoles<T = object[]>(callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    listRoles<T = object[]>(callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Creates the tokens needed for authentication: operation & refresh token. **Note, this operation does not require authorization to be set**.
      **/
-    createAuthenticationTokens<T = IHarperDBTokenResponse>(options: IHarperDBAuth, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    createAuthenticationTokens<T = IHarperDBTokenResponse>(options: IHarperDBAuth, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Creates a new operation token.
      **/
     refreshOperationToken<T = Pick<IHarperDBTokenResponse, "operation_token">>(options: {
         refreshToken: string;
-    }, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    }, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Exports data based on a given search operation from table to local file in JSON or CSV format **Note: this only works for local instances, not for cloud instances.**
      */
-    exportLocal<T = IHarperDBMessageResponse>(options: IHarperDBExportLocalOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    exportLocal<T = IHarperDBMessageResponse>(options: IHarperDBExportLocalOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
     * Exports data based on a given search operation from table to AWS S3 in JSON or CSV format.
 
 
     */
-    exportToS3<T = IHarperDBMessageResponse>(options: IHarperDBExportS3Options, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    exportToS3<T = IHarperDBMessageResponse>(options: IHarperDBExportS3Options, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
        Takes the output of package_custom_function_project, decrypts the base64-encoded string, reconstitutes the .tar file of your project folder, and extracts it to the Custom Functions root project directory.
      */
-    deployCustomFunctionProject<T = IHarperDBMessageResponse>(options: IHarperDBCustomFunctionPackage, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    deployCustomFunctionProject<T = IHarperDBMessageResponse>(options: IHarperDBCustomFunctionPackage, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Creates a new project folder in the Custom Functions root project directory. It also inserts into the new directory the contents of our Custom Functions Project template, which is available publicly, here: https://github.com/HarperDB/harperdb-custom-functions-template.
   
     */
-    addCustomFunctionProject<T = IHarperDBMessageResponse>(options: Pick<IHarperDBCustomFunctionOptions, "project">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    addCustomFunctionProject<T = IHarperDBMessageResponse>(options: Pick<IHarperDBCustomFunctionOptions, "project">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Deletes the specified project folder and all of its contents.
      */
-    dropCustomFunctionProject<T = IHarperDBMessageResponse>(options: Pick<IHarperDBCustomFunctionOptions, "project">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    dropCustomFunctionProject<T = IHarperDBMessageResponse>(options: Pick<IHarperDBCustomFunctionOptions, "project">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Creates a .tar file of the specified project folder, then reads it into a base64-encoded string and returns that string the the user.
      */
-    packageCustomFunctionProject<T = IHarperDBCustomFunctionPackage>(options: Pick<IHarperDBCustomFunctionPackage, "project">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    packageCustomFunctionProject<T = IHarperDBCustomFunctionPackage>(options: Pick<IHarperDBCustomFunctionPackage, "project">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Returns the content of the specified file as text. HarperDB Studio uses this call to render the file content in its built-in code editor.
      */
-    getCustomFunction<T = IHarperDBMessageResponse>(options: IHarperDBCustomFunctionOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    getCustomFunction<T = IHarperDBMessageResponse>(options: IHarperDBCustomFunctionOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      *Deletes the specified file.
      */
-    dropCustomFunction<T = IHarperDBMessageResponse>(options: IHarperDBCustomFunctionOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    dropCustomFunction<T = IHarperDBMessageResponse>(options: IHarperDBCustomFunctionOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Updates the content of the specified file. HarperDB Studio uses this call to save any changes made through its built-in code editor.
      */
-    setCustomFunction<T = IHarperDBMessageResponse>(options: IHarperDBSetCustomFunctionOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    setCustomFunction<T = IHarperDBMessageResponse>(options: IHarperDBSetCustomFunctionOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Returns an array of projects within the Custom Functions root project directory. Each project has details including each of the files in the routes and helpers directories, and the total file count in the static folder.
     
     */
     getCustomFunctions<T = {
         [key: string]: IHarperDBCustomFunctionInfo;
-    }>(callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    }>(callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      *Returns the state of the Custom functions server. This includes whether it is enabled, upon which port it is listening, and where its root project directory is located on the host machine.
      *
      */
-    customFunctionStatus<T = IHarperDBCustomFuntionStatus>(callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    customFunctionStatus<T = IHarperDBCustomFuntionStatus>(callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Returns detailed metrics on the host system. A deeper dive into the return object can be found here: https://systeminformation.io/general.html.
      */
@@ -165,24 +165,24 @@ export declare class HarpeeUtilities extends HarpeeHttp {
         "disk",
         "network",
         "harperdb_processes"
-    ], callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    ], callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Returns the status of a cluster relative to the instance where the operation is executed. Learn more about HarperDB clustering here: https://harperdb.io/docs/clustering/.
 
     */
-    clusterStatus<T = object>(callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    clusterStatus<T = object>(callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Returns the HarperDB configuration parameters. Read more about the configuration file here: https://harperdb.io/docs/reference/configuration-file/.
      */
-    getConfiguation<T = IHarperDBClusterConfiguration>(callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    getConfiguation<T = IHarperDBClusterConfiguration>(callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Modifies the HarperDB configuration file parameters. Read more about HarperDB configuration here: https://harperdb.io/docs/reference/configuration-file/.
      */
-    configureCluster<T = IHarperDBMessageResponse>(options?: IHarperDBClusterConfiguration, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    configureCluster<T = IHarperDBMessageResponse>(options?: IHarperDBClusterConfiguration, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Restarts the HarperDB instance.
      */
-    restart<T = IHarperDBMessageResponse>(callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    restart<T = IHarperDBMessageResponse>(callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Sending this operation restarts the specified HarperDB service.
 
@@ -190,19 +190,19 @@ export declare class HarpeeUtilities extends HarpeeHttp {
     restartService<T = IHarperDBMessageResponse>(options: {
         /** the name of the service you would like to restart. Currently, this is limited to 'custom_functions'*/
         service: "custom_functions";
-    }, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    }, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Registers an additional HarperDB instance with associated subscriptions. Learn more about HarperDB clustering here: https://harperdb.io/docs/clustering/.
 
     */
-    addNode<T = IHarperDBMessageResponse>(options: IHarpeeUtilNodeOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    addNode<T = IHarperDBMessageResponse>(options: IHarpeeUtilNodeOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Modifies an existing HarperDB instance registration and associated subscriptions. Learn more about HarperDB clustering here: https://harperdb.io/docs/clustering/.
 
     */
-    updateNode<T = IHarperDBMessageResponse>(options: IHarpeeUtilNodeOptions, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    updateNode<T = IHarperDBMessageResponse>(options: IHarpeeUtilNodeOptions, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
     /**
      * Unregisters a HarperDB instance and associated subscriptions. Learn more about HarperDB clustering here: https://harperdb.io/docs/clustering/.
      */
-    removeNode<T = IHarperDBMessageResponse>(options: Pick<IHarpeeUtilNodeOptions, "name">, callback?: HarpeeResponseCallback<T>): Promise<void | IHarpeeResponse<T>>;
+    removeNode<T = IHarperDBMessageResponse>(options: Pick<IHarpeeUtilNodeOptions, "name">, callback?: HarpeeResponseCallback<T>): Promise<void | import("../interfaces/harpee.interface").IHarpeeResponse<T>>;
 }

@@ -618,7 +618,7 @@ export class HarpeeModel extends HarpeeHttp {
             }
 
             if (!this.silent) {
-                const { error } = SchemaValidator.validate(
+                const { error, value } = SchemaValidator.validate(
                     this.schemaConfig,
                     newRecord
                 ) as {
@@ -627,6 +627,7 @@ export class HarpeeModel extends HarpeeHttp {
                 };
 
                 if (error) throw error;
+                newRecord = value;
             }
 
             const response = await this.$callbackOrPromise<T>(
@@ -661,7 +662,7 @@ export class HarpeeModel extends HarpeeHttp {
     ) {
         try {
             if (!Utils.isArray(newRecords)) {
-                newRecords = [newRecords];
+                throw new TypeError("'newRecords' must be an array");
             }
             // only throw an error when `silent` is false
             if (!this.silent) {
@@ -669,16 +670,15 @@ export class HarpeeModel extends HarpeeHttp {
                     this.schemaConfig,
                     newRecords
                 ) as {
-                    error: ValidationError | undefined;
-                    value: any;
-                }[];
+                    error: ValidationError[];
+                    value: any[];
+                };
 
-                if (validationResults?.length) {
-                    const validationErrors = validationResults.map(
-                        (validation) => validation?.error
-                    );
-                    if (validationErrors?.length) throw validationErrors;
-                }
+                const validationErrors = validationResults.error;
+
+                if (validationErrors?.length) throw validationErrors;
+
+                newRecords = validationResults.value;
             }
 
             const response = await this.$callbackOrPromise<T>(
