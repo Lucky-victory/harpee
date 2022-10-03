@@ -209,7 +209,7 @@ export class HarpeeModel extends HarpeeHttp {
         callback?: HarpeeResponseCallback<T>
     ) {
         try {
-            let getAttr: string[],
+            let getAttr: string[] = ["*"],
                 limit!: number,
                 offset!: number | null,
                 orderby!: string[],
@@ -221,19 +221,14 @@ export class HarpeeModel extends HarpeeHttp {
                     " find `options` must be an object or an array"
                 );
             }
-            if (
-                (Utils.isArray(options) || Utils.isObject(options)) &&
-                Utils.isEmpty(options)
-            ) {
-                getAttr = ["*"];
-            } else if (Utils.isArray(options) && !Utils.isEmpty(options)) {
+            if (Utils.isArray(options) && !Utils.isEmpty(options)) {
                 getAttr = options as string[];
             } else {
                 const _options = options as IHarpeeModelFindOptions;
                 limit = _options.limit as number;
-                offset = limit && _options.offset ? _options.offset : null;
+                offset = (limit && _options.offset) || null;
                 orderby = _options.orderby as string[];
-                order = orderby && _options.order ? _options.order : null;
+                order = (orderby && _options.order) || null;
                 where = _options.where as string;
                 and = where && (_options.and as string | number);
 
