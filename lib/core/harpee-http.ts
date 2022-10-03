@@ -77,30 +77,23 @@ export class HarpeeHttp {
                             data: null,
                             error: err,
                         });
-                    try {
-                        if (single)
-                            return resolve({
-                                success: true,
-                                data: (result as T[])[0],
-                                error: null,
-                            });
 
+                    if (single)
                         return resolve({
                             success: true,
-                            data: result as T,
+                            data: (result as T[])[0],
                             error: null,
                         });
-                    } catch {
-                        return reject({
-                            success: false,
-                            data: null,
-                            error: err,
-                        });
-                    }
+
+                    return resolve({
+                        success: true,
+                        data: result as T,
+                        error: null,
+                    });
                 });
             });
         }
-        if (callback && Utils.isFunction(callback)) {
+        callback &&
             this.$requestHandler(reqBody, (err, result) => {
                 if (err) {
                     return callback(
@@ -112,29 +105,18 @@ export class HarpeeHttp {
                         null
                     );
                 }
-                try {
-                    return single
-                        ? callback(null, {
-                              success: true,
-                              data: (result as T[])[0],
-                              error: null,
-                          })
-                        : callback(null, {
-                              success: true,
-                              data: result as T,
-                              error: null,
-                          });
-                } catch (err) {
-                    return callback(
-                        {
-                            success: false,
-                            data: null,
-                            error: err,
-                        },
-                        null
-                    );
-                }
+
+                return single
+                    ? callback(null, {
+                          success: true,
+                          data: (result as T[])[0],
+                          error: null,
+                      })
+                    : callback(null, {
+                          success: true,
+                          data: result as T,
+                          error: null,
+                      });
             });
-        }
     }
 }

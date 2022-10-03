@@ -35,7 +35,7 @@ export class Harpee {
             const username = config.username || config.user;
             const password = config.password || config.pass;
             const token = config.token;
-            if ((username && !password) || (password && !username)) {
+            if (!(username && password)) {
                 throw new Error(
                     "you must include both `username` and `password`"
                 );
@@ -48,9 +48,7 @@ export class Harpee {
             const connectionConfig = { host, username, password, token };
             HarpeeConfig.authConfig = connectionConfig;
 
-            if (connectionInfo && Utils.isFunction(connectionInfo)) {
-                connectionInfo(config, null);
-            }
+            connectionInfo && connectionInfo(config, null);
         } catch (error) {
             if (connectionInfo && Utils.isFunction(connectionInfo)) {
                 connectionInfo(config, error);

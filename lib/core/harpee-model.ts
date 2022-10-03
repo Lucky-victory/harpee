@@ -520,17 +520,17 @@ export class HarpeeModel extends HarpeeHttp {
             );
 
             // update the data
-            if (initResponse?.data) {
-                if (Utils.isFunction(value)) {
-                    Utils.safeSet(
-                        initResponse.data,
-                        path,
-                        value(initResponse.data)
-                    );
-                } else {
-                    Utils.safeSet(initResponse.data, path, value);
-                }
+
+            if (Utils.isFunction(value)) {
+                Utils.safeSet(
+                    initResponse?.data,
+                    path,
+                    value(initResponse?.data)
+                );
+            } else {
+                Utils.safeSet(initResponse?.data, path, value);
             }
+
             if (returnData && Utils.isFunction(callback)) {
                 isDataCallback = true;
             }
