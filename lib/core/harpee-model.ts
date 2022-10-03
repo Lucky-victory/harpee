@@ -463,7 +463,7 @@ export class HarpeeModel extends HarpeeHttp {
      * #### Example
      *
      * ```js
-     * // let's say you have the following data
+     * // using the following sample data
      * {id:1,username:'luckyv', friends:[{age:20,name:'mike'},{age:24,name:'jane'}]
      * }
      * // example 1
@@ -617,18 +617,16 @@ export class HarpeeModel extends HarpeeHttp {
                 throw new TypeError(" `newRecord` must be an object");
             }
 
-            if (!this.silent) {
-                const { error, value } = SchemaValidator.validate(
-                    this.schemaConfig,
-                    newRecord
-                ) as {
-                    error: ValidationError | undefined;
-                    value: any;
-                };
+            const { error, value } = SchemaValidator.validate(
+                this.schemaConfig,
+                newRecord
+            ) as {
+                error: ValidationError | undefined;
+                value: any;
+            };
 
-                if (error) throw error;
-                newRecord = value;
-            }
+            newRecord = value;
+            if (error && !this.silent) throw error;
 
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -664,22 +662,21 @@ export class HarpeeModel extends HarpeeHttp {
             if (!Utils.isArray(newRecords)) {
                 throw new TypeError("'newRecords' must be an array");
             }
+
+            const validationResults = SchemaValidator.validate(
+                this.schemaConfig,
+                newRecords
+            ) as {
+                error: ValidationError[];
+                value: any[];
+            };
+
+            const validationErrors = validationResults.error;
+
+            newRecords = validationResults.value;
             // only throw an error when `silent` is false
-            if (!this.silent) {
-                const validationResults = SchemaValidator.validate(
-                    this.schemaConfig,
-                    newRecords
-                ) as {
-                    error: ValidationError[];
-                    value: any[];
-                };
-
-                const validationErrors = validationResults.error;
-
-                if (validationErrors?.length) throw validationErrors;
-
-                newRecords = validationResults.value;
-            }
+            if (validationErrors?.length && !this.silent)
+                throw validationErrors;
 
             const response = await this.$callbackOrPromise<T>(
                 {

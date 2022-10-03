@@ -76,7 +76,7 @@ export declare class HarpeeModel extends HarpeeHttp {
      * #### Example
      *
      * ```js
-     * // let's say you have the following data
+     * // using the following sample data
      * {id:1,username:'luckyv', friends:[{age:20,name:'mike'},{age:24,name:'jane'}]
      * }
      * // example 1
