@@ -21,6 +21,11 @@ export declare class HarpeeModel extends HarpeeHttp {
      */
     constructor(modelName: string, schemaConfig: HarpeeSchema);
     /**
+     * Returns an array of the column names specified in @see {Schema#fields}
+     * @readonly
+     **/
+    get fields(): string[];
+    /**
      * This creates the schema, table, and the attributes specified in Schema.`fields`, if they don't exist.
      * **you should get rid of this after running your app atleast once.**
      *
