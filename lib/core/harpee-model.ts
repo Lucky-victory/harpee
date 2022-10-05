@@ -71,6 +71,14 @@ export class HarpeeModel extends HarpeeHttp {
         this.silent = silent as boolean;
     }
     /**
+     * Returns an array of the column names specified in @see {Schema#fields}
+     * @readonly
+     **/
+    get fields() {
+        const { schemaFields } = this;
+        return Utils.splitObject(schemaFields).keys;
+    }
+    /**
      * This creates the schema, table, and the attributes specified in Schema.`fields`, if they don't exist.
      * **you should get rid of this after running your app atleast once.**
      *
