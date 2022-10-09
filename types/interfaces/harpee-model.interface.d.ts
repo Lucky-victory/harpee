@@ -86,10 +86,14 @@ export declare type IHarpeeModelUpdateNestedOptions<V = any> = {
     id: StringOrNumber;
     /**
      * a string or array of string indicating the path to a value
+     * @example
+     * '.author.name'
+     * // or
+     * ['author','name']
      *
      */
-    path: HarpeePath;
-    value: any | ((val: V) => any);
+    path: string | string[];
+    value: any | ((val: V) => V);
     /**
      * when true, returns the updated data, default is true
      */
