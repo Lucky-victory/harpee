@@ -1,6 +1,6 @@
 import { Order, StringOrNumber } from "./harpee.interface";
 
-export interface IHarpeeModelFindOptions {
+export type IHarpeeModelFindOptions = {
     /**
      *
      * the number of records that the query result will include,default is `null`, resulting in no limit
@@ -22,7 +22,7 @@ export interface IHarpeeModelFindOptions {
     where?: string;
     and?: string | number;
     getAttributes?: string[];
-}
+};
 export interface IHarperDBCRUDResponse {
     message: string;
     update_hashes: StringOrNumber[];
@@ -46,7 +46,7 @@ export interface IHarpeeModelFindByIdOptions {
     id: StringOrNumber[];
     getAttributes?: string[];
 }
-export interface IHarperDBS3Options {
+export type IHarperDBS3Options = {
     /**
      *  what action to be performed on the data. default 'insert'
      */
@@ -67,17 +67,17 @@ export interface IHarperDBS3Options {
      * your aws secret access key.
      */
     awsSecretAccessKey: string;
-}
+};
 
-export interface IHarpeeModelImportOptions {
+export type IHarpeeModelImportOptions = {
     /**
      *  what action to be performed on the data. default 'insert'
      */
     action?: Actions;
 
     /**
-              a valid CSV string.
-             */
+     a valid CSV string.
+    */
     csv: string;
     /**
      * an absolute path to the local file. **Note: this operation only works for local instances not for cloud instances**.
@@ -91,23 +91,27 @@ export interface IHarpeeModelImportOptions {
      * selects whether or not the data load will transact to any clustered instance. The default is `false`.
      */
     transactToCluster?: boolean;
-}
-export interface IHarpeeModelUpdateNestedOptions<V = any> {
+};
+export type IHarpeeModelUpdateNestedOptions<V = any> = {
     /**
      *
      */
     id: StringOrNumber;
     /**
      * a string or array of string indicating the path to a value
+     * @example
+     * '.author.name'
+     * // or
+     * ['author','name']
      *
      */
-    path: HarpeePath;
-    value: any | ((val: V) => any);
+    path: string | string[];
+    value: any | ((val: V) => V);
     /**
      * when true, returns the updated data, default is true
      */
     returnData?: boolean;
-}
+};
 /**
  * a string or array of string indicating the path to a value
  *
@@ -142,7 +146,7 @@ export interface IHarpeeModelFindByValueOptions {
      */
     getAttributes?: string | string[];
 }
-export interface IHarpeeModelFindByConditionOptions {
+export type IHarpeeModelFindByConditionOptions = {
     /**
      * attribute you wish to search, can be any attribute.
      */
@@ -167,8 +171,8 @@ export interface IHarpeeModelFindByConditionOptions {
      * an array of one or more attributes to be returned, default is `["*"]` which returns all attributes.
      */
     getAttributes?: string[];
-}
-export interface ISearchCondition {
+};
+export type ISearchCondition = {
     /**
      * attribute you wish to search, can be any attribute.
      */
@@ -181,7 +185,7 @@ export interface ISearchCondition {
      * the type of search to perform
      */
     search_type: SearchType;
-}
+};
 
 export type SearchType =
     | "equals"

@@ -1,3 +1,4 @@
+import { IHarpeeResponse } from "./../interfaces/harpee.interface";
 import { IHarpeeUtilOptions } from "./harpee-utilities.interface";
 import { StringOrNumber } from "./harpee.interface";
 

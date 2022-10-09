@@ -1,4 +1,9 @@
-import { StringOrNumber } from "./harpee.interface";
+import { IHarperDBInsertResponse } from "./harpee-model.interface";
+import {
+    HarpeeResponseCallback,
+    IHarpeeResponse,
+    StringOrNumber,
+} from "./harpee.interface";
 
 export interface IHarperDBClusterConfiguration {
     PROJECT_DIR?: string;

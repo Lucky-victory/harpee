@@ -44,14 +44,13 @@ harpee.createConnection({host:
   const usersSchema =  new harpee.Schema({
   name:"usersSchema",
   fields:{
-    user_id: HType.number(),
     username: HType.string().required(),
     email: HType.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required() ,
     phone: HType.number(),
     verified:HType.bool().default(false)
   }
-   primaryKey:'id' // optional, alias for hash_attribute, default 'id'
+   primaryKey:'user_id' // optional, alias for hash_attribute, default 'id'
    silent:false // optional, when true turns off error throwing when `Schema.fields` doesn't match `Model.create` values, default is false
   })
 
@@ -75,7 +74,6 @@ Now you can start using the model `UsersModel` to perform several operations.
 // this will insert the following data in `users` table.
 UsersModel.create(
     {
-        user_id: 1,
         username: "lucky",
         email: "user@email.com",
         phone: 1234567890,
@@ -168,7 +166,9 @@ fields:{
   title: HType.string().required(),
   author: HType.object({name: HType.string()}).required(),
   body: HType.string().required(),
-  publishDate: HType.date()
+  publishDate: HType.date().default(new Date()),
+  status:HType.string().equal('published','draft').default('published'),
+  tags:HType.array()
 })
 ```
 
@@ -200,6 +200,7 @@ Articles.create({
     author: { name: "lucky" },
     body: "lorem ipsum dot set amor",
     publishDate: new Date(),
+    tags: ["first"],
 });
 ```
 
@@ -216,6 +217,26 @@ Articles.updateNested(
         path: "author.name",
         // the new value
         value: "lucky victory",
+        // returns the updated data
+        returnData: true,
+    },
+    (err, result) => {
+        console.log(result.data);
+    }
+);
+
+// exampme 2
+Articles.updateNested(
+    {
+        // the id of the data to be updated
+        id: 1,
+        // this will update the tags
+        path: ".tags",
+        // the new value
+        value: (article) => {
+            article.tags.push("second");
+            return article.tags;
+        },
         // returns the updated data
         returnData: true,
     },
@@ -253,7 +274,3 @@ You can find more methods on the [documentation](https://harpee-docs-v4.netlify.
 ### Bugs or Feature Request.
 
 For bugs or feature request, please create an [issue](https://github.com/lucky-victory/harpee/issues).
-
-### Support this project.
-
-Want to support this project? [![Buy me a coffee](https://raw.githubusercontent.com/Lucky-victory/folio/main/files/images/blue-button.png)](https://buymeacoffee.com/luckyvictory).

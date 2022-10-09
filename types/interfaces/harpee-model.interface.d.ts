@@ -1,5 +1,5 @@
 import { Order, StringOrNumber } from "./harpee.interface";
-export interface IHarpeeModelFindOptions {
+export declare type IHarpeeModelFindOptions = {
     /**
      *
      * the number of records that the query result will include,default is `null`, resulting in no limit
@@ -20,7 +20,7 @@ export interface IHarpeeModelFindOptions {
     where?: string;
     and?: string | number;
     getAttributes?: string[];
-}
+};
 export interface IHarperDBCRUDResponse {
     message: string;
     update_hashes: StringOrNumber[];
@@ -35,7 +35,7 @@ export interface IHarpeeModelFindByIdOptions {
     id: StringOrNumber[];
     getAttributes?: string[];
 }
-export interface IHarperDBS3Options {
+export declare type IHarperDBS3Options = {
     /**
      *  what action to be performed on the data. default 'insert'
      */
@@ -56,15 +56,15 @@ export interface IHarperDBS3Options {
      * your aws secret access key.
      */
     awsSecretAccessKey: string;
-}
-export interface IHarpeeModelImportOptions {
+};
+export declare type IHarpeeModelImportOptions = {
     /**
      *  what action to be performed on the data. default 'insert'
      */
     action?: Actions;
     /**
-              a valid CSV string.
-             */
+     a valid CSV string.
+    */
     csv: string;
     /**
      * an absolute path to the local file. **Note: this operation only works for local instances not for cloud instances**.
@@ -78,8 +78,8 @@ export interface IHarpeeModelImportOptions {
      * selects whether or not the data load will transact to any clustered instance. The default is `false`.
      */
     transactToCluster?: boolean;
-}
-export interface IHarpeeModelUpdateNestedOptions<V = any> {
+};
+export declare type IHarpeeModelUpdateNestedOptions<V = any> = {
     /**
      *
      */
@@ -94,7 +94,7 @@ export interface IHarpeeModelUpdateNestedOptions<V = any> {
      * when true, returns the updated data, default is true
      */
     returnData?: boolean;
-}
+};
 /**
  * a string or array of string indicating the path to a value
  *
@@ -119,7 +119,7 @@ export interface IHarpeeModelFindByValueOptions {
      */
     getAttributes?: string | string[];
 }
-export interface IHarpeeModelFindByConditionOptions {
+export declare type IHarpeeModelFindByConditionOptions = {
     /**
      * attribute you wish to search, can be any attribute.
      */
@@ -144,8 +144,8 @@ export interface IHarpeeModelFindByConditionOptions {
      * an array of one or more attributes to be returned, default is `["*"]` which returns all attributes.
      */
     getAttributes?: string[];
-}
-export interface ISearchCondition {
+};
+export declare type ISearchCondition = {
     /**
      * attribute you wish to search, can be any attribute.
      */
@@ -158,5 +158,5 @@ export interface ISearchCondition {
      * the type of search to perform
      */
     search_type: SearchType;
-}
+};
 export declare type SearchType = "equals" | "contains" | "starts_with" | "ends_with" | "greater_than" | "greater_than_equal" | "less_than" | "less_than_equal" | "between";

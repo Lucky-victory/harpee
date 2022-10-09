@@ -39,11 +39,11 @@ export interface IHarpeeResponse<T = unknown> {
     error: IHarpeeHttpError | null;
 }
 
-export interface IHarpeeHttpError {
+export type IHarpeeHttpError = {
     message: string;
     status?: number;
     data: any;
-}
+};
 export type HarpeeConnectInfoCallback = (
     info?: IHarpeeAuthConfig,
     err?: null | unknown

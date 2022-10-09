@@ -1,3 +1,4 @@
+import { IHarpeeResponse } from "./../interfaces/harpee.interface";
 import {
     IHarperDBCustomFunctionInfo,
     IHarperDBCustomFunctionPackage,
@@ -35,14 +36,20 @@ export class HarpeeUtilities extends HarpeeHttp {
     constructor() {
         super();
     }
+
     /**
      * Execute custom SQL queries.
      *
      */
+    async query<T = object[]>(sqlQuery: string): Promise<IHarpeeResponse<T>>;
+    async query<T = object[]>(
+        sqlQuery: string,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
     async query<T = object[]>(
         sqlQuery: string,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -66,7 +73,13 @@ export class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async describeAll<T = object>(callback?: HarpeeResponseCallback<T>) {
+    async describeAll<T = object>(): Promise<IHarpeeResponse<T>>;
+    async describeAll<T = object>(
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async describeAll<T = object>(
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -88,11 +101,17 @@ export class HarpeeUtilities extends HarpeeHttp {
     * Create a new database schema.
 
     */
-
+    async createSchema<T = IHarperDBMessageResponse>(
+        options: Pick<IHarpeeUtilOptions, "schema">
+    ): Promise<IHarpeeResponse<T>>;
+    async createSchema<T = IHarperDBMessageResponse>(
+        options: Pick<IHarpeeUtilOptions, "schema">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
     async createSchema<T = IHarperDBMessageResponse>(
         options: Pick<IHarpeeUtilOptions, "schema">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema } = options;
             if (!schema) {
@@ -121,9 +140,18 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async dropSchema<T = IHarperDBMessageResponse>(
+        options: Pick<IHarpeeUtilOptions, "schema">
+    ): Promise<IHarpeeResponse<T>>;
+
+    async dropSchema<T = IHarperDBMessageResponse>(
+        options: Pick<IHarpeeUtilOptions, "schema">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async dropSchema<T = IHarperDBMessageResponse>(
         options: Pick<IHarpeeUtilOptions, "schema">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema } = options;
 
@@ -154,9 +182,18 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async describeSchema<T = object>(
+        options: Pick<IHarpeeUtilOptions, "schema">
+    ): Promise<IHarpeeResponse<T>>;
+
+    async describeSchema<T = object>(
+        options: Pick<IHarpeeUtilOptions, "schema">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async describeSchema<T = object>(
         options: Pick<IHarpeeUtilOptions, "schema">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema } = options;
 
@@ -187,9 +224,18 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async createTable<T = IHarperDBMessageResponse>(
+        options: IHarpeeNewTableOptions
+    ): Promise<IHarpeeResponse<T>>;
+
+    async createTable<T = IHarperDBMessageResponse>(
+        options: IHarpeeNewTableOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async createTable<T = IHarperDBMessageResponse>(
         options: IHarpeeNewTableOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema, table } = options;
             const hash_attribute = options.hashAttribute || "id";
@@ -222,9 +268,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async createAttribute<T = IHarperDBInsertResponse>(
+        options: IHarpeeAttributeOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async createAttribute<T = IHarperDBInsertResponse>(
+        options: IHarpeeAttributeOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async createAttribute<T = IHarperDBInsertResponse>(
         options: IHarpeeAttributeOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema, table, attribute } = options;
 
@@ -259,9 +312,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async dropAttribute<T = IHarperDBMessageResponse>(
+        options: IHarpeeAttributeOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async dropAttribute<T = IHarperDBMessageResponse>(
+        options: IHarpeeAttributeOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async dropAttribute<T = IHarperDBMessageResponse>(
         options: IHarpeeAttributeOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema, table, attribute } = options;
 
@@ -296,9 +356,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async describeTable<T = object>(
+        options: IHarpeeUtilOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async describeTable<T = object>(
+        options: IHarpeeUtilOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async describeTable<T = object>(
         options: IHarpeeUtilOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema, table } = options;
 
@@ -329,9 +396,18 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async dropTable<T = IHarperDBMessageResponse>(
+        options: IHarpeeUtilOptions
+    ): Promise<IHarpeeResponse<T>>;
+
+    async dropTable<T = IHarperDBMessageResponse>(
+        options: IHarpeeUtilOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async dropTable<T = IHarperDBMessageResponse>(
         options: IHarpeeUtilOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema, table } = options;
 
@@ -363,9 +439,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async addRole<T = object>(
+        options: IHarperDBNewRoleOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async addRole<T = object>(
+        options: IHarperDBNewRoleOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async addRole<T = object>(
         options: IHarperDBNewRoleOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             if (!Utils.isObject(options)) {
                 throw new Error("`options` must be an object");
@@ -403,9 +486,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async alterRole<T = object>(
+        options: IHarperDBRoleOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async alterRole<T = object>(
+        options: IHarperDBRoleOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async alterRole<T = object>(
         options: IHarperDBRoleOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             if (!Utils.isObject(options)) {
                 throw new Error("`options` must be an object");
@@ -444,9 +534,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async dropRole<T = IHarperDBMessageResponse>(
+        options: Pick<IHarperDBRoleOptions, "id">
+    ): Promise<IHarpeeResponse<T>>;
+    async dropRole<T = IHarperDBMessageResponse>(
+        options: Pick<IHarperDBRoleOptions, "id">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async dropRole<T = IHarperDBMessageResponse>(
         options: Pick<IHarperDBRoleOptions, "id">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             if (!Utils.isObject(options)) {
                 throw new Error("`options` must be an object");
@@ -482,9 +579,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async addUser<T = IHarperDBMessageResponse>(
+        options: IHarperDBNewUser
+    ): Promise<IHarpeeResponse<T>>;
+    async addUser<T = IHarperDBMessageResponse>(
+        options: IHarperDBNewUser,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async addUser<T = IHarperDBMessageResponse>(
         options: IHarperDBNewUser,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             if (!Utils.isObject(options)) {
                 throw new Error("`options` must be an object");
@@ -523,9 +627,18 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async alterUser<T = object>(
+        options: IHarperDBAuthUser
+    ): Promise<IHarpeeResponse<T>>;
+
+    async alterUser<T = object>(
+        options: IHarperDBAuthUser,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async alterUser<T = object>(
         options: IHarperDBAuthUser,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { username, password, role } = options;
             const active = options.active || true;
@@ -559,9 +672,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async dropUser<T = IHarperDBMessageResponse>(
+        options: Pick<IHarperDBAuth, "username">
+    ): Promise<IHarpeeResponse<T>>;
+    async dropUser<T = IHarperDBMessageResponse>(
+        options: Pick<IHarperDBAuth, "username">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async dropUser<T = IHarperDBMessageResponse>(
         options: Pick<IHarperDBAuth, "username">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { username } = options;
 
@@ -590,7 +710,13 @@ export class HarpeeUtilities extends HarpeeHttp {
      * Returns a list of all users
      */
 
-    async listUsers<T = object[]>(callback?: HarpeeResponseCallback<T>) {
+    async listUsers<T = object[]>(): Promise<IHarpeeResponse<T>>;
+    async listUsers<T = object[]>(
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async listUsers<T = object[]>(
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -611,7 +737,13 @@ export class HarpeeUtilities extends HarpeeHttp {
     /**
      Returns a list of all roles
     */
-    async listRoles<T = object[]>(callback?: HarpeeResponseCallback<T>) {
+    async listRoles<T = object[]>(): Promise<IHarpeeResponse<T>>;
+    async listRoles<T = object[]>(
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async listRoles<T = object[]>(
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -634,9 +766,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      * Creates the tokens needed for authentication: operation & refresh token. **Note, this operation does not require authorization to be set**.
      **/
     async createAuthenticationTokens<T = IHarperDBTokenResponse>(
+        options: IHarperDBAuth
+    ): Promise<IHarpeeResponse<T>>;
+    async createAuthenticationTokens<T = IHarperDBTokenResponse>(
+        options: IHarperDBAuth,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async createAuthenticationTokens<T = IHarperDBTokenResponse>(
         options: IHarperDBAuth,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const username = options.username || this.config?.username;
             const password = options.password || this.config?.password;
@@ -668,7 +807,19 @@ export class HarpeeUtilities extends HarpeeHttp {
      **/
     async refreshOperationToken<
         T = Pick<IHarperDBTokenResponse, "operation_token">
-    >(options: { refreshToken: string }, callback?: HarpeeResponseCallback<T>) {
+    >(options: { refreshToken: string }): Promise<IHarpeeResponse<T>>;
+    async refreshOperationToken<
+        T = Pick<IHarperDBTokenResponse, "operation_token">
+    >(
+        options: { refreshToken: string },
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async refreshOperationToken<
+        T = Pick<IHarperDBTokenResponse, "operation_token">
+    >(
+        options: { refreshToken: string },
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { refreshToken } = options;
             if (!refreshToken) {
@@ -697,9 +848,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      * Exports data based on a given search operation from table to local file in JSON or CSV format **Note: this only works for local instances, not for cloud instances.**
      */
     async exportLocal<T = IHarperDBMessageResponse>(
+        options: IHarperDBExportLocalOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async exportLocal<T = IHarperDBMessageResponse>(
+        options: IHarperDBExportLocalOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async exportLocal<T = IHarperDBMessageResponse>(
         options: IHarperDBExportLocalOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const format = Utils.toLower(options.format);
             const path = options.path;
@@ -742,9 +900,16 @@ export class HarpeeUtilities extends HarpeeHttp {
 
     */
     async exportToS3<T = IHarperDBMessageResponse>(
+        options: IHarperDBExportS3Options
+    ): Promise<IHarpeeResponse<T>>;
+    async exportToS3<T = IHarperDBMessageResponse>(
+        options: IHarperDBExportS3Options,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async exportToS3<T = IHarperDBMessageResponse>(
         options: IHarperDBExportS3Options,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const format = Utils.toLower(options.format);
             const search_operation = options.searchOperation;
@@ -799,9 +964,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async deployCustomFunctionProject<T = IHarperDBMessageResponse>(
+        options: IHarperDBCustomFunctionPackage
+    ): Promise<IHarpeeResponse<T>>;
+    async deployCustomFunctionProject<T = IHarperDBMessageResponse>(
+        options: IHarperDBCustomFunctionPackage,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async deployCustomFunctionProject<T = IHarperDBMessageResponse>(
         options: IHarperDBCustomFunctionPackage,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { project, file, payload } = options;
             if (!(project || file || payload)) {
@@ -832,9 +1004,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async addCustomFunctionProject<T = IHarperDBMessageResponse>(
+        options: Pick<IHarperDBCustomFunctionOptions, "project">
+    ): Promise<IHarpeeResponse<T>>;
+    async addCustomFunctionProject<T = IHarperDBMessageResponse>(
+        options: Pick<IHarperDBCustomFunctionOptions, "project">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async addCustomFunctionProject<T = IHarperDBMessageResponse>(
         options: Pick<IHarperDBCustomFunctionOptions, "project">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { project } = options;
             if (!project) {
@@ -863,9 +1042,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async dropCustomFunctionProject<T = IHarperDBMessageResponse>(
+        options: Pick<IHarperDBCustomFunctionOptions, "project">
+    ): Promise<IHarpeeResponse<T>>;
+    async dropCustomFunctionProject<T = IHarperDBMessageResponse>(
+        options: Pick<IHarperDBCustomFunctionOptions, "project">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async dropCustomFunctionProject<T = IHarperDBMessageResponse>(
         options: Pick<IHarperDBCustomFunctionOptions, "project">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { project } = options;
             if (!project) {
@@ -894,9 +1080,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async packageCustomFunctionProject<T = IHarperDBCustomFunctionPackage>(
+        options: Pick<IHarperDBCustomFunctionPackage, "project">
+    ): Promise<IHarpeeResponse<T>>;
+    async packageCustomFunctionProject<T = IHarperDBCustomFunctionPackage>(
+        options: Pick<IHarperDBCustomFunctionPackage, "project">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async packageCustomFunctionProject<T = IHarperDBCustomFunctionPackage>(
         options: Pick<IHarperDBCustomFunctionPackage, "project">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { project } = options;
             if (!project) {
@@ -923,9 +1116,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      * Returns the content of the specified file as text. HarperDB Studio uses this call to render the file content in its built-in code editor.
      */
     async getCustomFunction<T = IHarperDBMessageResponse>(
+        options: IHarperDBCustomFunctionOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async getCustomFunction<T = IHarperDBMessageResponse>(
+        options: IHarperDBCustomFunctionOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async getCustomFunction<T = IHarperDBMessageResponse>(
         options: IHarperDBCustomFunctionOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { project, file, type } = options;
             if (!(project || file || type)) {
@@ -955,9 +1155,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      *Deletes the specified file.
      */
     async dropCustomFunction<T = IHarperDBMessageResponse>(
+        options: IHarperDBCustomFunctionOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async dropCustomFunction<T = IHarperDBMessageResponse>(
+        options: IHarperDBCustomFunctionOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async dropCustomFunction<T = IHarperDBMessageResponse>(
         options: IHarperDBCustomFunctionOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { project, file, type } = options;
             if (!(project || file || type)) {
@@ -987,9 +1194,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      * Updates the content of the specified file. HarperDB Studio uses this call to save any changes made through its built-in code editor.
      */
     async setCustomFunction<T = IHarperDBMessageResponse>(
+        options: IHarperDBSetCustomFunctionOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async setCustomFunction<T = IHarperDBMessageResponse>(
+        options: IHarperDBSetCustomFunctionOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async setCustomFunction<T = IHarperDBMessageResponse>(
         options: IHarperDBSetCustomFunctionOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const {
                 project,
@@ -1028,7 +1242,15 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
     async getCustomFunctions<
         T = { [key: string]: IHarperDBCustomFunctionInfo }
-    >(callback?: HarpeeResponseCallback<T>) {
+    >(): Promise<IHarpeeResponse<T>>;
+    async getCustomFunctions<
+        T = { [key: string]: IHarperDBCustomFunctionInfo }
+    >(callback: HarpeeResponseCallback<T>): Promise<void>;
+    async getCustomFunctions<
+        T = { [key: string]: IHarperDBCustomFunctionInfo }
+    >(
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -1050,9 +1272,15 @@ export class HarpeeUtilities extends HarpeeHttp {
      *Returns the state of the Custom functions server. This includes whether it is enabled, upon which port it is listening, and where its root project directory is located on the host machine.
      *
      */
+    async customFunctionStatus<T = IHarperDBCustomFuntionStatus>(): Promise<
+        IHarpeeResponse<T>
+    >;
+    async customFunctionStatus<T = IHarperDBCustomFuntionStatus>(
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
     async customFunctionStatus<T = IHarperDBCustomFuntionStatus>(
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -1083,9 +1311,32 @@ export class HarpeeUtilities extends HarpeeHttp {
             "disk",
             "network",
             "harperdb_processes"
+        ]
+    ): Promise<IHarpeeResponse<T>>;
+    async systemInformation<T = object>(
+        attributes: [
+            "system",
+            "time",
+            "cpu",
+            "memory",
+            "disk",
+            "network",
+            "harperdb_processes"
+        ],
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async systemInformation<T = object>(
+        attributes?: [
+            "system",
+            "time",
+            "cpu",
+            "memory",
+            "disk",
+            "network",
+            "harperdb_processes"
         ],
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -1109,7 +1360,13 @@ export class HarpeeUtilities extends HarpeeHttp {
 
     */
 
-    async clusterStatus<T = object>(callback?: HarpeeResponseCallback<T>) {
+    async clusterStatus<T = object>(): Promise<IHarpeeResponse<T>>;
+    async clusterStatus<T = object>(
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async clusterStatus<T = object>(
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -1131,9 +1388,15 @@ export class HarpeeUtilities extends HarpeeHttp {
      * Returns the HarperDB configuration parameters. Read more about the configuration file here: https://harperdb.io/docs/reference/configuration-file/.
      */
 
+    async getConfiguation<T = IHarperDBClusterConfiguration>(): Promise<
+        IHarpeeResponse<T>
+    >;
+    async getConfiguation<T = IHarperDBClusterConfiguration>(
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
     async getConfiguation<T = IHarperDBClusterConfiguration>(
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -1156,9 +1419,18 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async configureCluster<T = IHarperDBMessageResponse>(
+        options?: IHarperDBClusterConfiguration
+    ): Promise<IHarpeeResponse<T>>;
+
+    async configureCluster<T = IHarperDBMessageResponse>(
+        options: IHarperDBClusterConfiguration,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async configureCluster<T = IHarperDBMessageResponse>(
         options: IHarperDBClusterConfiguration = {},
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -1181,9 +1453,13 @@ export class HarpeeUtilities extends HarpeeHttp {
      * Restarts the HarperDB instance.
      */
 
+    async restart<T = IHarperDBMessageResponse>(): Promise<IHarpeeResponse<T>>;
+    async restart<T = IHarperDBMessageResponse>(
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
     async restart<T = IHarperDBMessageResponse>(
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -1206,13 +1482,24 @@ export class HarpeeUtilities extends HarpeeHttp {
 
     */
 
+    async restartService<T = IHarperDBMessageResponse>(options: {
+        /** the name of the service you would like to restart. Currently, this is limited to 'custom_functions'*/
+        service: "custom_functions";
+    }): Promise<IHarpeeResponse<T>>;
+    async restartService<T = IHarperDBMessageResponse>(
+        options: {
+            /** the name of the service you would like to restart. Currently, this is limited to 'custom_functions'*/
+            service: "custom_functions";
+        },
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
     async restartService<T = IHarperDBMessageResponse>(
         options: {
             /** the name of the service you would like to restart. Currently, this is limited to 'custom_functions'*/
             service: "custom_functions";
         },
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { service } = options;
             const response = await this.$callbackOrPromise<T>(
@@ -1238,9 +1525,16 @@ export class HarpeeUtilities extends HarpeeHttp {
     */
 
     async addNode<T = IHarperDBMessageResponse>(
+        options: IHarpeeUtilNodeOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async addNode<T = IHarperDBMessageResponse>(
+        options: IHarpeeUtilNodeOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async addNode<T = IHarperDBMessageResponse>(
         options: IHarpeeUtilNodeOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { name, host, subscriptions, port } = options;
             if (!(name || host || subscriptions || port)) {
@@ -1276,9 +1570,16 @@ export class HarpeeUtilities extends HarpeeHttp {
 
     */
     async updateNode<T = IHarperDBMessageResponse>(
+        options: IHarpeeUtilNodeOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async updateNode<T = IHarperDBMessageResponse>(
+        options: IHarpeeUtilNodeOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async updateNode<T = IHarperDBMessageResponse>(
         options: IHarpeeUtilNodeOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { name, host, subscriptions, port } = options;
             if (!(name || host || subscriptions || port)) {
@@ -1314,9 +1615,16 @@ export class HarpeeUtilities extends HarpeeHttp {
      */
 
     async removeNode<T = IHarperDBMessageResponse>(
+        options: Pick<IHarpeeUtilNodeOptions, "name">
+    ): Promise<IHarpeeResponse<T>>;
+    async removeNode<T = IHarperDBMessageResponse>(
+        options: Pick<IHarpeeUtilNodeOptions, "name">,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async removeNode<T = IHarperDBMessageResponse>(
         options: Pick<IHarpeeUtilNodeOptions, "name">,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { name } = options;
             if (!name) {

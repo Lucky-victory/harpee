@@ -1,7 +1,10 @@
 import { HarpeeHttp } from "./harpee-http";
 import operations from "../constants/operations";
 import Utils from "../helpers/utils";
-import { HarpeeResponseCallback } from "../interfaces/harpee.interface";
+import {
+    HarpeeResponseCallback,
+    IHarpeeResponse,
+} from "../interfaces/harpee.interface";
 import {
     IHarpeeReadLogOptions,
     IHarperDBDeleteRecordsOptions,
@@ -31,9 +34,16 @@ export class HarpeeLogger extends HarpeeHttp {
 
      */
     async readLog<T = object>(
+        options: IHarpeeReadLogOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async readLog<T = object>(
+        options: IHarpeeReadLogOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async readLog<T = object>(
         options: IHarpeeReadLogOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             if (!Utils.isObject(options)) {
                 throw new Error("`options` must be an object");
@@ -80,6 +90,19 @@ export class HarpeeLogger extends HarpeeHttp {
 
       */
 
+    async getJob<T = object[]>(options: {
+        /**
+         * the id of the job you wish to view */
+        id: string;
+    }): Promise<IHarpeeResponse<T>>;
+    async getJob<T = object[]>(
+        options: {
+            /**
+             * the id of the job you wish to view */
+            id: string;
+        },
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
     async getJob<T = object[]>(
         options: {
             /**
@@ -87,7 +110,7 @@ export class HarpeeLogger extends HarpeeHttp {
             id: string;
         },
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const id = { options };
             if (!id) {
@@ -117,9 +140,16 @@ export class HarpeeLogger extends HarpeeHttp {
       */
 
     async readTransactionLog<T = object[]>(
+        options: IHarpeeUtilOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async readTransactionLog<T = object[]>(
+        options: IHarpeeUtilOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async readTransactionLog<T = object[]>(
         options: IHarpeeUtilOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema, table } = options;
 
@@ -136,7 +166,7 @@ export class HarpeeLogger extends HarpeeHttp {
             }
         } catch (error) {
             if (Utils.isFunction(callback)) {
-                return (callback as HarpeeResponseCallback)(error, null);
+                return (callback as HarpeeResponseCallback<T>)(error, null);
             }
             return Promise.reject(error);
         }
@@ -146,9 +176,16 @@ export class HarpeeLogger extends HarpeeHttp {
      */
 
     async readTransactionLogByTimestamp<T = object[]>(
+        options: IHarperDBReadTransLogByTimestampOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async readTransactionLogByTimestamp<T = object[]>(
+        options: IHarperDBReadTransLogByTimestampOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async readTransactionLogByTimestamp<T = object[]>(
         options: IHarperDBReadTransLogByTimestampOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const schema = options.schema;
             const table = options.table;
@@ -174,7 +211,7 @@ export class HarpeeLogger extends HarpeeHttp {
             }
         } catch (error) {
             if (Utils.isFunction(callback)) {
-                return (callback as HarpeeResponseCallback)(error, null);
+                return (callback as HarpeeResponseCallback<T>)(error, null);
             }
             return Promise.reject(error);
         }
@@ -184,9 +221,16 @@ export class HarpeeLogger extends HarpeeHttp {
      */
 
     async readTransactionLogByUsername<T = object[]>(
+        options: IHarperDBReadTransLogByUsernameOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async readTransactionLogByUsername<T = object[]>(
+        options: IHarperDBReadTransLogByUsernameOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async readTransactionLogByUsername<T = object[]>(
         options: IHarperDBReadTransLogByUsernameOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema, table } = options;
             const search_values = options.searchValues;
@@ -211,7 +255,7 @@ export class HarpeeLogger extends HarpeeHttp {
             }
         } catch (error) {
             if (Utils.isFunction(callback)) {
-                return (callback as HarpeeResponseCallback)(error, null);
+                return (callback as HarpeeResponseCallback<T>)(error, null);
             }
             return Promise.reject(error);
         }
@@ -222,9 +266,16 @@ export class HarpeeLogger extends HarpeeHttp {
      */
 
     async readTransactionLogByHashValue<T = object[]>(
+        options: IHarperDBReadTransLogByHashOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async readTransactionLogByHashValue<T = object[]>(
+        options: IHarperDBReadTransLogByHashOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async readTransactionLogByHashValue<T = object[]>(
         options: IHarperDBReadTransLogByHashOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { schema, table } = options;
 
@@ -250,7 +301,7 @@ export class HarpeeLogger extends HarpeeHttp {
             }
         } catch (error) {
             if (Utils.isFunction(callback)) {
-                return (callback as HarpeeResponseCallback)(error, null);
+                return (callback as HarpeeResponseCallback<T>)(error, null);
             }
             return Promise.reject(error);
         }
@@ -260,9 +311,16 @@ export class HarpeeLogger extends HarpeeHttp {
      
      */
     async deleteRecordsBefore<T = IHarperDBMessageResponse>(
+        options: IHarperDBDeleteRecordsOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async deleteRecordsBefore<T = IHarperDBMessageResponse>(
+        options: IHarperDBDeleteRecordsOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async deleteRecordsBefore<T = IHarperDBMessageResponse>(
         options: IHarperDBDeleteRecordsOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { date, table, schema } = options;
             if (!date) {
@@ -283,7 +341,7 @@ export class HarpeeLogger extends HarpeeHttp {
             }
         } catch (error) {
             if (Utils.isFunction(callback)) {
-                return (callback as HarpeeResponseCallback)(error, null);
+                return (callback as HarpeeResponseCallback<T>)(error, null);
             }
             return Promise.reject(error);
         }
@@ -294,9 +352,18 @@ export class HarpeeLogger extends HarpeeHttp {
      */
 
     async deleteTransactionLogsBefore<T = unknown>(
+        options: IHarperDBDeleteTransLogOptions
+    ): Promise<IHarpeeResponse<T>>;
+
+    async deleteTransactionLogsBefore<T = unknown>(
+        options: IHarperDBDeleteTransLogOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async deleteTransactionLogsBefore<T = unknown>(
         options: IHarperDBDeleteTransLogOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             const { timestamp, table, schema } = options;
             if (!Utils.isNumber(timestamp)) {
@@ -317,7 +384,7 @@ export class HarpeeLogger extends HarpeeHttp {
             }
         } catch (error) {
             if (Utils.isFunction(callback)) {
-                return (callback as HarpeeResponseCallback)(error, null);
+                return (callback as HarpeeResponseCallback<T>)(error, null);
             }
             return Promise.reject(error);
         }
@@ -328,9 +395,16 @@ export class HarpeeLogger extends HarpeeHttp {
      *
      */
     async searchJobsByStartDate<T = object[]>(
+        options: IHarperDBSearchJobOptions
+    ): Promise<IHarpeeResponse<T>>;
+    async searchJobsByStartDate<T = object[]>(
+        options: IHarperDBSearchJobOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+    async searchJobsByStartDate<T = object[]>(
         options: IHarperDBSearchJobOptions,
         callback?: HarpeeResponseCallback<T>
-    ) {
+    ): Promise<void | IHarpeeResponse<T>> {
         try {
             if (!Utils.isObject(options)) {
                 throw new Error("`options` must be an object");
@@ -354,7 +428,7 @@ export class HarpeeLogger extends HarpeeHttp {
             }
         } catch (error) {
             if (Utils.isFunction(callback)) {
-                return (callback as HarpeeResponseCallback)(error, null);
+                return (callback as HarpeeResponseCallback<T>)(error, null);
             }
             return Promise.reject(error);
         }
