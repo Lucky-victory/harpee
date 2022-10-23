@@ -256,7 +256,7 @@ export class HarpeeModel extends HarpeeHttp {
                 const _options = options as IHarpeeModelFindOptions;
                 limit = _options.limit as number;
                 offset = (
-                    limit && !Utils.notNullOrUndefined(_options.offset)
+                    limit && Utils.notNullOrUndefined(_options.offset)
                         ? _options.offset
                         : null
                 ) as number;
@@ -265,7 +265,7 @@ export class HarpeeModel extends HarpeeHttp {
                 where = _options.where as string;
 
                 and = (
-                    where && !Utils.notNullOrUndefined(_options.and)
+                    where && Utils.notNullOrUndefined(_options.and)
                         ? _options.and
                         : null
                 ) as string | number;

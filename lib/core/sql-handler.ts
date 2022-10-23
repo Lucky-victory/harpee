@@ -158,7 +158,9 @@ export class SqlHandler {
     }
 
     whereNot(condition: string) {
-        this._query += condition ? ` WHERE NOT ${condition}` : "";
+        this._query += !Utils.isEmpty(condition)
+            ? ` WHERE NOT ${condition}`
+            : "";
         return this;
     }
 

@@ -53,7 +53,7 @@ export default class Utils {
      * @param { * } val - the value to be checked
      * */
     static notNullOrUndefined(val: unknown) {
-        return !Utils.isNull(val) || !Utils.isUndefined(val);
+        return !Utils.isNull(val) && !Utils.isUndefined(val);
     }
     static isUndefined(val: unknown) {
         return typeOf(val) === "undefined";
