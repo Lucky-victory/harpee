@@ -6,7 +6,7 @@ import {
 } from "../interfaces/harpee.interface";
 
 export class SqlHandler {
-    private  _query: string = "";
+    private _query: string = "";
     constructor() {
         this._query = ``;
     }
@@ -83,17 +83,19 @@ export class SqlHandler {
     }
 
     orderBy(columns: string[]) {
-        this._query += columns ? ` ORDER BY  ${columns.join(",")}` : "";
+        this._query += !Utils.isEmpty(columns)
+            ? ` ORDER BY  ${columns.join(",")}`
+            : "";
         return this;
     }
 
     order(order: Order) {
-        this._query += order ? ` ${Utils.toUpper(order)}` : "";
+        this._query += !Utils.isEmpty(order) ? ` ${Utils.toUpper(order)}` : "";
         return this;
     }
 
     delete() {
-        this._query += " DELETE";
+        this._query += " DELETE ";
         return this;
     }
 
@@ -150,7 +152,8 @@ export class SqlHandler {
     }
 
     where(condition: string) {
-        this._query += condition ? ` WHERE ${condition}` : "";
+        this._query += !Utils.isEmpty(condition) ? ` WHERE ${condition}` : "";
+
         return this;
     }
 
@@ -161,6 +164,7 @@ export class SqlHandler {
 
     equalTo(val: StringOrNumber) {
         this._query += Utils.notNullOrUndefined(val) ? ` ='${val}'` : "";
+        console.log(this._query);
         return this;
     }
 

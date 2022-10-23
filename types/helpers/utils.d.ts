@@ -116,7 +116,7 @@ export default class Utils {
     static typeOf(obj: unknown): string;
     static safeGet<T extends object>(item: T | T[] | any[], target: string | string[], defaultValue?: {}): any;
     static safeSet<T = object>(item: T, target: string | string[], value: any): boolean;
-    static pick<T extends object>(obj: T, select: (keyof T)[]): Pick<T, keyof T>;
+    static pick<T = object>(obj: T, select: (keyof T)[] | string[]): Pick<T, keyof T>;
     static omit<T extends object>(obj: T, remove: (keyof T)[]): Omit<T, keyof T>;
 }
 export declare type CheckValue = string | object | Date | undefined | null | number | boolean;

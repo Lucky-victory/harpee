@@ -57,12 +57,12 @@ harpee.createConnection({host:
 
 // create a model, the model name represents a table.
 
-const UsersModel = new harpee.Model("users",myUsersSchema);
+const UsersModel = new harpee.Model("users",usersSchema);
 
 // Next, initialize it.
-// Recommended: you may get rid of this method after running your app for the first time.
+// Recommended: you should get rid of this method after running your app for the first time.
 
-UsersModel.init();
+await UsersModel.init();
 
 ```
 
@@ -204,16 +204,16 @@ Articles.create({
 });
 ```
 
-#### updateNested({id,path,value,returnData?},callback)
+#### updateNested({id,path,value, returnData? ,getAttributes?:string[]}, callback)
 
 This methods let's you update values as well nested values, such as objects & arrays, by simply specifying a path.
 
 ```js
+// this will update the author's name, 'lucky' => 'lucky victory'
 Articles.updateNested(
     {
         // the id of the data to be updated
         id: 1,
-        // this will update the author's name, 'lucky' => 'lucky victory'
         path: "author.name",
         // the new value
         value: "lucky victory",
