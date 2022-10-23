@@ -166,7 +166,7 @@ export class SqlHandler {
 
     equalTo(val: StringOrNumber) {
         this._query += Utils.notNullOrUndefined(val) ? ` ='${val}'` : "";
-        console.log(this._query);
+
         return this;
     }
 
