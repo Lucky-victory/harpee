@@ -112,6 +112,7 @@ export type IHarpeeModelUpdateNestedOptions<V = object> = {
      */
     returnData?: boolean;
     getAttributes?: string[];
+    queryFields?:string[]
 };
 /**
  * a string or array of string indicating the path to a value

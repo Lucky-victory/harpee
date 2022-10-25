@@ -583,13 +583,18 @@ export class HarpeeModel extends HarpeeHttp {
             returnData = true,
             getAttributes = ["*"],
         } = options;
+        let { queryFields = ["*"] } = options;
+        //if the queryField doesn't specified all fields and it doesn't include primary key, then add the primary key;
+        queryFields[0] !== "*" && !queryFields.includes(this.primaryKey)
+            ? queryFields.push(this.primaryKey)
+            : "";
         const schema = this.schemaName;
         const table = this.modelName;
         const primaryKey = this.primaryKey;
         let isDataCallback: boolean = false;
         try {
             const { query } = new SqlHandler()
-                .select(["*"])
+                .select(queryFields)
                 .from(schema, table)
                 .where(primaryKey)
                 .equalTo(id);
