@@ -62,7 +62,7 @@ const UsersModel = new harpee.Model("users",myUsersSchema);
 // Next, initialize it.
 // Recommended: you may get rid of this method after running your app for the first time.
 
-UsersModel.init();
+await UsersModel.init();
 
 ```
 
