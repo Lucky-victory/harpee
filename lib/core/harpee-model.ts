@@ -585,9 +585,11 @@ export class HarpeeModel extends HarpeeHttp {
         } = options;
         let { queryFields = ["*"] } = options;
         //if the queryField doesn't specified all fields and it doesn't include primary key, then add the primary key;
-        queryFields[0] !== "*" && !queryFields.includes(this.primaryKey)
-            ? queryFields.push(this.primaryKey)
-            : "";
+        if (queryFields[0] !== "*" && !queryFields.includes(this.primaryKey)) {
+            
+            queryFields.push(this.primaryKey)
+        }
+            
         const schema = this.schemaName;
         const table = this.modelName;
         const primaryKey = this.primaryKey;
