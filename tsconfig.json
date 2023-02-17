@@ -36,6 +36,8 @@
         "excludePrivate": true,
         "excludeProtected": true,
 
+        "gaID":"G-NFC8ETSPFB",
+        "includeVersion":true,
         "name": "Harpee",
         "hideGenerator": true
     }

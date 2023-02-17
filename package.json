@@ -23,7 +23,7 @@
         "dist",
         "types"
     ],
-    "author": "Lucky Victory <luckyvictory54@gmail.com> (https://me.lucky-victory.dev)",
+    "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
     "license": "MIT",
     "typings": "./types",
     "dependencies": {
