@@ -255,11 +255,20 @@ export class HarpeeModel extends HarpeeHttp {
             } else {
                 const _options = options as IHarpeeModelFindOptions;
                 limit = _options.limit as number;
-                offset = (limit && _options.offset) || null;
+                offset = (
+                    limit && Utils.notNullOrUndefined(_options.offset)
+                        ? _options.offset
+                        : null
+                ) as number;
                 orderby = _options.orderby as string[];
-                order = (orderby && _options.order) || null;
+                order = orderby && _options.order ? _options.order : null;
                 where = _options.where as string;
-                and = where && (_options.and as string | number);
+
+                and = (
+                    where && Utils.notNullOrUndefined(_options.and)
+                        ? _options.and
+                        : null
+                ) as string | number;
 
                 getAttr = _options.getAttributes || ["*"];
             }
@@ -315,13 +324,18 @@ export class HarpeeModel extends HarpeeHttp {
             let idValues!: StringOrNumber[],
                 getAttributes = ["*"],
                 idKey = this.primaryKey;
+            let limit!: number | undefined;
             if (Utils.isArray(ids)) {
                 idValues = ids as StringOrNumber[];
             } else {
-                const { getAttributes: getAttr, id } =
-                    ids as IHarpeeModelFindByIdOptions;
+                const {
+                    getAttributes: getAttr,
+                    id,
+                    limit: _limit,
+                } = ids as IHarpeeModelFindByIdOptions;
                 idValues = id;
                 getAttributes = getAttr || ["*"];
+                limit = _limit;
             }
 
             const schema = this.schemaName;
@@ -332,7 +346,8 @@ export class HarpeeModel extends HarpeeHttp {
                 .select(getAttributes)
                 .from(schema, table)
                 .where(idKey)
-                .in(idValues);
+                .in(idValues)
+                .limit(limit as number);
 
             const response = await this.$callbackOrPromise<T>(
                 {
@@ -561,14 +576,25 @@ export class HarpeeModel extends HarpeeHttp {
         if (!Utils.isObject(options)) {
             throw new TypeError("updateNested `options` must be an object");
         }
-        const { path, value, id, returnData = true } = options;
+        const {
+            path,
+            value,
+            id,
+            returnData = true,
+            getAttributes = ["*"],
+        } = options;
+        let { queryFields = ["*"] } = options;
+        //if the queryField doesn't specified all fields and it doesn't include primary key, then add the primary key;
+        queryFields[0] !== "*" && !queryFields.includes(this.primaryKey)
+            ? queryFields.push(this.primaryKey)
+            : "";
         const schema = this.schemaName;
         const table = this.modelName;
         const primaryKey = this.primaryKey;
         let isDataCallback: boolean = false;
         try {
             const { query } = new SqlHandler()
-                .select(["*"])
+                .select(queryFields)
                 .from(schema, table)
                 .where(primaryKey)
                 .equalTo(id);
@@ -607,9 +633,16 @@ export class HarpeeModel extends HarpeeHttp {
 
                 isDataCallback ? undefined : callback
             );
+            /**
+             if getAttributes is specified, it will pick the attributes to return otherwise it will return all data
+             *  */
+            const whatToReturn = <D = object>(data: D) =>
+                getAttributes[0] === "*"
+                    ? data
+                    : Utils.pick(data, getAttributes);
             if (isDataCallback) {
                 (callback as HarpeeResponseCallback<T>)(null, {
-                    data: initResponse?.data as unknown as T,
+                    data: whatToReturn(initResponse?.data) as unknown as T,
                     success: true,
                     error: null,
                 });
@@ -617,7 +650,7 @@ export class HarpeeModel extends HarpeeHttp {
             if (!Utils.isUndefined(response) && !isDataCallback) {
                 if (returnData) {
                     return Promise.resolve({
-                        data: initResponse?.data,
+                        data: whatToReturn(initResponse?.data),
                         success: true,
                         error: null,
                     }) as Promise<IHarpeeResponse<T>>;

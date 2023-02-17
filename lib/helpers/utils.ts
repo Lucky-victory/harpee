@@ -228,8 +228,8 @@ export default class Utils {
         return safeSet(item as unknown as object, target, value);
     }
 
-    static pick<T extends object>(obj: T, select: (keyof T)[]) {
-        return pick(obj, select);
+    static pick<T = object>(obj: T, select: (keyof T)[] | string[]) {
+        return pick(obj, select as (keyof T)[]);
     }
     static omit<T extends object>(
         obj: T,

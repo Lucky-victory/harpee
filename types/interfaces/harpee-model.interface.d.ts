@@ -34,6 +34,7 @@ export declare type IHarperDBInsertResponse = Pick<IHarperDBCRUDResponse, "inser
 export interface IHarpeeModelFindByIdOptions {
     id: StringOrNumber[];
     getAttributes?: string[];
+    limit?: number;
 }
 export declare type IHarperDBS3Options = {
     /**
@@ -79,7 +80,7 @@ export declare type IHarpeeModelImportOptions = {
      */
     transactToCluster?: boolean;
 };
-export declare type IHarpeeModelUpdateNestedOptions<V = any> = {
+export declare type IHarpeeModelUpdateNestedOptions<V = object> = {
     /**
      *
      */
@@ -98,12 +99,13 @@ export declare type IHarpeeModelUpdateNestedOptions<V = any> = {
      * when true, returns the updated data, default is true
      */
     returnData?: boolean;
+    getAttributes?: string[];
+    queryFields?: string[];
 };
 /**
  * a string or array of string indicating the path to a value
  *
  */
-export declare type HarpeePath = string | string[];
 export declare type IHarpeeModelImportCsvOptions = Pick<IHarpeeModelImportOptions, "action" | "csv" | "transactToCluster">;
 export declare type IHarpeeModelImportCsvFileOptions = Pick<IHarpeeModelImportOptions, "action" | "filePath" | "transactToCluster">;
 export declare type IHarpeeModelImportCsvUrlOptions = Pick<IHarpeeModelImportOptions, "action" | "csvUrl" | "transactToCluster">;
@@ -124,10 +126,6 @@ export interface IHarpeeModelFindByValueOptions {
     getAttributes?: string | string[];
 }
 export declare type IHarpeeModelFindByConditionOptions = {
-    /**
-     * attribute you wish to search, can be any attribute.
-     */
-    searchAttribute: string;
     /**
      * the operator used between each condition, default is `and`
      */
