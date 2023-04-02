@@ -23,6 +23,7 @@ export interface IOperations {
     CSV_FILE_LOAD: string;
     INSERT: string;
     UPDATE: string;
+    UPSERT: string;
     DELETE: string;
     IMPORT_FROM_S3: string;
     EXPORT_TO_S3: string;

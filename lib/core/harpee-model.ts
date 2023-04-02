@@ -90,7 +90,7 @@ export class HarpeeModel extends HarpeeHttp {
             const table = this.modelName;
             const primaryKey = this.primaryKey;
             const createSchema = async () =>
-                await harpeeUtils.createSchema({
+                harpeeUtils.createSchema({
                     schema,
                 });
             const describeAll = async () => await harpeeUtils.describeAll();
@@ -101,62 +101,61 @@ export class HarpeeModel extends HarpeeHttp {
                     table,
                     hashAttribute: primaryKey,
                 });
-            const createAttribute = async (attribute: string) =>
-                await harpeeUtils.createAttribute({
-                    schema,
-                    table,
-                    attribute,
-                });
+            const createTempRecord = async () => {
+                // get fields from Schema.`fields`
+                const fields = this.schemaFields;
 
-            // get information about the database
-            const response1 = await describeAll();
-            // check if the schema already exist, else create it
-            if (!(response1?.data as any)[schema]) {
-                createSchema().then(async () => {
-                    await createTable();
-                });
-            }
-
-            // get information about the database
-            const response2 = await describeAll();
-            // check if the table already exist, else create it
-            if (
-                !(
-                    (response2?.data as any) &&
-                    (response2?.data as any)[schema][table]
-                )
-            ) {
-                await createTable();
-            }
-
-            // get information about the database
-            const response3 = await describeAll();
-
-            // get fields from Schema.`fields`
-            const fields = this.schemaFields;
-
-            // turn the fields object into an array of strings
-            const attributes = Utils.splitObject(fields).keys;
-
-            // get previous attributes from the table
-            const previousAttributes = (response3?.data as any)[schema][table][
-                "attributes"
-            ];
-
-            // turn the previous attributes object into an array of strings
-            const previousAttributesValues =
-                Utils.ObjectArrayToStringArray(previousAttributes);
-
-            // loop through attributes from `fields`
-            const createAttributes = async () => {
-                for (const attribute of attributes) {
-                    // create the attribute if it's not in the previous attributes
-                    if (!previousAttributesValues.includes(attribute)) {
-                        await createAttribute(attribute);
-                    }
+                // turn the fields object into an array of strings
+                const attributes = Utils.splitObject(fields).keys;
+                if (attributes.length) {
+                    // create a temporary record
+                    const tempRecord = attributes.reduce((acc, val) => {
+                        acc[val] = "temp";
+                        acc[primaryKey] = "__harpee_init";
+                        return acc;
+                    }, {});
+                    await harpeeUtils.insert({
+                        schema,
+                        table,
+                        records: [tempRecord],
+                    });
+                    await harpeeUtils.delete({
+                        table,
+                        schema,
+                        hashValues: ["__harpee_init"],
+                    });
                 }
             };
-            await createAttributes();
+
+            // get information about the database
+            const { data: dbInfoResponse } = await describeAll();
+            // check if the schema already exist, else create it
+            if (!(dbInfoResponse as any)[schema]) {
+                createSchema()
+                    .then(() => {
+                        createTable().then(async () => {
+                            try {
+                                await createTempRecord();
+                            } catch (err) {
+                                Promise.reject(err);
+                            }
+                        });
+                    })
+                    .catch((err) => {
+                        Promise.reject(err);
+                    });
+            } else if (
+                (dbInfoResponse as any)[schema] &&
+                !(dbInfoResponse as any)[schema][table]
+            ) {
+                createTable()
+                    .then(async () => {
+                        await createTempRecord();
+                    })
+                    .catch((err) => {
+                        Promise.reject(err);
+                    });
+            }
         } catch (err) {
             return Promise.reject(err);
         }

@@ -25,6 +25,7 @@ const operations: IOperations = {
     CSV_FILE_LOAD: "csv_file_load",
     INSERT: "insert",
     UPDATE: "update",
+    UPSERT: "upsert",
     DELETE: "delete",
     IMPORT_FROM_S3: "import_from_s3",
     EXPORT_TO_S3: "export_to_s3",

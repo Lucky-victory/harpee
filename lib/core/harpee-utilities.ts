@@ -17,6 +17,8 @@ import {
     IHarpeeUtilNodeOptions,
     IHarperDBCustomFuntionStatus,
     IHarpeeAttributeOptions,
+    IHarperDBInsertUpdateOptions,
+    IHarperDBDeleteOptions,
 } from "../interfaces/harpee-utilities.interface";
 
 import { HarpeeHttp } from "./harpee-http";
@@ -27,7 +29,11 @@ import {
     IHarperDBCustomFunctionOptions,
     IHarperDBClusterConfiguration,
 } from "../interfaces/harpee-utilities.interface";
-import { IHarperDBInsertResponse } from "../interfaces/harpee-model.interface";
+import {
+    IHarperDBDeleteResponse,
+    IHarperDBInsertResponse,
+    IHarperDBUpdateResponse,
+} from "../interfaces/harpee-model.interface";
 
 /**
  * A class for handling, configurations, creating/refreshing Authentication Tokens, etc
@@ -249,6 +255,171 @@ export class HarpeeUtilities extends HarpeeHttp {
                     schema,
                     table,
                     hash_attribute,
+                },
+                callback
+            );
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
+            }
+        } catch (error) {
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
+        }
+    }
+
+    async insert<T = IHarperDBInsertResponse>(
+        options: IHarperDBInsertUpdateOptions
+    ): Promise<IHarpeeResponse<T>>;
+
+    async insert<T = IHarperDBInsertResponse>(
+        options: IHarperDBInsertUpdateOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async insert<T = IHarperDBInsertResponse>(
+        options: IHarperDBInsertUpdateOptions,
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
+        try {
+            const { schema, table, records } = options;
+            if (!(table || schema || records)) {
+                throw new Error("`schema`,`table` and `records` are required");
+            }
+
+            const response = await this.$callbackOrPromise<T>(
+                {
+                    operation: operations.INSERT,
+                    schema,
+                    table,
+                    records,
+                },
+                callback
+            );
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
+            }
+        } catch (error) {
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
+        }
+    }
+
+    async upsert<T = IHarperDBInsertResponse>(
+        options: IHarperDBInsertUpdateOptions
+    ): Promise<IHarpeeResponse<T>>;
+
+    async upsert<T = IHarperDBInsertResponse>(
+        options: IHarperDBInsertUpdateOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async upsert<T = IHarperDBInsertResponse>(
+        options: IHarperDBInsertUpdateOptions,
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
+        try {
+            const { schema, table, records } = options;
+            if (!(table || schema || records)) {
+                throw new Error("`schema`,`table` and `records` are required");
+            }
+
+            const response = await this.$callbackOrPromise<T>(
+                {
+                    operation: operations.UPSERT,
+                    schema,
+                    table,
+                    records,
+                },
+                callback
+            );
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
+            }
+        } catch (error) {
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
+        }
+    }
+
+    /**
+     * Note:  **Each record in the records array must include their ID**
+     * @param options
+     */
+    async update<T = IHarperDBUpdateResponse>(
+        options: IHarperDBInsertUpdateOptions
+    ): Promise<IHarpeeResponse<T>>;
+
+    async update<T = IHarperDBUpdateResponse>(
+        options: IHarperDBInsertUpdateOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async update<T = IHarperDBUpdateResponse>(
+        options: IHarperDBInsertUpdateOptions,
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
+        try {
+            const { schema, table, records } = options;
+            if (!(table || schema || records)) {
+                throw new Error("`schema`,`table` and `records` are required");
+            }
+
+            const response = await this.$callbackOrPromise<T>(
+                {
+                    operation: operations.UPDATE,
+                    schema,
+                    table,
+                    records,
+                },
+                callback
+            );
+            if (!Utils.isUndefined(response)) {
+                return Promise.resolve(response);
+            }
+        } catch (error) {
+            if (Utils.isFunction(callback)) {
+                return (callback as HarpeeResponseCallback)(error, null);
+            }
+            return Promise.reject(error);
+        }
+    }
+    /**
+     *
+     * @param options
+     */
+    async delete<T = IHarperDBDeleteResponse>(
+        options: IHarperDBDeleteOptions
+    ): Promise<IHarpeeResponse<T>>;
+
+    async delete<T = IHarperDBDeleteResponse>(
+        options: IHarperDBDeleteOptions,
+        callback: HarpeeResponseCallback<T>
+    ): Promise<void>;
+
+    async delete<T = IHarperDBDeleteResponse>(
+        options: IHarperDBDeleteOptions,
+        callback?: HarpeeResponseCallback<T>
+    ): Promise<void | IHarpeeResponse<T>> {
+        try {
+            const { schema, table, hashValues } = options;
+            if (!(table || schema || hashValues)) {
+                throw new Error(
+                    "`schema`,`table` and `hashValues` are required"
+                );
+            }
+
+            const response = await this.$callbackOrPromise<T>(
+                {
+                    operation: operations.DELETE,
+                    schema,
+                    table,
+                    hash_values: hashValues,
                 },
                 callback
             );

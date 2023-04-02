@@ -6,8 +6,8 @@
         /* Modules */
         "module": "CommonJS" /* Specify what module code is generated. */,
         "rootDir": "lib/" /* Specify the root folder within your source files. */,
-        "moduleResolution": "node",
         "declaration": true,
+        "moduleResolution": "node",
         "outDir": "dist/" /* Specify an output folder for all emitted files. */,
         "removeComments": false /* Disable emitting comments. */,
 
@@ -36,8 +36,8 @@
         "excludePrivate": true,
         "excludeProtected": true,
 
-        "gaID":"G-NFC8ETSPFB",
-        "includeVersion":true,
+        "gaID": "G-NFC8ETSPFB",
+        "includeVersion": true,
         "name": "Harpee",
         "hideGenerator": true
     }
