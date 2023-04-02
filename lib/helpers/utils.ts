@@ -19,7 +19,7 @@ export default class Utils {
      * */
 
     static isArray(val: unknown) {
-        return typeOf(val) === "array";
+        return typeOf<any>(val) === "array";
     }
     /** Checks if the value is a String.
      * @param { * } val - the value to be checked
@@ -40,14 +40,14 @@ export default class Utils {
      * */
 
     static isBoolean(val: unknown) {
-        return typeOf(val) === "boolean";
+        return typeOf<any>(val) === "boolean";
     }
     /** Checks if the value is a Function.
      * @param { * } val - the value to be checked
      * */
 
     static isFunction(val: unknown) {
-        return typeOf(val) === "function";
+        return typeOf<any>(val) === "function";
     }
     /** Checks if the value is a Undefined.
      * @param { * } val - the value to be checked
@@ -56,20 +56,20 @@ export default class Utils {
         return !Utils.isNull(val) && !Utils.isUndefined(val);
     }
     static isUndefined(val: unknown) {
-        return typeOf(val) === "undefined";
+        return typeOf<any>(val) === "undefined";
     }
     /** Checks if the value is Null.
      * @param { * } val - the value to be checked
      * */
 
     static isNull(val: unknown): boolean {
-        return typeOf(val) === "null";
+        return typeOf<any>(val) === "null";
     }
     /** Checks if the value is a Date.
      * @param { * } val - the value to be checked
      * */
     static isDate(val: unknown): boolean {
-        return typeOf(val) === "date";
+        return typeOf<any>(val) === "date";
     }
     /** Evaluates two strings and checks if they have same or similar values.
      * @param { string } STR - the string to be evaluated.

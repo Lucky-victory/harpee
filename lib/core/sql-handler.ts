@@ -22,26 +22,38 @@ export class SqlHandler {
     }
 
     selectCount(column: string) {
-        this._query += column ? ` SELECT COUNT(\`${column}\`)` : "";
+        this._query +=
+            Utils.isString(column) && !Utils.isEmpty(column)
+                ? ` SELECT COUNT(\`${column}\`)`
+                : "";
         return this;
     }
 
     selectAvg(column: string) {
-        this._query += column ? ` SELECT AVG(\`${column}\`)` : "";
+        this._query +=
+            Utils.isString(column) && !Utils.isEmpty(column)
+                ? ` SELECT AVG(\`${column}\`)`
+                : "";
         return this;
     }
 
     selectSum(column: string) {
-        this._query += column ? ` SELECT SUM(\`${column}\`)` : "";
+        this._query +=
+            Utils.isString(column) && !Utils.isEmpty(column)
+                ? ` SELECT SUM(\`${column}\`)`
+                : "";
         return this;
     }
 
     from(schema: string, table: string) {
-        this._query += table ? ` FROM ${schema}.\`${table}\`` : "";
+        this._query +=
+            !Utils.isEmpty(schema) && !Utils.isEmpty(table)
+                ? ` FROM ${schema}.\`${table}\``
+                : "";
         return this;
     }
     as(newName: string) {
-        this._query += newName ? ` AS \`${newName}\`` : "";
+        this._query += !Utils.isEmpty(newName) ? ` AS \`${newName}\`` : "";
         return this;
     }
     /**
@@ -152,15 +164,19 @@ export class SqlHandler {
     }
 
     where(condition: string) {
-        this._query += !Utils.isEmpty(condition) ? ` WHERE ${condition}` : "";
+        this._query +=
+            Utils.isString(condition) && !Utils.isEmpty(condition)
+                ? ` WHERE ${condition}`
+                : "";
 
         return this;
     }
 
     whereNot(condition: string) {
-        this._query += !Utils.isEmpty(condition)
-            ? ` WHERE NOT ${condition}`
-            : "";
+        this._query +=
+            Utils.isString(condition) && !Utils.isEmpty(condition)
+                ? ` WHERE NOT ${condition}`
+                : "";
         return this;
     }
 
@@ -183,7 +199,10 @@ export class SqlHandler {
     }
 
     like(pattern: string) {
-        this._query += pattern ? ` LIKE '${pattern}'` : "";
+        this._query +=
+            Utils.isString(pattern) && !Utils.isEmpty(pattern)
+                ? ` LIKE '${pattern}'`
+                : "";
         return this;
     }
 
@@ -215,6 +234,20 @@ export class SqlHandler {
     lessThan(value: number) {
         this._query += Utils.notNullOrUndefined(value) ? ` < ${value}` : "";
         return this;
+    }
+    lessThanOrEqual(value: StringOrNumber) {
+        this._query += Utils.notNullOrUndefined(value) ? ` <= ${value}` : "";
+        return this;
+    }
+    lte(value: StringOrNumber) {
+        return this.lessThanOrEqual(value);
+    }
+    greaterThanOrEqual(value: StringOrNumber) {
+        this._query += Utils.notNullOrUndefined(value) ? ` >= ${value}` : "";
+        return this;
+    }
+    gte(value: StringOrNumber) {
+        return this.greaterThanOrEqual(value);
     }
     /**
      * same as `lessThan`

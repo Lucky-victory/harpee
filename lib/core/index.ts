@@ -47,8 +47,10 @@ export class Harpee {
             }
             const connectionConfig = { host, username, password, token };
             HarpeeConfig.authConfig = connectionConfig;
-
-            connectionInfo && connectionInfo(config, null);
+            if (!connectionInfo) {
+                return { ...config };
+            }
+            return connectionInfo && connectionInfo(config, null);
         } catch (error) {
             if (connectionInfo && Utils.isFunction(connectionInfo)) {
                 connectionInfo(config, error);
