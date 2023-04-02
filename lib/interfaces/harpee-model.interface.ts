@@ -44,7 +44,8 @@ export type IHarperDBInsertResponse = Pick<
 >;
 export interface IHarpeeModelFindByIdOptions {
     id: StringOrNumber[];
-    getAttributes?: string[];limit?:number
+    getAttributes?: string[];
+    limit?: number;
 }
 export type IHarperDBS3Options = {
     /**
@@ -112,7 +113,6 @@ export type IHarpeeModelUpdateNestedOptions<V = object> = {
      */
     returnData?: boolean;
     getAttributes?: string[];
-    queryFields?:string[]
 };
 /**
  * a string or array of string indicating the path to a value
@@ -149,7 +149,6 @@ export interface IHarpeeModelFindByValueOptions {
     getAttributes?: string | string[];
 }
 export type IHarpeeModelFindByConditionOptions = {
-  
     /**
      * the operator used between each condition, default is `and`
      */
