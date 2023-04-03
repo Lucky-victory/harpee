@@ -51,6 +51,10 @@ export declare class SqlHandler {
      **/
     gt(value: number): this;
     lessThan(value: number): this;
+    lessThanOrEqual(value: StringOrNumber): this;
+    lte(value: StringOrNumber): this;
+    greaterThanOrEqual(value: StringOrNumber): this;
+    gte(value: StringOrNumber): this;
     /**
      * same as `lessThan`
      *

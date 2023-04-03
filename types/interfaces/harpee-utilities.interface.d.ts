@@ -137,6 +137,17 @@ export interface IHarpeeUtilOptions {
 export interface IHarpeeNewTableOptions extends IHarpeeUtilOptions {
     hashAttribute?: string;
 }
+export interface IHarperDBInsertUpdateOptions extends IHarpeeUtilOptions {
+    records: {
+        [key: string]: any;
+    }[];
+}
+export interface IHarperDBDeleteOptions extends IHarpeeUtilOptions {
+    /**
+     * ID(s) of the record(s) to delete
+     */
+    hashValues: StringOrNumber[];
+}
 export interface IHarpeeAttributeOptions extends IHarpeeUtilOptions {
     attribute: string;
 }

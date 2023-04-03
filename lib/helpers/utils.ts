@@ -19,13 +19,15 @@ export default class Utils {
      * */
 
     static isArray(val: unknown) {
-        return typeOf<any>(val) === "array";
+        //@ts-ignore
+        return typeOf(val) === "array";
     }
     /** Checks if the value is a String.
      * @param { * } val - the value to be checked
      * */
 
     static isString(val: unknown) {
+        //@ts-ignore
         return typeOf(val) === "string";
     }
     /** Checks if the value is a Number.
@@ -33,6 +35,7 @@ export default class Utils {
      * */
 
     static isNumber(val: unknown) {
+        //@ts-ignore
         return typeOf(val) === "number";
     }
     /** Checks if the value is a Boolean.
@@ -40,14 +43,16 @@ export default class Utils {
      * */
 
     static isBoolean(val: unknown) {
-        return typeOf<any>(val) === "boolean";
+        //@ts-ignore
+        return typeOf(val) === "boolean";
     }
     /** Checks if the value is a Function.
      * @param { * } val - the value to be checked
      * */
 
     static isFunction(val: unknown) {
-        return typeOf<any>(val) === "function";
+        //@ts-ignore
+        return typeOf(val) === "function";
     }
     /** Checks if the value is a Undefined.
      * @param { * } val - the value to be checked
@@ -63,13 +68,15 @@ export default class Utils {
      * */
 
     static isNull(val: unknown): boolean {
-        return typeOf<any>(val) === "null";
+        //@ts-ignore
+        return typeOf(val) === "null";
     }
     /** Checks if the value is a Date.
      * @param { * } val - the value to be checked
      * */
     static isDate(val: unknown): boolean {
-        return typeOf<any>(val) === "date";
+        //@ts-ignore
+        return typeOf(val) === "date";
     }
     /** Evaluates two strings and checks if they have same or similar values.
      * @param { string } STR - the string to be evaluated.

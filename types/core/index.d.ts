@@ -12,13 +12,27 @@ export declare class Harpee {
      * @param config
      * @param connectionInfo
      */
-    static createConnection(config: IHarpeeAuthConfig, connectionInfo?: HarpeeConnectInfoCallback): void;
+    static createConnection(config: IHarpeeAuthConfig, connectionInfo?: HarpeeConnectInfoCallback): void | {
+        username?: string | undefined;
+        password?: string | undefined;
+        user?: string | undefined;
+        pass?: string | undefined;
+        host: string;
+        token?: string | undefined;
+    };
     /**
      * Alias for  `createConnection`.
      *
      *
      **/
-    static connect(config: IHarpeeAuthConfig, connectionInfo?: HarpeeConnectInfoCallback): void;
+    static connect(config: IHarpeeAuthConfig, connectionInfo?: HarpeeConnectInfoCallback): void | {
+        username?: string | undefined;
+        password?: string | undefined;
+        user?: string | undefined;
+        pass?: string | undefined;
+        host: string;
+        token?: string | undefined;
+    };
     static Model: typeof HarpeeModel;
     static Schema: typeof HarpeeSchema;
     static Logger: typeof HarpeeLogger;

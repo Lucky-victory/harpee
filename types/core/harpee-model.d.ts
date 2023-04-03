@@ -119,8 +119,8 @@ export declare class HarpeeModel extends HarpeeHttp {
      *
      * ```
      */
-    updateNested<T = IHarperDBUpdateResponse | object, V = object>(options: IHarpeeModelUpdateNestedOptions<V>): Promise<IHarpeeResponse<T>>;
-    updateNested<T = IHarperDBUpdateResponse | object, V = object>(options: IHarpeeModelUpdateNestedOptions<V>, callback: HarpeeResponseCallback<T>): Promise<void>;
+    updateNested<T = IHarperDBUpdateResponse | object>(options: IHarpeeModelUpdateNestedOptions): Promise<IHarpeeResponse<T>>;
+    updateNested<T = IHarperDBUpdateResponse | object>(options: IHarpeeModelUpdateNestedOptions, callback: HarpeeResponseCallback<T>): Promise<void>;
     /**
      * Updates the table with the specified records.
      * @param records - an array of one or more records to be updated, **Note: the records must include their primary key (e.g id)**.

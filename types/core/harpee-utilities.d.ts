@@ -1,9 +1,9 @@
 import { IHarpeeResponse } from "./../interfaces/harpee.interface";
-import { IHarperDBCustomFunctionInfo, IHarperDBCustomFunctionPackage, IHarperDBExportS3Options, IHarperDBExportLocalOptions, IHarperDBAuth, IHarperDBTokenResponse, IHarperDBMessageResponse, IHarperDBAuthUser, IHarperDBNewUser, IHarperDBRoleOptions, IHarperDBNewRoleOptions, IHarpeeUtilOptions, IHarpeeNewTableOptions, IHarperDBSetCustomFunctionOptions, IHarpeeUtilNodeOptions, IHarperDBCustomFuntionStatus, IHarpeeAttributeOptions } from "../interfaces/harpee-utilities.interface";
+import { IHarperDBCustomFunctionInfo, IHarperDBCustomFunctionPackage, IHarperDBExportS3Options, IHarperDBExportLocalOptions, IHarperDBAuth, IHarperDBTokenResponse, IHarperDBMessageResponse, IHarperDBAuthUser, IHarperDBNewUser, IHarperDBRoleOptions, IHarperDBNewRoleOptions, IHarpeeUtilOptions, IHarpeeNewTableOptions, IHarperDBSetCustomFunctionOptions, IHarpeeUtilNodeOptions, IHarperDBCustomFuntionStatus, IHarpeeAttributeOptions, IHarperDBInsertUpdateOptions, IHarperDBDeleteOptions } from "../interfaces/harpee-utilities.interface";
 import { HarpeeHttp } from "./harpee-http";
 import { HarpeeResponseCallback } from "../interfaces/harpee.interface";
 import { IHarperDBCustomFunctionOptions, IHarperDBClusterConfiguration } from "../interfaces/harpee-utilities.interface";
-import { IHarperDBInsertResponse } from "../interfaces/harpee-model.interface";
+import { IHarperDBDeleteResponse, IHarperDBInsertResponse, IHarperDBUpdateResponse } from "../interfaces/harpee-model.interface";
 /**
  * A class for handling, configurations, creating/refreshing Authentication Tokens, etc
  */
@@ -44,6 +44,22 @@ export declare class HarpeeUtilities extends HarpeeHttp {
     */
     createTable<T = IHarperDBMessageResponse>(options: IHarpeeNewTableOptions): Promise<IHarpeeResponse<T>>;
     createTable<T = IHarperDBMessageResponse>(options: IHarpeeNewTableOptions, callback: HarpeeResponseCallback<T>): Promise<void>;
+    insert<T = IHarperDBInsertResponse>(options: IHarperDBInsertUpdateOptions): Promise<IHarpeeResponse<T>>;
+    insert<T = IHarperDBInsertResponse>(options: IHarperDBInsertUpdateOptions, callback: HarpeeResponseCallback<T>): Promise<void>;
+    upsert<T = IHarperDBInsertResponse>(options: IHarperDBInsertUpdateOptions): Promise<IHarpeeResponse<T>>;
+    upsert<T = IHarperDBInsertResponse>(options: IHarperDBInsertUpdateOptions, callback: HarpeeResponseCallback<T>): Promise<void>;
+    /**
+     * Note:  **Each record in the records array must include their ID**
+     * @param options
+     */
+    update<T = IHarperDBUpdateResponse>(options: IHarperDBInsertUpdateOptions): Promise<IHarpeeResponse<T>>;
+    update<T = IHarperDBUpdateResponse>(options: IHarperDBInsertUpdateOptions, callback: HarpeeResponseCallback<T>): Promise<void>;
+    /**
+     *
+     * @param options
+     */
+    delete<T = IHarperDBDeleteResponse>(options: IHarperDBDeleteOptions): Promise<IHarpeeResponse<T>>;
+    delete<T = IHarperDBDeleteResponse>(options: IHarperDBDeleteOptions, callback: HarpeeResponseCallback<T>): Promise<void>;
     /**
     * Create a new attribute  within the specified table
 

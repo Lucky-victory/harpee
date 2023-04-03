@@ -83,7 +83,7 @@ export class HarpeeModel extends HarpeeHttp {
      * **you should get rid of this after running your app atleast once.**
      *
      */
-    async init(): Promise<unknown | void> {
+    async init() {
         const harpeeUtils = new HarpeeUtilities();
         try {
             const schema = this.schemaName;
@@ -95,25 +95,17 @@ export class HarpeeModel extends HarpeeHttp {
                 });
             const describeAll = async () => await harpeeUtils.describeAll();
 
-            const createTable = async () =>
-                await harpeeUtils.createTable({
-                    schema,
-                    table,
-                    hashAttribute: primaryKey,
-                });
             const createTempRecord = async () => {
-                // get fields from Schema.`fields`
-                const fields = this.schemaFields;
-
-                // turn the fields object into an array of strings
-                const attributes = Utils.splitObject(fields).keys;
+                const attributes = this.fields;
                 if (attributes.length) {
                     // create a temporary record
                     const tempRecord = attributes.reduce((acc, val) => {
+                        // @ts-ignore
                         acc[val] = "temp";
+                        // @ts-ignore
                         acc[primaryKey] = "__harpee_init";
                         return acc;
-                    }, {});
+                    }, {} as object);
                     await harpeeUtils.insert({
                         schema,
                         table,
@@ -131,31 +123,38 @@ export class HarpeeModel extends HarpeeHttp {
             const { data: dbInfoResponse } = await describeAll();
             // check if the schema already exist, else create it
             if (!(dbInfoResponse as any)[schema]) {
-                createSchema()
-                    .then(() => {
-                        createTable().then(async () => {
-                            try {
-                                await createTempRecord();
-                            } catch (err) {
-                                Promise.reject(err);
-                            }
+                return (async () => {
+                    await createSchema();
+
+                    // get information about the database
+                    // const { data: dbInfoResponse } = await describeAll();
+                    try {
+                        await harpeeUtils.createTable({
+                            schema,
+                            table,
+                            hashAttribute: primaryKey,
                         });
-                    })
-                    .catch((err) => {
-                        Promise.reject(err);
-                    });
-            } else if (
-                (dbInfoResponse as any)[schema] &&
-                !(dbInfoResponse as any)[schema][table]
-            ) {
-                createTable()
-                    .then(async () => {
                         await createTempRecord();
-                    })
-                    .catch((err) => {
+                        await Promise.resolve();
+                    } catch (err) {
                         Promise.reject(err);
-                    });
+                    }
+                })();
             }
+            (async () => {
+                if (
+                    (dbInfoResponse as any)[schema] &&
+                    !(dbInfoResponse as any)[schema][table]
+                ) {
+                    await harpeeUtils.createTable({
+                        schema,
+                        table,
+                        hashAttribute: primaryKey,
+                    });
+                    await createTempRecord();
+                    await Promise.resolve();
+                }
+            })();
         } catch (err) {
             return Promise.reject(err);
         }
@@ -656,7 +655,7 @@ export class HarpeeModel extends HarpeeHttp {
                         data: whatToReturn(initResponse?.data),
                         success: true,
                         error: null,
-                    });
+                    }) as Promise<IHarpeeResponse<T>>;
                 }
                 return Promise.resolve(response);
             }
