@@ -2,7 +2,7 @@
 
 # Introduction.
 
-**Harpee** is a modeling tool for [HarperDB](https://harperdb.io/?utm_source=luckyvictory), supports both callbacks and promises.
+**Harpee** is a modeling tool for [HarperDB](https://harperdb.io/?utm_source=luckyvictory) which allows you to have a structured data for your tables (collections), it supports both callbacks and promises.
 
 ## Installation.
 
