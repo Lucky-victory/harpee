@@ -68,6 +68,7 @@ export class HarpeeModel extends HarpeeHttp {
         this.primaryKey = primaryKey as string;
         this.silent = silent as boolean;
     }
+
     /**
      * Returns an array of the column names specified in @see {Schema#fields}
      * @readonly
@@ -85,6 +86,7 @@ export class HarpeeModel extends HarpeeHttp {
      */
     async init() {
         const harpeeUtils = new HarpeeUtilities();
+
         try {
             const schema = this.schemaName;
             const table = this.modelName;
@@ -121,44 +123,38 @@ export class HarpeeModel extends HarpeeHttp {
 
             // get information about the database
             const { data: dbInfoResponse } = await describeAll();
+
             // check if the schema already exist, else create it
             if (!(dbInfoResponse as any)[schema]) {
-                return (async () => {
-                    await createSchema();
-
-                    // get information about the database
-                    // const { data: dbInfoResponse } = await describeAll();
-                    try {
-                        await harpeeUtils.createTable({
-                            schema,
-                            table,
-                            hashAttribute: primaryKey,
-                        });
-                        await createTempRecord();
-                        await Promise.resolve();
-                    } catch (err) {
-                        Promise.reject(err);
-                    }
-                })();
+                await createSchema();
+                await harpeeUtils.createTable({
+                    schema,
+                    table,
+                    hashAttribute: primaryKey,
+                });
+                await describeAll();
+                await createTempRecord();
+            } else if (
+                (dbInfoResponse as any)[schema] &&
+                !(dbInfoResponse as any)[schema][table]
+            ) {
+                await harpeeUtils.createTable({
+                    schema,
+                    table,
+                    hashAttribute: primaryKey,
+                });
+                await describeAll();
+                await createTempRecord();
             }
-            (async () => {
-                if (
-                    (dbInfoResponse as any)[schema] &&
-                    !(dbInfoResponse as any)[schema][table]
-                ) {
-                    await harpeeUtils.createTable({
-                        schema,
-                        table,
-                        hashAttribute: primaryKey,
-                    });
-                    await createTempRecord();
-                    await Promise.resolve();
-                }
-            })();
         } catch (err) {
-            return Promise.reject(err);
+            console.error("Error initializing the model:", err);
+            const errorMessage = `Failed to initialize the model: ${JSON.stringify(
+                err
+            )}`;
+            throw new Error(errorMessage);
         }
     }
+
     /**
      * Execute custom SQL queries.
      *

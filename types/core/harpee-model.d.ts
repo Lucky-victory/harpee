@@ -30,7 +30,7 @@ export declare class HarpeeModel extends HarpeeHttp {
      * **you should get rid of this after running your app atleast once.**
      *
      */
-    init(): Promise<unknown | void>;
+    init(): Promise<void>;
     /**
      * Execute custom SQL queries.
      *
