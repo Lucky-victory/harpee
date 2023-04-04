@@ -8,6 +8,7 @@
     "dev": "tsc",
     "gen:docs": "npx typedoc",
     "watch": "tsc --watch",
+    "test": "nyc ava",
     "build": "tsc -p tsconfig.json",
     "prepublishOnly": "npm run build && npm run gen:docs",
     "fix:prettier": "prettier \"lib/**/*.ts\" --write"
@@ -38,7 +39,10 @@
     "just-typeof": "^3.1.1"
   },
   "devDependencies": {
+    "@ava/typescript": "^4.0.0",
     "@types/node": "^18.7.18",
+    "ava": "^5.2.0",
+    "nyc": "^15.1.0",
     "typedoc": "^0.23.14",
     "typescript": "^4.3.5"
   },
@@ -46,6 +50,18 @@
     "singleQuote": true,
     "semi": true,
     "trailingComma": "es5"
+  },
+  "ava": {
+    "files": [
+      "!dist/lib/**",
+      "!src/test/helper.ts"
+    ],
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
   },
   "repository": {
     "type": "git",

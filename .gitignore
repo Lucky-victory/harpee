@@ -46,7 +46,7 @@ jspm_packages/
 
 # Optional npm cache directory
 .npm
-
+.npmrc
 # Optional eslint cache
 .eslintcache
 
