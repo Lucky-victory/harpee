@@ -24,36 +24,30 @@ export class Harpee {
     config: IHarpeeAuthConfig,
     connectionInfo?: HarpeeConnectInfoCallback
   ) {
-    try {
-      if (!Utils.isObject(config)) {
-        throw new TypeError('connection `config` must be an Object');
-      }
-      if (!config.host) {
-        throw new Error('`host` is required');
-      }
-      const host = config.host;
-      const username = config.username || config.user;
-      const password = config.password || config.pass;
-      const token = config.token;
-      if (!(username && password)) {
-        throw new Error('you must include both `username` and `password`');
-      }
-      if (username && password && token) {
-        throw new Error(
-          'you should include `username` and `password` or only `token`'
-        );
-      }
-      const connectionConfig = { host, username, password, token };
-      HarpeeConfig.authConfig = connectionConfig;
-      if (!connectionInfo) {
-        return { ...config };
-      }
-      return connectionInfo && connectionInfo(config, null);
-    } catch (error) {
-      if (connectionInfo && Utils.isFunction(connectionInfo)) {
-        connectionInfo(config, error);
-      }
+    if (!config || !Utils.isObject(config)) {
+      throw new TypeError('connection `config` must be an Object');
     }
+    if (!config.host) {
+      throw new Error('`host` is required');
+    }
+    const host = config.host;
+    const username = config.username || config.user;
+    const password = config.password || config.pass;
+    const token = config.token;
+    if (!(username && password)) {
+      throw new Error('you must include both `username` and `password`');
+    }
+    if (username && password && token) {
+      throw new Error(
+        'you should include `username` and `password` or only `token`'
+      );
+    }
+    const connectionConfig = { host, username, password, token };
+    HarpeeConfig.authConfig = connectionConfig;
+    if (!connectionInfo) {
+      return { ...config };
+    }
+    return connectionInfo && connectionInfo(config, null);
   }
   /**
    * Alias for  `createConnection`.

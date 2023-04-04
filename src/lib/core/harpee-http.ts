@@ -15,6 +15,8 @@ export class HarpeeHttp {
   constructor() {
     this.config = HarpeeConfig.authConfig;
     this.schemaConfig = HarpeeConfig.schemaConfig;
+
+    console.log('config:', { config: this.config });
   }
 
   private $requestHandler(
@@ -32,6 +34,8 @@ export class HarpeeHttp {
         'Basic ' +
         Buffer.from(_username + ':' + _password, 'utf-8').toString('base64');
     }
+    console.log('auth:', { auth });
+
     const errorObj: IHarpeeHttpError = {
       message: 'an error occurred',
       data: undefined,

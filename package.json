@@ -53,12 +53,11 @@
   },
   "ava": {
     "files": [
-      "!dist/lib/**",
-      "!src/test/helper.ts"
+      "!dist/lib/**"
     ],
     "typescript": {
       "rewritePaths": {
-        "./": "dist/"
+        "src/": "dist/"
       },
       "compile": false
     }

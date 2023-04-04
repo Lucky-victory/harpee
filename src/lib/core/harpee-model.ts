@@ -102,12 +102,11 @@ export class HarpeeModel extends HarpeeHttp {
         if (attributes.length) {
           // create a temporary record
           const tempRecord = attributes.reduce((acc, val) => {
-            // @ts-ignore
             acc[val] = 'temp';
-            // @ts-ignore
+
             acc[primaryKey] = '__harpee_init';
             return acc;
-          }, {} as object);
+          }, {} as { [key: string]: any });
           await harpeeUtils.insert({
             schema,
             table,
