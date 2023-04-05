@@ -54,7 +54,7 @@
   "ava": {
     "files": [
       "!dist/lib/**",
-      "!dist/test/helper.js"
+      "!src/test/helper.ts"
     ],
     "typescript": {
       "rewritePaths": {

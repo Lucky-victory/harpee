@@ -49,7 +49,7 @@ export class HarpeeModel extends HarpeeHttp {
    */
   constructor(modelName: string, schemaConfig: HarpeeSchema) {
     super();
-    console.log('harpee models');
+  
 
     if (!modelName || !Utils.isString(modelName)) {
       throw new Error('`modelName` is required and it must be a String');
@@ -58,7 +58,7 @@ export class HarpeeModel extends HarpeeHttp {
       throw new Error('`schemaConfig` is required');
     }
 
-    const { primaryKey, silent, fields, name } = this.schemaConfig
+    const { primaryKey, silent, fields, name } = this.schemaConfig;
 
     this.schemaName = name as string;
 
@@ -393,18 +393,22 @@ export class HarpeeModel extends HarpeeHttp {
 
       const schema = this.schemaName;
       const table = this.modelName;
-      const sqlHandler = new SqlHandler();
 
-      const { query } = sqlHandler
-        .select(getAttributes as string[])
-        .from(schema, table)
-        .where(attrKey)
-        .equalTo(attrValue);
-
+      const conditions = [
+        {
+          search_type: 'equals',
+          search_value: attrValue,
+          search_attribute: attrKey,
+        },
+      ];
       const response = await this.$callbackOrPromise<T>(
         {
-          operation: operations.SQL,
-          sql: query,
+          operation: operations.SEARCH_BY_CONDITIONS,
+          table,
+          schema,
+          get_attributes: getAttributes,
+          limit: 1,
+          conditions,
         },
         callback,
         true

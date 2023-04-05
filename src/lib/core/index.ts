@@ -8,15 +8,9 @@ import { HarpeeModel } from './harpee-model';
 import { HarpeeSchema } from './harpee-schema';
 import { HarpeeUtilities } from './harpee-utilities';
 import { SqlHandler } from './sql-handler';
-import { HarpeeConfig } from './harpee-config';
 import { HarpeeHttp } from './harpee-http';
 
 export class Harpee extends HarpeeHttp {
-  // private static _config: IHarpeeAuthConfig;
-  // protected get config() {
-  //   return Harpee._config;
-  // }
-
   /**
    *creates a connection to your harperDB instance
    * @param config
@@ -45,7 +39,6 @@ export class Harpee extends HarpeeHttp {
       );
     }
     const connectionConfig = { host, username, password, token };
-    console.log({ connectionConfig });
 
     HarpeeHttp._setConfig = connectionConfig;
     if (!connectionCb) {

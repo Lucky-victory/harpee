@@ -7,7 +7,6 @@ import {
   IHarpeeResponse,
   IHarpeeSchemaConfig,
 } from '../interfaces/harpee.interface';
-import { HarpeeConfig } from './harpee-config';
 
 export class HarpeeHttp {
   protected config: IHarpeeAuthConfig;
