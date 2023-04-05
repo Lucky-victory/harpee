@@ -23,13 +23,13 @@
   },
   "typedocOptions": {
     "entryPoints": [
-      "lib/core",
-      "lib/core/harpee-model.ts",
+      "src/lib/core",
+      "src/lib/core/harpee-model.ts",
       "lib/core/harpee-utilities.ts",
-      "lib/core/sql-handler.ts",
-      "lib/core/harpee-logger.ts",
-      "lib/core/harpee-schema.ts",
-      "lib/interfaces"
+      "src/lib/core/sql-handler.ts",
+      "src/lib/core/harpee-logger.ts",
+      "src/lib/core/harpee-schema.ts",
+      "src/lib/interfaces"
     ],
 
     "out": "docs",
