@@ -49,7 +49,6 @@ export class HarpeeModel extends HarpeeHttp {
    */
   constructor(modelName: string, schemaConfig: HarpeeSchema) {
     super();
-  
 
     if (!modelName || !Utils.isString(modelName)) {
       throw new Error('`modelName` is required and it must be a String');
