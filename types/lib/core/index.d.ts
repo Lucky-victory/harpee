@@ -4,15 +4,14 @@ import { HarpeeModel } from './harpee-model';
 import { HarpeeSchema } from './harpee-schema';
 import { HarpeeUtilities } from './harpee-utilities';
 import { SqlHandler } from './sql-handler';
-export declare class Harpee {
-    private static _config;
-    protected get config(): IHarpeeAuthConfig;
+import { HarpeeHttp } from './harpee-http';
+export declare class Harpee extends HarpeeHttp {
     /**
      *creates a connection to your harperDB instance
      * @param config
-     * @param connectionInfo
+     * @param connectionCb
      */
-    static createConnection(config: IHarpeeAuthConfig, connectionInfo?: HarpeeConnectInfoCallback): void | {
+    static createConnection(config: IHarpeeAuthConfig, connectionCb?: HarpeeConnectInfoCallback): void | {
         username?: string | undefined;
         password?: string | undefined;
         user?: string | undefined;

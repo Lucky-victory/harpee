@@ -49,6 +49,7 @@ export class HarpeeModel extends HarpeeHttp {
    */
   constructor(modelName: string, schemaConfig: HarpeeSchema) {
     super();
+    console.log('harpee models');
 
     if (!modelName || !Utils.isString(modelName)) {
       throw new Error('`modelName` is required and it must be a String');
@@ -57,7 +58,7 @@ export class HarpeeModel extends HarpeeHttp {
       throw new Error('`schemaConfig` is required');
     }
 
-    const { primaryKey, silent, fields, name } = this.schemaConfig;
+    const { primaryKey, silent, fields, name } = this.schemaConfig
 
     this.schemaName = name as string;
 

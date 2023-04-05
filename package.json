@@ -53,7 +53,8 @@
   },
   "ava": {
     "files": [
-      "!dist/lib/**"
+      "!dist/lib/**",
+      "!dist/test/helper.js"
     ],
     "typescript": {
       "rewritePaths": {

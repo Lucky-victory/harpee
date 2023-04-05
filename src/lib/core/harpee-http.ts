@@ -12,19 +12,25 @@ import { HarpeeConfig } from './harpee-config';
 export class HarpeeHttp {
   protected config: IHarpeeAuthConfig;
   protected schemaConfig: IHarpeeSchemaConfig;
+  protected static _config: IHarpeeAuthConfig;
+  static _schemaConfig: IHarpeeSchemaConfig;
   constructor() {
-    this.config = HarpeeConfig.authConfig;
-    this.schemaConfig = HarpeeConfig.schemaConfig;
-
-    console.log('config:', { config: this.config });
+    this.config = HarpeeHttp._config;
+    this.schemaConfig = HarpeeHttp._schemaConfig;
   }
-
+  protected static set _setConfig(config: IHarpeeAuthConfig) {
+    HarpeeHttp._config = config;
+  }
+  protected static set _setSchemaConfig(schemaConfig: IHarpeeSchemaConfig) {
+    HarpeeHttp._schemaConfig = schemaConfig;
+  }
   private $requestHandler(
     reqBody: any,
     callback: (err: unknown | null, data: any | null) => void
   ) {
     let auth: string = '';
-    const { username, password, token, host } = this.config || {};
+    const { username, password, token, host } =
+      this.config || HarpeeHttp._config || {};
     const _username = username;
     const _password = password;
     if (token) {
@@ -34,7 +40,6 @@ export class HarpeeHttp {
         'Basic ' +
         Buffer.from(_username + ':' + _password, 'utf-8').toString('base64');
     }
-    console.log('auth:', { auth });
 
     const errorObj: IHarpeeHttpError = {
       message: 'an error occurred',

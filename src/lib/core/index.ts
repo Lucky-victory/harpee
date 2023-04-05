@@ -9,20 +9,22 @@ import { HarpeeSchema } from './harpee-schema';
 import { HarpeeUtilities } from './harpee-utilities';
 import { SqlHandler } from './sql-handler';
 import { HarpeeConfig } from './harpee-config';
+import { HarpeeHttp } from './harpee-http';
 
-export class Harpee {
-  private static _config: IHarpeeAuthConfig;
-  protected get config() {
-    return Harpee._config;
-  }
+export class Harpee extends HarpeeHttp {
+  // private static _config: IHarpeeAuthConfig;
+  // protected get config() {
+  //   return Harpee._config;
+  // }
+
   /**
    *creates a connection to your harperDB instance
    * @param config
-   * @param connectionInfo
+   * @param connectionCb
    */
   static createConnection(
     config: IHarpeeAuthConfig,
-    connectionInfo?: HarpeeConnectInfoCallback
+    connectionCb?: HarpeeConnectInfoCallback
   ) {
     if (!config || !Utils.isObject(config)) {
       throw new TypeError('connection `config` must be an Object');
@@ -43,11 +45,13 @@ export class Harpee {
       );
     }
     const connectionConfig = { host, username, password, token };
-    HarpeeConfig.authConfig = connectionConfig;
-    if (!connectionInfo) {
+    console.log({ connectionConfig });
+
+    HarpeeHttp._setConfig = connectionConfig;
+    if (!connectionCb) {
       return { ...config };
     }
-    return connectionInfo && connectionInfo(config, null);
+    return connectionCb && connectionCb(config, null);
   }
   /**
    * Alias for  `createConnection`.

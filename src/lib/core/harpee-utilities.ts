@@ -41,6 +41,8 @@ import {
 export class HarpeeUtilities extends HarpeeHttp {
   constructor() {
     super();
+    console.log('harpee utils');
+    
   }
 
   /**

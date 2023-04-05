@@ -1,6 +1,7 @@
 import Utils from '../helpers/utils';
 import { IHarpeeSchemaConfig } from '../interfaces/harpee.interface';
 import { HarpeeConfig } from './harpee-config';
+import { HarpeeHttp } from './harpee-http';
 
 /**
  * Let's you specify the schema name, also configure your table's column names.
@@ -23,7 +24,7 @@ export class HarpeeSchema {
     this.primaryKey = schemaConfig.primaryKey || 'id';
     this.silent = schemaConfig.silent || false;
     this.fields = schemaConfig.fields;
-    HarpeeConfig.schemaConfig = {
+    HarpeeHttp._schemaConfig = {
       name: this.schemaName,
       fields: this.fields,
       primaryKey: this.primaryKey,
