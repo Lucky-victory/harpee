@@ -3,10 +3,9 @@ const { Model, createConnection, Schema } = harpee;
 
 export const connDB = () =>
   createConnection({
-    user: 'veek',
-    pass: '@veek.247',
-    host: 'https://hashnode-lv.harperdbcloud.com',
-  });
+  host: 'http://localhost::9925',
+        user: 'HDB_ADMIN',
+        pass: 'HBD_PASSWORD'});
 const schema = new Schema({
   name: 'harpeeTestSchema',
   fields: { name: HType.string(), age: HType.number() },
