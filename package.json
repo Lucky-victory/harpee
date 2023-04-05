@@ -1,9 +1,9 @@
 {
   "name": "harpee",
-  "version": "4.1.0",
+  "version": "4.1.2",
   "description": "Harpee is a modeling tool for HarperDB, which allows you to have a structured data for your tables (collections), it supports both callbacks and Promises.",
   "main": "./dist/lib/index.js",
-  "types": "./types/lib/index.d.ts",
+  "types": "./types/lib",
   "scripts": {
     "dev": "tsc",
     "gen:docs": "npx typedoc",
@@ -29,7 +29,7 @@
   ],
   "author": "Lucky Victory <luckyvictory54@gmail.com> (https://lucky-victory.dev)",
   "license": "MIT",
-  "typings": "./types/lib/index.d.ts",
+  "typings": "./types/lib",
   "dependencies": {
     "axios": "^0.27.1",
     "joi": "^17.6.0",
